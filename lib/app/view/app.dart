@@ -1,28 +1,52 @@
-
-
-import 'package:dash_tools/features/json/json_formatter_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:dash_tools/l10n/l10n.dart';
+import "package:dash_tools/features/tool.dart";
+import "package:dash_tools/widgets/adaptive_navigation.dart";
+import "package:flutter/material.dart";
+import "package:flutter_localizations/flutter_localizations.dart";
+import "package:dash_tools/l10n/l10n.dart";
+import "package:yaru/yaru.dart";
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        appBarTheme: const AppBarTheme(color: Color(0xFF13B9FF)),
-        colorScheme: ColorScheme.fromSwatch(
-          accentColor: const Color(0xFF13B9FF),
-        ),
-      ),
-      localizationsDelegates: const [
+    YaruVariant.red;
+    return const MaterialApp(
+      localizationsDelegates: [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const JsonFormatterScreen(),
+      home:YaruTheme(data: YaruThemeData(variant: YaruVariant.blue,),
+          child: _AdaptiveNavigation()),
+    );
+  }
+}
+
+
+class _AdaptiveNavigation extends StatefulWidget {
+  const _AdaptiveNavigation({Key? key}) : super(key: key);
+
+  @override
+  State<_AdaptiveNavigation> createState() => _AdaptiveNavigationState();
+}
+
+class _AdaptiveNavigationState extends State<_AdaptiveNavigation> {
+  var selectedIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+
+    return AdaptiveNavigation(
+      selectedIndex: selectedIndex,
+      destinations: destinations,
+      showNavigationBar: true,
+      onDestinationSelected: (int index) {
+        setState(() {
+          selectedIndex = index;
+        });
+      },
+      child: tools[selectedIndex].screen,
     );
   }
 }

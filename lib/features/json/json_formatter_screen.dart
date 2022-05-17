@@ -1,10 +1,12 @@
-import 'dart:convert' show JsonEncoder, jsonDecode;
-import 'package:flutter/material.dart';
+import "dart:convert" show JsonEncoder, jsonDecode;
+import "package:dash_tools/widgets/rounded_container.dart";
+import "package:flutter/material.dart";
 
 // Import the language & theme
-import 'package:code_text_field/code_text_field.dart';
-import 'package:highlight/languages/json.dart' show json;
-import 'package:flutter_highlight/themes/monokai-sublime.dart' show monokaiSublimeTheme;
+import "package:code_text_field/code_text_field.dart";
+import "package:highlight/languages/json.dart" show json;
+import "package:flutter_highlight/themes/monokai-sublime.dart" show monokaiSublimeTheme;
+import "json_screen_controller.dart";
 
 class JsonFormatterScreen extends StatefulWidget {
   const JsonFormatterScreen({Key? key}) : super(key: key);
@@ -24,7 +26,8 @@ class _JsonFormatterScreenState extends State<JsonFormatterScreen> {
     theme: monokaiSublimeTheme,
   );
 
-  final encoder = const JsonEncoder.withIndent('  ');
+  final encoder = const JsonEncoder.withIndent("  ");
+  var mode = JsonMode.prettify;
 
   @override
   void initState() {
@@ -41,32 +44,39 @@ class _JsonFormatterScreenState extends State<JsonFormatterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
-        children: [
-          Flexible(
-            flex: 3,
-            child: CodeField(
-              controller: inputController,
-              expands: true,
-              lineNumberStyle: const LineNumberStyle(
-                width: 32,
-                margin: 14,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Flexible(
+              flex: 3,
+              child: RoundedContainer(
+                child: CodeField(
+                  controller: inputController,
+                  expands: true,
+                  lineNumberStyle: const LineNumberStyle(
+                    width: 32,
+                    margin: 14,
+                  ),
+                  maxLines: null,
+                  minLines: null,
+                ),
               ),
-              maxLines: null,
-              minLines: null,
             ),
-          ),
-          const SizedBox.square(dimension: 35),
-          Flexible(
-            flex: 2,
-            child: CodeField(
-              controller: outputController,
-              expands: true,
-              maxLines: null,
-              minLines: null,
-            ),
-          )
-        ],
+            const SizedBox(width: 35,child: VerticalDivider(indent: 8,endIndent: 8,)),
+            Flexible(
+              flex: 2,
+              child: RoundedContainer(
+                child: CodeField(
+                  controller: outputController,
+                  expands: true,
+                  maxLines: null,
+                  minLines: null,
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

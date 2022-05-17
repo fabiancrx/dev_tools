@@ -4,7 +4,7 @@ version: 1.0.0+1
 publish_to: none
 
 environment:
-  sdk: ">=2.16.0 <3.0.0"
+  sdk: ">=2.17.0 <3.0.0"
 
 dependencies:
 #  SDK
@@ -17,6 +17,8 @@ dependencies:
   flutter_highlight: ^0.7.0
   highlight: ^0.7.0
   yaru_widgets: ^1.0.9
+  yaru: ^0.3.1
+  adwaita: ^0.5.2
 
 
 dev_dependencies:

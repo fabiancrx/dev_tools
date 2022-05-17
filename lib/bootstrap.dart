@@ -1,10 +1,6 @@
-
-
-import 'dart:async';
-import 'dart:developer';
-import 'package:flutter/widgets.dart';
-
-
+import "dart:async";
+import "dart:developer";
+import "package:flutter/widgets.dart";
 
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   FlutterError.onError = (details) {
