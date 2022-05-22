@@ -1,4 +1,4 @@
-import 'package:dash_tools/features/json/json_formatter_screen.dart';
+import 'package:dash_tools/tools/json/json_formatter_screen.dart';
 import 'package:flutter/material.dart';
 
 class Tool {

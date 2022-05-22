@@ -1,4 +1,4 @@
-import "package:dash_tools/features/tool.dart";
+import "package:dash_tools/tools/tool.dart";
 import "package:dash_tools/widgets/adaptive_navigation.dart";
 import "package:flutter/material.dart";
 import "package:flutter_localizations/flutter_localizations.dart";
@@ -10,7 +10,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    YaruVariant.red;
+
     return const MaterialApp(
       localizationsDelegates: [
         AppLocalizations.delegate,

@@ -19,6 +19,7 @@ dependencies:
   yaru_widgets: ^1.0.9
   yaru: ^0.3.1
   adwaita: ^0.5.2
+  flutter_riverpod: ^2.0.0-dev.9
 
 
 dev_dependencies:
