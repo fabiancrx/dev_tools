@@ -1,4 +1,5 @@
 import 'package:dash_tools/tools/json/json_formatter_screen.dart';
+import 'package:dash_tools/tools/number_converter.dart';
 import 'package:flutter/material.dart';
 
 class Tool {
@@ -14,7 +15,7 @@ class Tool {
 }
 
 const List<Tool> tools = [
-  Tool(JsonFormatterScreen(),
+  Tool(JsonFormatterScreen(key: ValueKey('json_formatter')),
       id: 'json',
       name: 'JSON formatter',
       description: 'Prettify, minify or just validate a String as JSON ',
@@ -22,6 +23,7 @@ const List<Tool> tools = [
   Tool(Text('base64'),
       id: 'base64', name: 'BASE 64 encoder/decoder', description: 'Encode or decode a String as base64 ', position: 1),
   Tool(Text('hash'), id: 'hash', name: '', description: 'Get SHA1, MD5,... hashes out of different files', position: 2),
+  Tool(NumberConverterScreen(),description: 'convert numbers',id: '0xNumber',name: 'Number Converter',position: 3)
 ];
 
 final destinations = tools.map((t) => NavigationDestination(

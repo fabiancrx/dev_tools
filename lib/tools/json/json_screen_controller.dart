@@ -1,51 +1,65 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final jsonProvider = StateProvider<JsonPageController>((ref) {
+final jsonControllerProvider = StateNotifierProvider<JsonPageController, JsonPageState>((ref) {
   return JsonPageController();
 });
 
-class JsonPageState {
-  final JsonProcessing mode;
-  final JsonIndent indent;
+class JsonPageState with EquatableMixin {
+  final JsonMode mode;
   final bool autoProcess;
-
 // final String jsonPath;
 
-  JsonPageState({required this.mode, required this.indent, this.autoProcess = true});
+  const JsonPageState({required this.mode, this.autoProcess = true});
 
-  factory JsonPageState.initial() => JsonPageState(mode: JsonProcessing.prettify, indent: JsonIndent.twoSpaces);
+  factory JsonPageState.initial() => const JsonPageState(mode: JsonMode.twoSpaces);
+
+  @override
+  String toString() {
+    return 'JsonPageState{mode: $mode, autoProcess: $autoProcess}';
+  }
+
+  @override
+  List<Object?> get props => [mode, autoProcess];
 }
 
 class JsonPageController extends StateNotifier<JsonPageState> {
   JsonPageController({JsonPageState? state}) : super(state ?? JsonPageState.initial());
 
-  /// Paste a sample json text in the input field
-  String sample() => _kSampleJson;
+  final JsonDecoder _decoder = const JsonDecoder();
 
-  String processSync(String json) {
+  /// Paste a sample json text in the input field
+  String get sample => _kSampleJson;
+
+  String processSync(String raw) {
     switch (state.mode) {
-      case JsonProcessing.prettify:
-        final encoder = JsonEncoder.withIndent(state.indent.indent);
+      case JsonMode.twoSpaces:
+      case JsonMode.fourSpaces:
+      case JsonMode.tab:
+      case JsonMode.minify:
+        final json = _decoder.convert(raw);
+        final encoder = JsonEncoder.withIndent(state.mode.indent);
         return encoder.convert(json);
-      case JsonProcessing.minify:
+      case JsonMode.encode:
         const encoder = JsonEncoder();
-        return encoder.convert(json);
-      case JsonProcessing.encode:
-      case JsonProcessing.decode:
-        throw UnimplementedError("${state.mode.name} not implemented yet!!");
+        final result = encoder.convert(raw);
+
+        if (result.length > 2 && (result[0] == '"' && result[result.length - 1] == '"')) {
+          return result.substring(1, result.length - 2);
+        }
+
+        return result;
+      case JsonMode.decode:
+        return _decoder.convert(unEscapeJson(raw));
     }
   }
 
-  /// Modifies the indentation of the text
-  void changeIndent(JsonIndent indent) {
-    state = JsonPageState(indent: indent, mode: JsonProcessing.prettify);
-  }
-
   /// Change the processing mode
-  void changeMode(JsonProcessing mode) {
-    state = JsonPageState(mode: mode, indent: state.indent);
+  void changeMode(JsonMode? mode) {
+    if (mode == null) return;
+    state = JsonPageState(mode: mode);
   }
 
   @override
@@ -54,16 +68,17 @@ class JsonPageController extends StateNotifier<JsonPageState> {
   }
 }
 
-enum JsonProcessing { prettify, minify, encode, decode }
-
-enum JsonIndent {
+enum JsonMode {
+  minify,
+  encode,
+  decode,
   twoSpaces("  "),
   fourSpaces("    "),
   tab("\t");
 
-  final String indent;
+  final String? indent;
 
-  const JsonIndent(this.indent);
+  const JsonMode([this.indent]);
 }
 
 const _kSampleJson = r'''{
@@ -94,3 +109,30 @@ const _kSampleJson = r'''{
     }
 }}    
     ''';
+String unEscapeJson(String t) {
+  if (t.isEmpty) return t;
+
+  const escapes = [r'\"', r"\\", r"\/"];
+  const lb = [
+    r"\b",
+    r"\f",
+    r"\n",
+    r"\r",
+    r"\t",
+    // r"\u",
+  ];
+  final StringBuffer sb = StringBuffer();
+
+  for (int i = 0; i < t.length; i++) {
+    if (i + 1 == t.length) continue;
+    if (escapes.contains(t[i] + t[i + 1])) {
+      continue;
+    } else if (lb.contains(t[i] + t[i + 1])) {
+      i++;
+      continue;
+    } else {
+      sb.write(t[i]);
+    }
+  }
+  return sb.toString();
+}

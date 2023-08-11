@@ -2,7 +2,7 @@ import 'dart:math' as math show max, min;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+// Vendored from macos_ui
 /// Default value for [ResizablePane] top padding
 const EdgeInsets kResizablePaneSafeArea = EdgeInsets.only(top: 52);
 

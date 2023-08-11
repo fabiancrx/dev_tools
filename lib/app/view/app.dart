@@ -10,19 +10,18 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return const MaterialApp(
       localizationsDelegates: [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      home:YaruTheme(data: YaruThemeData(variant: YaruVariant.blue,),
-          child: _AdaptiveNavigation()),
+      home: YaruTheme(
+          data: YaruThemeData(variant: YaruVariant.orange),
+          child: DropdownButtonHideUnderline(child: _AdaptiveNavigation())),
     );
   }
 }
-
 
 class _AdaptiveNavigation extends StatefulWidget {
   const _AdaptiveNavigation({Key? key}) : super(key: key);
@@ -36,7 +35,6 @@ class _AdaptiveNavigationState extends State<_AdaptiveNavigation> {
 
   @override
   Widget build(BuildContext context) {
-
     return AdaptiveNavigation(
       selectedIndex: selectedIndex,
       destinations: destinations,
