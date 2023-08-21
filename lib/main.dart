@@ -1,4 +1,4 @@
-import "package:dash_tools/app/view/app.dart";
+import "package:dash_tools/app/app.dart";
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import "bootstrap.dart";

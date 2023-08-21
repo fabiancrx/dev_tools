@@ -1,3 +1,5 @@
+import 'package:dash_tools/tools/base64/base64_converter.dart';
+import 'package:dash_tools/tools/base64/base64_image_converter.dart';
 import 'package:dash_tools/tools/json/json_formatter_screen.dart';
 import 'package:dash_tools/tools/number_converter/number_converter.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +22,8 @@ const List<Tool> tools = [
       name: 'JSON formatter',
       description: 'Prettify, minify or just validate a String as JSON ',
       position: 0),
-  Tool(Text('base64'),
+
+  Tool(Base64ConverterScreen(),
       id: 'base64', name: 'BASE 64 encoder/decoder', description: 'Encode or decode a String as base64 ', position: 1),
   Tool(Text('hash'), id: 'hash', name: '', description: 'Get SHA1, MD5,... hashes out of different files', position: 2),
   Tool(NumberConverterScreen(),description: 'convert numbers',id: '0xNumber',name: 'Number Converter',position: 3)
