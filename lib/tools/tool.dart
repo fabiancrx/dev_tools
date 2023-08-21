@@ -1,5 +1,5 @@
 import 'package:dash_tools/tools/json/json_formatter_screen.dart';
-import 'package:dash_tools/tools/number_converter.dart';
+import 'package:dash_tools/tools/number_converter/number_converter.dart';
 import 'package:flutter/material.dart';
 
 class Tool {
