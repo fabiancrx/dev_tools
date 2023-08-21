@@ -44,6 +44,12 @@ jobs:
           name: devtools-linux-dev.zip
           path: linux-dev.zip
 
+      - name: Upload artifacts to release
+        uses: svenstaro/upload-release-action@2.2.1
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: linux-dev.zip
+
 #  build-macos:
 #    name: "Build MacOS"
 #    runs-on: macos-latest
@@ -108,6 +114,7 @@ jobs:
       - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2.6.1
         with:
+          flutter-version: '3.10.6'
           channel: 'stable'
 
       - name: Enable desktop
@@ -127,3 +134,9 @@ jobs:
         with:
           name: dev-tools-windows-dev.zip
           path: windows-dev.zip
+
+      - name: Upload artifacts to release
+        uses: svenstaro/upload-release-action@2.2.1
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: windows-dev.zip
