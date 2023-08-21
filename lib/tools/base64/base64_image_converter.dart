@@ -1,13 +1,12 @@
 import 'dart:convert';
 
+import 'package:dash_tools/tools/base64/dart_logo.dart';
 import 'package:dash_tools/widgets/rounded_container.dart';
 import 'package:dash_tools/widgets/vendored/split.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:super_clipboard/super_clipboard.dart';
 import 'package:yaru_widgets/widgets.dart';
-
-import 'base64_converter.dart';
 
 class Base64ImageConverterScreen extends StatefulWidget {
   const Base64ImageConverterScreen({super.key});
@@ -21,9 +20,14 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
   final outputController = TextEditingController();
   var imageBytes = Uint8List.fromList([]);
 
+
   @override
   void initState() {
     super.initState();
+    if (inputController.text.isEmpty) {
+      inputController.text = base64DartLogo;
+      imageBytes = dataFromBase64String(inputController.text);
+    }
     inputController.addListener(() {
       imageBytes = dataFromBase64String(inputController.text);
       setState(() {});
