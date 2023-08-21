@@ -25,8 +25,10 @@ const List<Tool> tools = [
 
   Tool(Base64ConverterScreen(),
       id: 'base64', name: 'BASE 64 encoder/decoder', description: 'Encode or decode a String as base64 ', position: 1),
-  Tool(Text('hash'), id: 'hash', name: '', description: 'Get SHA1, MD5,... hashes out of different files', position: 2),
-  Tool(NumberConverterScreen(),description: 'convert numbers',id: '0xNumber',name: 'Number Converter',position: 3)
+  Tool(Base64ImageConverterScreen(),
+      id: 'base64image', name: 'BASE 64 Image encoder/decoder', description: 'Encode or decode an image as base64 ', position: 2),
+  Tool(Text('hash'), id: 'hash', name: '', description: 'Get SHA1, MD5,... hashes out of different files', position: 3),
+  Tool(NumberConverterScreen(),description: 'convert numbers',id: '0xNumber',name: 'Number Converter',position: 4)
 ];
 
 final destinations = tools.map((t) => NavigationDestination(
