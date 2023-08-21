@@ -1,8 +1,8 @@
-name: Build (Linux, Mac OS, Windows)
+name: Build (Linux, Windows)
 
 on:
   push:
-    branches: [master,ci-cd]
+    branches: [master]
   workflow_dispatch:
 
 jobs:
