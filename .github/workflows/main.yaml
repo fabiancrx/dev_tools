@@ -1,10 +1,142 @@
-name: dash_tools
+name: Build (Linux, Windows)
 
-on: [pull_request, push]
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
 
 jobs:
-  build:
-    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
-    with:
-      flutter_channel: stable
-      flutter_version: 3.0.0
+  build-linux:
+    name: "Build Linux"
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v2.4.0
+
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@v2.10.0
+        with:
+          flutter-version: '3.10.6'
+          channel: 'stable'
+
+      - name: Install Linux build tools
+        run: sudo apt-get update && sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev squashfs-tools
+
+      - name: Enable desktop
+        run: flutter config --enable-linux-desktop
+
+      - name: Get packages
+        run: flutter pub get
+
+      - name: Flutter build app
+        run: flutter build linux
+
+      - name: Compress artifacts
+        uses: TheDoctor0/zip-release@0.6.1
+        with:
+          filename: linux-dev.zip
+
+      - name: Upload Build Zip
+        uses: actions/upload-artifact@v2.3.1
+        with:
+          name: devtools-linux-dev.zip
+          path: linux-dev.zip
+
+      - name: Upload artifacts to release
+        uses: svenstaro/upload-release-action@2.7.0
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: linux-dev.zip
+
+#  build-macos:
+#    name: "Build MacOS"
+#    runs-on: macos-latest
+#    env:
+#      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#
+#    steps:
+#      - uses: actions/checkout@v2.4.0
+#
+#      - name: Setup Flutter SDK
+#        uses: subosito/flutter-action@v2.6.1
+#        with:
+#          channel: 'stable'
+#
+#      - name: Set Up XCode
+#        uses: devbotsxyz/xcode-select@v1.1.0
+#
+#      - name: Enable desktop
+#        run: flutter config --enable-macos-desktop
+#
+#      - name: Get packages
+#        run: flutter pub get
+#
+#      - name: Analyze
+#        run: flutter analyze
+#
+#      - name: Flutter build app
+#        run: flutter build macos
+#
+#      - name: Install create-dmg
+#        run: brew install create-dmg
+#
+#      - name: Create dmg
+#        run: |
+#          ./scripts/create_mac_dmg.sh
+#
+#      - name: Compress artifacts
+#        run: zip -r macos-dev.zip build/macos/Build/Products/Release
+#
+#      - name: Upload Build DMG
+#        uses: actions/upload-artifact@v2.3.1
+#        with:
+#          name: devtools-macos-dev.dmg
+#          path: build/macos/Build/Products/Release/devtools.dmg
+#
+#      - name: Upload Build Zip
+#        uses: actions/upload-artifact@v2.3.1
+#        with:
+#          name: devtools-macos-dev.zip
+#          path: macos-dev.zip
+
+
+  build-windows:
+    name: "Build Windows"
+    runs-on: windows-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v2.4.0
+
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@v2.6.1
+        with:
+          flutter-version: '3.10.6'
+          channel: 'stable'
+
+      - name: Enable desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: Get packages
+        run: flutter pub get
+
+      - name: Flutter build app
+        run: flutter build windows
+
+      - name: Compress artifacts
+        run: tar.exe -a -c -f windows-dev.zip build/windows/Runner/release
+
+      - name: Upload Build Zip
+        uses: actions/upload-artifact@v2.3.1
+        with:
+          name: dev-tools-windows-dev.zip
+          path: windows-dev.zip
+
+      - name: Upload artifacts to release
+        uses: svenstaro/upload-release-action@2.7.0
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: windows-dev.zip
