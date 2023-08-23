@@ -11,30 +11,36 @@ class Tool {
   final bool enabled;
   final int position;
   final Widget screen;
+  final Widget? icon;
 
   const Tool(this.screen,
-      {required this.name, required this.description, this.enabled = true, required this.position, required this.id});
+      {required this.name, required this.description, this.enabled = true, required this.position, required this.id, this.icon});
 }
 
 const List<Tool> tools = [
   Tool(JsonFormatterScreen(key: ValueKey('json_formatter')),
-      id: 'json',
-      name: 'JSON formatter',
-      description: 'Prettify, minify or just validate a String as JSON ',
-      position: 0),
-
+      id: 'json', name: 'JSON formatter', description: 'Prettify, minify or just validate a String as JSON ', position: 0),
   Tool(Base64ConverterScreen(),
       id: 'base64', name: 'BASE 64 encoder/decoder', description: 'Encode or decode a String as base64 ', position: 1),
   Tool(Base64ImageConverterScreen(),
       id: 'base64image', name: 'BASE 64 Image encoder/decoder', description: 'Encode or decode an image as base64 ', position: 2),
   Tool(Text('hash'), id: 'hash', name: '', description: 'Get SHA1, MD5,... hashes out of different files', position: 3),
-  Tool(NumberConverterScreen(),description: 'convert numbers',id: '0xNumber',name: 'Number Converter',position: 4)
+  Tool(
+    NumberConverterScreen(),
+    description: 'Convert numbers from one base to another',
+    id: 'number',
+    name: 'Number Converter',
+    position: 4,
+    icon: Icon(Icons.numbers),
+  )
 ];
 
-final destinations = tools.map((t) => NavigationDestination(
-      icon: const Icon(Icons.abc),
-      label: t.name,
-      tooltip: t.description,
-    )).toList();
+final destinations = tools
+    .map((t) => NavigationDestination(
+          icon: t.icon ?? const Icon(Icons.abc),
+          label: t.name,
+          tooltip: t.description,
+        ))
+    .toList();
 
 //Sort order [alphabetical,custom,default,recently used]

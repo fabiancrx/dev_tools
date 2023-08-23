@@ -1,3 +1,4 @@
+import 'package:dash_tools/common/text_formatters.dart';
 import 'package:flutter/material.dart';
 
 class NumberConverterScreen extends StatefulWidget {
@@ -95,40 +96,52 @@ class _NumberConverterScreenState extends State<NumberConverterScreen> {
       TextField(
           controller: hexController,
           focusNode: hexFocusNode,
-          decoration: InputDecoration(label: const Text("Hex"), suffixIcon: ClearTextIcon(controller: hexController))),
+          inputFormatters: [AppTextFormatters.hexadecimal],
+          decoration:
+              InputDecoration(label: const Text("Hex"), suffixIcon: ClearTextIcon(controller: hexController, focusNode: hexFocusNode))),
       const SizedBox.square(dimension: 12),
       TextField(
           controller: decimalController,
           focusNode: decimalFocusNode,
-          decoration: InputDecoration(label: const Text("Decimal"), suffixIcon: ClearTextIcon(controller: decimalController))),
+          inputFormatters: [AppTextFormatters.decimal],
+          decoration: InputDecoration(
+              label: const Text("Decimal"), suffixIcon: ClearTextIcon(controller: decimalController, focusNode: decimalFocusNode))),
       const SizedBox.square(dimension: 12),
       TextField(
           controller: octalController,
           focusNode: octalFocusNode,
-          decoration: InputDecoration(label: const Text("Octal"), suffixIcon: ClearTextIcon(controller: octalController))),
+          inputFormatters: [AppTextFormatters.octal],
+          decoration: InputDecoration(
+              label: const Text("Octal"), suffixIcon: ClearTextIcon(controller: octalController, focusNode: octalFocusNode))),
       const SizedBox.square(dimension: 12),
       TextField(
           controller: binaryController,
           focusNode: binaryFocusNode,
-          decoration: InputDecoration(label: const Text("Binary"), suffixIcon: ClearTextIcon(controller: binaryController))),
+          inputFormatters: [AppTextFormatters.binary],
+          decoration: InputDecoration(
+              label: const Text("Binary"), suffixIcon: ClearTextIcon(controller: binaryController, focusNode: binaryFocusNode))),
     ]);
   }
 }
 
 class ClearTextIcon extends StatelessWidget {
   final TextEditingController controller;
+  final FocusNode? focusNode;
 
-  const ClearTextIcon({super.key, required this.controller});
+  const ClearTextIcon({super.key, required this.controller, this.focusNode});
+
+  bool get hasFocus => focusNode?.hasFocus ?? true;
 
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-        listenable: controller,
+        listenable: Listenable.merge([controller, focusNode]),
         builder: (context, child) {
           return Visibility(
-            visible: controller.text.trim().isNotEmpty,
+            visible: controller.text.trim().isNotEmpty && hasFocus,
             child: IconButton(
               onPressed: controller.clear,
+              tooltip: 'Clear',
               icon: const Icon(Icons.clear),
             ),
           );
