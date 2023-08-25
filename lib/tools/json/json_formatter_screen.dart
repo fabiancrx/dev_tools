@@ -147,7 +147,8 @@ import "package:flutter/material.dart";
 import "package:code_text_field/code_text_field.dart";
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import "package:highlight/languages/json.dart" show json;
-import "package:flutter_highlight/themes/monokai-sublime.dart" show monokaiSublimeTheme;
+import "package:flutter_highlight/themes/androidstudio.dart";
+import "package:flutter_highlight/themes/github.dart";
 import 'package:yaru_widgets/yaru_widgets.dart';
 import "json_screen_controller.dart";
 
@@ -163,10 +164,13 @@ class JsonFormatterScreen extends ConsumerStatefulWidget {
 class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
   late final CodeController inputController = CodeController(language: json);
 
+  static const _populatedText = '''{"message":{"text":"Hello world"}}''';
+
   late final CodeController outputController = CodeController(language: json);
 
   @override
   void initState() {
+    _populate();
     inputController.addListener(() {
       final pageProvider = ref.read(jsonControllerProvider);
 
@@ -176,6 +180,19 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
       }
     });
     super.initState();
+  }
+
+  _populate() {
+    inputController.text = _populatedText;
+    final jsonObject = ref.read(jsonControllerProvider.notifier).processSync(inputController.text);
+    outputController.text = jsonObject;
+  }
+
+  get _theme {
+    return switch (Theme.of(context).brightness) {
+      Brightness.light => androidstudioTheme,
+      Brightness.dark => githubTheme,
+    };
   }
 
   @override
@@ -188,71 +205,72 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
     });
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child:             Split(
-          axis: Axis.horizontal,
-          initialFractions: [0.5,0.5],
-          minSizes: [278,80],
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    YaruOptionButton(onPressed: inputController.clear, child: Icon(Icons.clear_rounded)),
-                    YaruOptionButton(onPressed: getClipboardContent, child: Icon(Icons.paste_rounded)),
-                    OutlinedButton(
-                        onPressed: () {
-                          inputController.text = pageController.sample;
+      body: CodeTheme(
+        data: CodeThemeData(styles: _theme),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Split(
+            axis: Axis.horizontal,
+            initialFractions: const [0.5, 0.5],
+            minSizes: const [278, 80],
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      YaruOptionButton(onPressed: inputController.clear, child: Icon(Icons.clear_rounded)),
+                      YaruOptionButton(onPressed: getClipboardContent, child: Icon(Icons.paste_rounded)),
+                      OutlinedButton(
+                          onPressed: () {
+                            inputController.text = pageController.sample;
+                            inputController.notifyListeners();
+                          },
+                          child: const Text("Sample")),
+                      DropdownButton(
+                        value: pageState.mode,
+                        onChanged: (JsonMode? m) {
+                          pageController.changeMode(m);
                           inputController.notifyListeners();
                         },
-                        child: const Text("Sample")),
-                    DropdownButton(
-                      value: pageState.mode,
-                      onChanged: (JsonMode? m) {
-                        pageController.changeMode(m);
-                        inputController.notifyListeners();
-                      },
-                      items: JsonMode.values
-                          .map((e) => DropdownMenuItem(
-                        value: e,
-                        child: Text(e.name),
-                      ))
-                          .toList(),
-                    ),
-                  ].interleave(const SizedBox()),
-                ),
-                Expanded(
-
-                  child: RoundedContainer(
-                    child: TextField(
-                      controller: inputController,
-                      expands: true,
-                      // lineNumberStyle: const LineNumberStyle(
-                      //   width: 32,
-                      //   margin: 14,
-                      // ),
-
-                      maxLines: null,
-                      minLines: null,
+                        items: JsonMode.values
+                            .map((e) => DropdownMenuItem(
+                                  value: e,
+                                  child: Text(e.name),
+                                ))
+                            .toList(),
+                      ),
+                    ].interleave(const SizedBox()),
+                  ),
+                  Expanded(
+                    child: RoundedContainer(
+                      child: TextField(
+                        textAlignVertical: TextAlignVertical.top,
+                        controller: inputController,
+                        expands: true,
+                        maxLines: null,
+                        minLines: null,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-
-            RoundedContainer(
-              child: CodeField(
-                controller: outputController,
-                expands: true,
-                maxLines: null,
-                minLines: null,
+                ],
               ),
-            )
-          ],
+              Expanded(
+                child: RoundedContainer(
+                  child: CodeField(
+                    background: Colors.transparent,
+                    controller: outputController,
+                    expands: true,
+                    lineNumberStyle: LineNumberStyle(margin: 0, width: 48),
+                    maxLines: null,
+                    minLines: null,
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
