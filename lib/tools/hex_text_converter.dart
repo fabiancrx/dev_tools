@@ -1,6 +1,7 @@
 import 'package:dash_tools/widgets/rounded_container.dart';
 import 'package:dash_tools/widgets/vendored/split.dart';
 import 'package:flutter/material.dart';
+import 'package:yaru_widgets/yaru_widgets.dart';
 
 class HexToTextConverterScreen extends StatefulWidget {
   const HexToTextConverterScreen({super.key});
@@ -12,6 +13,7 @@ class HexToTextConverterScreen extends StatefulWidget {
 class _HexToTextConverterScreenState extends State<HexToTextConverterScreen> {
   final inputController = TextEditingController();
   final outputController = TextEditingController();
+  final mode = ValueNotifier(HexTextConvertMode.hexToText);
 
   @override
   void initState() {
@@ -21,8 +23,12 @@ class _HexToTextConverterScreenState extends State<HexToTextConverterScreen> {
       outputController.text = hexToAscii(inputController.text);
     }
     inputController.addListener(() {
-
-      outputController.text = hexToAscii(inputController.text.replaceAll(RegExp(r"\s+"), ""));
+      switch (mode.value) {
+        case HexTextConvertMode.hexToText:
+          outputController.text = hexToAscii(inputController.text.replaceAll(RegExp(r"\s+"), ""));
+        case HexTextConvertMode.textToHex:
+          outputController.text = asciiToHex(inputController.text.replaceAll(RegExp(r"\s+"), ""));
+      }
       setState(() {});
     });
   }
@@ -62,6 +68,22 @@ class _HexToTextConverterScreenState extends State<HexToTextConverterScreen> {
             Column(
               mainAxisSize: MainAxisSize.max,
               children: [
+                ListenableBuilder(
+                  listenable: mode,
+                  builder: (_, __) {
+                    return Row(
+                      children: HexTextConvertMode.values
+                          .map((e) => YaruRadioButton(
+                          value: e,
+                          groupValue: mode.value,
+                          onChanged: (_) {
+                            mode.value = e;
+                          },
+                          title: Text(e.name)))
+                          .toList(),
+                    );
+                  },
+                ),
                 Expanded(
                   child: RoundedContainer(
                     child: TextField(
@@ -97,3 +119,5 @@ class _HexToTextConverterScreenState extends State<HexToTextConverterScreen> {
     );
   }
 }
+
+enum HexTextConvertMode { hexToText, textToHex }
