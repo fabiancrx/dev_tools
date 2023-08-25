@@ -257,16 +257,14 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
                   ),
                 ],
               ),
-              Expanded(
-                child: RoundedContainer(
-                  child: CodeField(
-                    background: Colors.transparent,
-                    controller: outputController,
-                    expands: true,
-                    lineNumberStyle: LineNumberStyle(margin: 0, width: 48),
-                    maxLines: null,
-                    minLines: null,
-                  ),
+              RoundedContainer(
+                child: CodeField(
+                  background: Colors.transparent,
+                  controller: outputController,
+                  expands: true,
+                  lineNumberStyle: LineNumberStyle(margin: 0, width: 48),
+                  maxLines: null,
+                  minLines: null,
                 ),
               )
             ],
