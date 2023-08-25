@@ -1,5 +1,6 @@
 import 'package:dash_tools/tools/base64/base64_converter.dart';
 import 'package:dash_tools/tools/base64/base64_image_converter.dart';
+import 'package:dash_tools/tools/hex_text_converter.dart';
 import 'package:dash_tools/tools/json/json_formatter_screen.dart';
 import 'package:dash_tools/tools/number_converter/number_converter.dart';
 import 'package:flutter/material.dart';
@@ -24,14 +25,21 @@ const List<Tool> tools = [
       id: 'base64', name: 'BASE 64 encoder/decoder', description: 'Encode or decode a String as base64 ', position: 1),
   Tool(Base64ImageConverterScreen(),
       id: 'base64image', name: 'BASE 64 Image encoder/decoder', description: 'Encode or decode an image as base64 ', position: 2),
-  Tool(Text('hash'), id: 'hash', name: '', description: 'Get SHA1, MD5,... hashes out of different files', position: 3),
+  //Tool(Text('hash'), id: 'hash', name: '', description: 'Get SHA1, MD5,... hashes out of different files', position: 3),
   Tool(
     NumberConverterScreen(),
     description: 'Convert numbers from one base to another',
     id: 'number',
     name: 'Number Converter',
-    position: 4,
+    position: 3,
     icon: Icon(Icons.numbers),
+  ),
+  Tool(
+    HexToTextConverterScreen(),
+    description: 'Hex to ascii',
+    id: 'hextext',
+    name: 'Hex to ASCII',
+    position: 4,
   )
 ];
 

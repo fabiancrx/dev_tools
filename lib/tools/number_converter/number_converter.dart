@@ -25,6 +25,13 @@ class _NumberConverterScreenState extends State<NumberConverterScreen> {
     decimalController.addListener(_decimalConverter);
     octalController.addListener(_octalConverter);
     binaryController.addListener(_binaryConverter);
+    _populate();
+  }
+
+  _populate([int value = 95]) {
+    decimalController.text = '$value';
+    decimalFocusNode.requestFocus();
+    _decimalConverter();
   }
 
   void _hexConverter() {
