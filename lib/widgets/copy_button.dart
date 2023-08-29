@@ -11,19 +11,22 @@ class CopyButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: BoxConstraints.tightFor(width: showText ? 96 : 48),
-      child: YaruOptionButton(
-          onPressed: copyCallback,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                const Flexible(child: Icon(Icons.content_copy_outlined)),
-                if (showText) const Flexible(child: Text("Copy")),
-              ],
-            ),
-          )),
+      child: Tooltip(
+        message: "Copy",
+        child: YaruOptionButton(
+            onPressed: copyCallback,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  const Flexible(child: Icon(Icons.content_copy_outlined)),
+                  if (showText) const Flexible(child: Text("Copy")),
+                ],
+              ),
+            )),
+      ),
     );
   }
 }

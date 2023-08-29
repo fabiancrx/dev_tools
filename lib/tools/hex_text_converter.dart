@@ -99,29 +99,27 @@ class _HexToTextConverterScreenState extends State<HexToTextConverterScreen> {
                 ),
               ],
             ),
-            Flexible(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Flexible(
-                    child: CopyButton(copyCallback: (){
-                      pasteContentToClipboard(outputController.text);
-                    }),
-                  ),
-                  Expanded(
-                    child: RoundedContainer(
-                      child: TextField(
-                        controller: outputController,
-                        textAlignVertical: TextAlignVertical.top,
-                        expands: true,
-                        maxLines: null,
-                        minLines: null,
-                      ),
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Flexible(
+                  child: CopyButton(copyCallback: (){
+                    pasteContentToClipboard(outputController.text);
+                  }),
+                ),
+                Expanded(
+                  child: RoundedContainer(
+                    child: TextField(
+                      controller: outputController,
+                      textAlignVertical: TextAlignVertical.top,
+                      expands: true,
+                      maxLines: null,
+                      minLines: null,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),
