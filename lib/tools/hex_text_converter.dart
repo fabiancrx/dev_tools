@@ -1,3 +1,5 @@
+import 'package:dash_tools/tools/clipboard_service.dart';
+import 'package:dash_tools/widgets/copy_button.dart';
 import 'package:dash_tools/widgets/rounded_container.dart';
 import 'package:dash_tools/widgets/vendored/split.dart';
 import 'package:flutter/material.dart';
@@ -97,21 +99,29 @@ class _HexToTextConverterScreenState extends State<HexToTextConverterScreen> {
                 ),
               ],
             ),
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Expanded(
-                  child: RoundedContainer(
-                    child: TextField(
-                      controller: outputController,
-                      textAlignVertical: TextAlignVertical.top,
-                      expands: true,
-                      maxLines: null,
-                      minLines: null,
+            Flexible(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    child: CopyButton(copyCallback: (){
+                      pasteContentToClipboard(outputController.text);
+                    }),
+                  ),
+                  Expanded(
+                    child: RoundedContainer(
+                      child: TextField(
+                        controller: outputController,
+                        textAlignVertical: TextAlignVertical.top,
+                        expands: true,
+                        maxLines: null,
+                        minLines: null,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
