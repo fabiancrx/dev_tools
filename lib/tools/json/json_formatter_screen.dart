@@ -190,8 +190,8 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
 
   get _theme {
     return switch (Theme.of(context).brightness) {
-      Brightness.light => androidstudioTheme,
-      Brightness.dark => githubTheme,
+      Brightness.light => githubTheme,
+      Brightness.dark => androidstudioTheme,
     };
   }
 
