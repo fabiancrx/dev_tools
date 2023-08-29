@@ -1,5 +1,8 @@
 import 'package:dash_tools/common/text_formatters.dart';
+import 'package:dash_tools/tools/clipboard_service.dart';
+import 'package:dash_tools/widgets/copy_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class NumberConverterScreen extends StatefulWidget {
   const NumberConverterScreen({super.key});
@@ -7,6 +10,8 @@ class NumberConverterScreen extends StatefulWidget {
   @override
   State<NumberConverterScreen> createState() => _NumberConverterScreenState();
 }
+
+typedef _NumericalSystemConfiguration = ({TextEditingController controller, FocusNode focus, TextInputFormatter formatter, String label});
 
 class _NumberConverterScreenState extends State<NumberConverterScreen> {
   final hexController = TextEditingController();
@@ -97,37 +102,55 @@ class _NumberConverterScreenState extends State<NumberConverterScreen> {
     }
   }
 
+  List<_NumericalSystemConfiguration> get numericalSystems => [
+        (controller: hexController, focus: hexFocusNode, formatter: AppTextFormatters.hexadecimal, label: "Hex"),
+        (controller: decimalController, focus: decimalFocusNode, formatter: AppTextFormatters.decimal, label: "Decimal"),
+        (controller: octalController, focus: octalFocusNode, formatter: AppTextFormatters.octal, label: "Octal"),
+        (controller: binaryController, focus: binaryFocusNode, formatter: AppTextFormatters.binary, label: "Binary"),
+      ];
+
   @override
   Widget build(BuildContext context) {
-    return ListView(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12), children: [
-      TextField(
-          controller: hexController,
-          focusNode: hexFocusNode,
-          inputFormatters: [AppTextFormatters.hexadecimal],
-          decoration:
-              InputDecoration(label: const Text("Hex"), suffixIcon: ClearTextIcon(controller: hexController, focusNode: hexFocusNode))),
-      const SizedBox.square(dimension: 12),
-      TextField(
-          controller: decimalController,
-          focusNode: decimalFocusNode,
-          inputFormatters: [AppTextFormatters.decimal],
-          decoration: InputDecoration(
-              label: const Text("Decimal"), suffixIcon: ClearTextIcon(controller: decimalController, focusNode: decimalFocusNode))),
-      const SizedBox.square(dimension: 12),
-      TextField(
-          controller: octalController,
-          focusNode: octalFocusNode,
-          inputFormatters: [AppTextFormatters.octal],
-          decoration: InputDecoration(
-              label: const Text("Octal"), suffixIcon: ClearTextIcon(controller: octalController, focusNode: octalFocusNode))),
-      const SizedBox.square(dimension: 12),
-      TextField(
-          controller: binaryController,
-          focusNode: binaryFocusNode,
-          inputFormatters: [AppTextFormatters.binary],
-          decoration: InputDecoration(
-              label: const Text("Binary"), suffixIcon: ClearTextIcon(controller: binaryController, focusNode: binaryFocusNode))),
-    ]);
+    return ListView.separated(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+        itemBuilder: (BuildContext context, int index) {
+          final num = numericalSystems[index];
+          return _NumberTextField(controller: num.controller, focusNode: num.focus, inputFormatter: num.formatter, text: num.label);
+        },
+        separatorBuilder: (BuildContext context, int index) => const SizedBox.square(dimension: 12),
+        itemCount: numericalSystems.length);
+  }
+}
+
+class _NumberTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final TextInputFormatter inputFormatter;
+  final String text;
+
+  const _NumberTextField({super.key, required this.controller, required this.focusNode, required this.inputFormatter, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+              controller: controller,
+              focusNode: focusNode,
+              inputFormatters: [inputFormatter],
+              decoration: InputDecoration(label: Text(text), suffixIcon: ClearTextIcon(controller: controller, focusNode: focusNode))),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          child: CopyButton(
+              copyCallback: () {
+                pasteContentToClipboard(controller.text);
+              },
+              showText: false),
+        )
+      ],
+    );
   }
 }
 

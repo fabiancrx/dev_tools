@@ -3,21 +3,25 @@ import 'package:yaru_widgets/widgets.dart';
 
 class CopyButton extends StatelessWidget {
   final VoidCallback copyCallback;
+  final bool showText;
 
-  const CopyButton({super.key, required this.copyCallback});
+  const CopyButton({super.key, required this.copyCallback, this.showText = true});
 
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-      constraints: BoxConstraints.tightFor(width: 96),
+      constraints: BoxConstraints.tightFor(width: showText ? 96 : 48),
       child: YaruOptionButton(
           onPressed: copyCallback,
-          child: const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [Flexible(child: Icon(Icons.content_copy_outlined)), Flexible(child: Text("Copy"))],
+              children: [
+                const Flexible(child: Icon(Icons.content_copy_outlined)),
+                if (showText) const Flexible(child: Text("Copy")),
+              ],
             ),
           )),
     );
