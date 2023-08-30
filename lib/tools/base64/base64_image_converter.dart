@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dash_tools/tools/base64/dart_logo.dart';
+import 'package:dash_tools/tools/number_converter/number_converter.dart';
 import 'package:dash_tools/widgets/rounded_container.dart';
 import 'package:dash_tools/widgets/vendored/split.dart';
 import 'package:flutter/material.dart';
@@ -20,18 +21,24 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
   final outputController = TextEditingController();
   var imageBytes = Uint8List.fromList([]);
 
-
   @override
   void initState() {
     super.initState();
-    if (inputController.text.isEmpty) {
-      inputController.text = base64DartLogo;
-      imageBytes = dataFromBase64String(inputController.text);
-    }
+    _populate();
     inputController.addListener(() {
       imageBytes = dataFromBase64String(inputController.text);
       setState(() {});
     });
+  }
+
+  void _populate() {
+    if (inputController.text.isEmpty) {
+      inputController.text = base64DartLogo;
+      imageBytes = dataFromBase64String(inputController.text);
+      if (context.mounted) {
+        setState(() {});
+      }
+    }
   }
 
   Uint8List dataFromBase64String(String base64String) {
@@ -63,6 +70,41 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
             Column(
               mainAxisSize: MainAxisSize.max,
               children: [
+                Row(
+                  children: [
+                    Tooltip(
+                      message: "Paste base 64 encoded image from clipboard",
+                      child: YaruOptionButton(
+                          onPressed: () async {
+                            final reader = await ClipboardReader.readClipboard();
+                            if (reader.canProvide(Formats.plainText)) {
+                              reader.getValue(Formats.plainText, (data) async {
+                                if (data != null && data.isNotEmpty) {
+                                  inputController.text = data;
+                                  setState(() {});
+                                }
+                              });
+                            }
+                          },
+                          child: (const Icon(Icons.paste))),
+                    ),
+                    const SizedBox.square(dimension: 8),
+                    Tooltip(
+                        message: "Copy base 64 encoded image to clipboard",
+                        child: YaruOptionButton(
+                            onPressed: () async {
+                              if (imageBytes.isNotEmpty) {
+                                final item = DataWriterItem();
+                                item.add(Formats.plainText.lazy(() => inputController.text));
+                                await ClipboardWriter.instance.write([item]);
+                              }
+                            },
+                            child: (const Icon(Icons.copy)))),
+                    const Spacer(),
+                    ClearTextIcon(controller: inputController)
+                  ],
+                ),
+                const SizedBox.square(dimension: 8),
                 Expanded(
                   child: RoundedContainer(
                     child: TextField(
@@ -81,24 +123,44 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
               children: [
                 Row(
                   children: [
-                    YaruOptionButton(
-                        onPressed: () async {
-                          final reader = await ClipboardReader.readClipboard();
-                          if (reader.canProvide(Formats.png)) {
-                            reader.getFile(Formats.png, (file) async {
-                              // Do something with the PNG image
-                              imageBytes = await file.readAll();
-                              inputController.text = base64String(imageBytes);
-                              setState(() {});
-                            });
-                          }
-                        },
-                        child: (const Icon(Icons.copy)))
+                    Tooltip(
+                        message: "Paste image from clipboard",
+                        child: YaruOptionButton(
+                            onPressed: () async {
+                              final reader = await ClipboardReader.readClipboard();
+                              if (reader.canProvide(Formats.png)) {
+                                reader.getFile(Formats.png, (file) async {
+                                  // Do something with the PNG image
+                                  imageBytes = await file.readAll();
+                                  inputController.text = base64String(imageBytes);
+                                  setState(() {});
+                                });
+                              }
+                            },
+                            child: (const Icon(Icons.paste)))),
+                    const SizedBox.square(dimension: 8),
+                    Tooltip(
+                        message: "Copy image to clipboard",
+                        child: YaruOptionButton(
+                            onPressed: () async {
+                              if (imageBytes.isNotEmpty) {
+                                final item = DataWriterItem();
+                                item.add(Formats.png.lazy(() => imageBytes));
+                                await ClipboardWriter.instance.write([item]);
+                              }
+                            },
+                            child: (const Icon(Icons.copy))))
                   ],
                 ),
+                const SizedBox.square(dimension: 8),
                 Expanded(
                   child: RoundedContainer(
-                    child: Image.memory(imageBytes),
+                    child: Center(
+                      child: Image.memory(imageBytes, errorBuilder: (_, __, ___) {
+                        _populate();
+                        return FlutterLogo();
+                      }),
+                    ),
                   ),
                 ),
               ],
