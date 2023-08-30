@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dash_tools/tools/base64/dart_logo.dart';
 import 'package:dash_tools/tools/number_converter/number_converter.dart';
+import 'package:dash_tools/widgets/flex_action_bar.dart';
 import 'package:dash_tools/widgets/rounded_container.dart';
 import 'package:dash_tools/widgets/vendored/split.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +67,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
             Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Row(
+                FlexActionBar(
                   children: [
                     Tooltip(
                       message: "Paste base 64 encoded image from clipboard",
@@ -100,7 +101,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                     ClearTextIcon(controller: inputController)
                   ],
                 ),
-                const SizedBox.square(dimension: 8),
+
                 Expanded(
                   child: RoundedContainer(
                     child: TextField(
@@ -117,7 +118,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
             Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Row(
+                FlexActionBar(
                   children: [
                     Tooltip(
                         message: "Paste image from clipboard",
@@ -148,7 +149,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                             child: (const Icon(Icons.copy))))
                   ],
                 ),
-                const SizedBox.square(dimension: 8),
+
                 Expanded(
                   child: RoundedContainer(
                     child: Center(

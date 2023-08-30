@@ -1,5 +1,6 @@
 import 'package:dash_tools/tools/clipboard_service.dart';
 import 'package:dash_tools/widgets/copy_button.dart';
+import 'package:dash_tools/widgets/flex_action_bar.dart';
 import 'package:dash_tools/widgets/rounded_container.dart';
 import 'package:dash_tools/widgets/vendored/split.dart';
 import 'package:flutter/material.dart';
@@ -67,25 +68,29 @@ class _HexToTextConverterScreenState extends State<HexToTextConverterScreen> {
           initialFractions: [0.5, 0.5],
           minSizes: [80, 160],
           children: [
+
+
             Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                ListenableBuilder(
-                  listenable: mode,
-                  builder: (_, __) {
-                    return Row(
-                      children: HexTextConvertMode.values
-                          .map((e) => YaruRadioButton(
-                          value: e,
-                          groupValue: mode.value,
-                          onChanged: (_) {
-                            mode.value = e;
-                          },
-                          title: Text(e.name)))
-                          .toList(),
-                    );
-                  },
-                ),
+                FlexActionBar(children: [
+                  ListenableBuilder(
+                    listenable: mode,
+                    builder: (_, __) {
+                      return Row(
+                        children: HexTextConvertMode.values
+                            .map((e) => YaruRadioButton(
+                            value: e,
+                            groupValue: mode.value,
+                            onChanged: (_) {
+                              mode.value = e;
+                            },
+                            title: Text(e.name)))
+                            .toList(),
+                      );
+                    },
+                  ),
+                ]),
                 Expanded(
                   child: RoundedContainer(
                     child: TextField(
@@ -103,11 +108,11 @@ class _HexToTextConverterScreenState extends State<HexToTextConverterScreen> {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Flexible(
-                  child: CopyButton(copyCallback: (){
+                FlexActionBar(children: [
+                  CopyButton(copyCallback: () {
                     pasteContentToClipboard(outputController.text);
-                  }),
-                ),
+                  })
+                ]),
                 Expanded(
                   child: RoundedContainer(
                     child: TextField(

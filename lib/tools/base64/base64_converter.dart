@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:dash_tools/tools/clipboard_service.dart';
+import 'package:dash_tools/widgets/copy_button.dart';
+import 'package:dash_tools/widgets/flex_action_bar.dart';
 import 'package:dash_tools/widgets/rounded_container.dart';
 import 'package:dash_tools/widgets/vendored/split.dart';
 import 'package:flutter/material.dart';
@@ -62,16 +65,22 @@ class _Base64ConverterScreenState extends State<Base64ConverterScreen> {
                 ListenableBuilder(
                   listenable: mode,
                   builder: (_, __) {
-                    return Row(
-                      children: Base64ConverterMode.values
-                          .map((e) => YaruRadioButton(
-                              value: e,
-                              groupValue: mode.value,
-                              onChanged: (_) {
-                                mode.value = e;
-                              },
-                              title: Text(e.name)))
-                          .toList(),
+                    return FlexActionBar(
+                      children: [
+                        ...Base64ConverterMode.values
+                            .map((e) => YaruRadioButton(
+                                value: e,
+                                groupValue: mode.value,
+                                onChanged: (_) {
+                                  mode.value = e;
+                                },
+                                title: Text(e.name)))
+                            .toList(),
+                        Spacer(),
+                        CopyButton(copyCallback: () {
+                          pasteContentToClipboard(outputController.text);
+                        })
+                      ],
                     );
                   },
                 ),
