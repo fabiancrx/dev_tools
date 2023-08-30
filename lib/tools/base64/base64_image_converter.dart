@@ -27,7 +27,6 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
     _populate();
     inputController.addListener(() {
       imageBytes = dataFromBase64String(inputController.text);
-      setState(() {});
     });
   }
 
@@ -35,9 +34,6 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
     if (inputController.text.isEmpty) {
       inputController.text = base64DartLogo;
       imageBytes = dataFromBase64String(inputController.text);
-      if (context.mounted) {
-        setState(() {});
-      }
     }
   }
 
@@ -156,10 +152,14 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                 Expanded(
                   child: RoundedContainer(
                     child: Center(
-                      child: Image.memory(imageBytes, errorBuilder: (_, __, ___) {
-                        _populate();
-                        return FlutterLogo();
-                      }),
+                      child: ListenableBuilder(
+                        builder: (context, _) {
+                          return Image.memory(imageBytes, errorBuilder: (_, __, ___) {
+                            return const Icon(Icons.broken_image_outlined);
+                          });
+                        },
+                        listenable: inputController,
+                      ),
                     ),
                   ),
                 ),

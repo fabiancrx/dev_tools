@@ -157,8 +157,9 @@ class _NumberTextField extends StatelessWidget {
 class ClearTextIcon extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode? focusNode;
+  final VoidCallback? onPressed;
 
-  const ClearTextIcon({super.key, required this.controller, this.focusNode});
+  const ClearTextIcon({super.key, required this.controller, this.focusNode, this.onPressed});
 
   bool get hasFocus => focusNode?.hasFocus ?? true;
 
@@ -170,7 +171,7 @@ class ClearTextIcon extends StatelessWidget {
           return Visibility(
             visible: controller.text.trim().isNotEmpty && hasFocus,
             child: IconButton(
-              onPressed: controller.clear,
+              onPressed: onPressed?.call ?? controller.clear,
               tooltip: 'Clear',
               icon: const Icon(Icons.clear),
             ),
