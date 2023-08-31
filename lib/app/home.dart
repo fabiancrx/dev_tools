@@ -32,6 +32,7 @@ class _SearchFieldState extends State<SearchField> {
           decoration: InputDecoration(
               prefixIcon: const Icon(Icons.search),
               hintText: 'Search...',
+              hintStyle: TextStyle(),
               suffixIcon: ClearTextIcon(controller: searchController, focusNode: searchFocus))),
     );
   }
@@ -58,8 +59,8 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
     final itemStyle = normalWindowSize
         ? YaruNavigationRailStyle.labelled
         : wideWindowSize
-        ? YaruNavigationRailStyle.labelledExtended
-        : YaruNavigationRailStyle.compact;
+            ? YaruNavigationRailStyle.labelledExtended
+            : YaruNavigationRailStyle.compact;
     return YaruNavigationPage(
       trailing: Padding(
         padding: const EdgeInsets.only(bottom: 10),
@@ -77,12 +78,12 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
         width: normalWindowSize
             ? 100
             : wideWindowSize
-            ? 250
-            : 60,
+                ? 250
+                : 60,
         duration: const Duration(milliseconds: 200),
         child: YaruWindowTitleBar(
           title: wideWindowSize
-              ? ConstrainedBox(constraints: const BoxConstraints(maxHeight: 42), child: const SearchField())
+              ? ConstrainedBox(constraints: const BoxConstraints(maxHeight: 44), child: const SearchField())
               : const AppLogo(),
           style: YaruTitleBarStyle.undecorated,
         ),
@@ -95,6 +96,7 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
       },
       initialIndex: selectedIndex,
       itemBuilder: (context, index, selected) => YaruNavigationRailItem(
+        tooltip: wideWindowSize ? tools[index].description : tools[index].name,
         icon: tools[index].icon ?? const Icon(Icons.compare_arrows),
         label: Text(tools[index].name), style: itemStyle,
         // tooltip: pageItems[index].tooltipMessage,
