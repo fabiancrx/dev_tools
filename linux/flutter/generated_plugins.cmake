@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   gtk
+  handy_window
   irondash_engine_context
   screen_retriever
   super_native_extensions

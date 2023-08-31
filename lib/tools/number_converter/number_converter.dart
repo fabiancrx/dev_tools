@@ -1,5 +1,6 @@
 import 'package:dash_tools/common/text_formatters.dart';
 import 'package:dash_tools/tools/clipboard_service.dart';
+import 'package:dash_tools/widgets/clear_text.dart';
 import 'package:dash_tools/widgets/copy_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -154,28 +155,4 @@ class _NumberTextField extends StatelessWidget {
   }
 }
 
-class ClearTextIcon extends StatelessWidget {
-  final TextEditingController controller;
-  final FocusNode? focusNode;
-  final VoidCallback? onPressed;
 
-  const ClearTextIcon({super.key, required this.controller, this.focusNode, this.onPressed});
-
-  bool get hasFocus => focusNode?.hasFocus ?? true;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListenableBuilder(
-        listenable: Listenable.merge([controller, focusNode]),
-        builder: (context, child) {
-          return Visibility(
-            visible: controller.text.trim().isNotEmpty && hasFocus,
-            child: IconButton(
-              onPressed: onPressed?.call ?? controller.clear,
-              tooltip: 'Clear',
-              icon: const Icon(Icons.clear),
-            ),
-          );
-        });
-  }
-}

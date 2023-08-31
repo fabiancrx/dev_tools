@@ -74,7 +74,7 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
           child: Split(
             axis: Axis.horizontal,
             initialFractions: const [0.5, 0.5],
-            minSizes: const [278, 80],
+            minSizes: const [300, 120],
             children: [
               Column(
                 mainAxisSize: MainAxisSize.max,
@@ -82,8 +82,8 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
                   FlexActionBar(
 
                     children: <Widget>[
-                      YaruOptionButton(onPressed: inputController.clear, child: Icon(Icons.clear_rounded)),
-                      YaruOptionButton(onPressed: getClipboardContent, child: Icon(Icons.paste_rounded)),
+                      YaruOptionButton(onPressed: inputController.clear, child: const Icon(Icons.clear_rounded)),
+                      YaruOptionButton(onPressed: getClipboardContent, child: const Icon(Icons.paste_rounded)),
                       OutlinedButton(
                           onPressed: () {
                             inputController.text = pageController.sample;
@@ -123,7 +123,7 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
                   background: Colors.transparent,
                   controller: outputController,
                   expands: true,
-                  lineNumberStyle: LineNumberStyle(margin: 0, width: 48),
+                  lineNumberStyle: const LineNumberStyle(margin: 0, width: 48),
                   maxLines: null,
                   minLines: null,
                 ),

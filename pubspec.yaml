@@ -18,7 +18,8 @@ dependencies:
   highlight: ^0.7.0
   yaru_widgets: ^2.7.0
   yaru: ^0.10.0
-  adwaita: ^1.0.1
+  window_manager: ^0.3.6
+  handy_window: ^0.3.1
   flutter_riverpod: ^2.3.7
   equatable: ^2.0.5
   super_editor: ^0.2.6

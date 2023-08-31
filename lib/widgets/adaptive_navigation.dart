@@ -1,5 +1,6 @@
 import 'package:dash_tools/common/breakpoints.dart';
 import 'package:flutter/material.dart';
+import 'package:yaru_widgets/yaru_widgets.dart';
 
 class AdaptiveNavigation extends StatelessWidget {
   /// Weather to display a [NavigationBar] when the viewport is small. If false A full screen navigation drawer is shown
@@ -26,12 +27,12 @@ class AdaptiveNavigation extends StatelessWidget {
       builder: (context, dimens) {
         if (dimens.maxWidth >= Breakpoint.sm.size || !_showNavigationBar) {
           return Scaffold(
+            appBar: const YaruWindowTitleBar(title: Text('Dash tools')),
             body: Row(
               children: [
                 NavigationRail(
                   minWidth: 52,
-                  extended: dimens.maxWidth >= Breakpoint.lg.size ||
-                      (!_showNavigationBar && dimens.maxWidth <= Breakpoint.sm.size),
+                  extended: dimens.maxWidth >= Breakpoint.lg.size || (!_showNavigationBar && dimens.maxWidth <= Breakpoint.sm.size),
                   destinations: destinations
                       .map((e) => NavigationRailDestination(
                             icon: e.icon,
