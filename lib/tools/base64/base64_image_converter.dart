@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:dash_tools/tools/base64/dart_logo.dart';
 import 'package:dash_tools/widgets/clear_text.dart';
 import 'package:dash_tools/widgets/flex_action_bar.dart';
-import 'package:dash_tools/widgets/rounded_container.dart';
 import 'package:dash_tools/widgets/vendored/split.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -101,16 +100,13 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                     ClearTextIcon(controller: inputController)
                   ],
                 ),
-
                 Expanded(
-                  child: RoundedContainer(
-                    child: TextField(
-                      controller: inputController,
-                      textAlignVertical: TextAlignVertical.top,
-                      expands: true,
-                      maxLines: null,
-                      minLines: null,
-                    ),
+                  child: TextField(
+                    controller: inputController,
+                    textAlignVertical: TextAlignVertical.top,
+                    expands: true,
+                    maxLines: null,
+                    minLines: null,
                   ),
                 ),
               ],
@@ -149,18 +145,15 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                             child: (const Icon(Icons.copy))))
                   ],
                 ),
-
                 Expanded(
-                  child: RoundedContainer(
-                    child: Center(
-                      child: ListenableBuilder(
-                        builder: (context, _) {
-                          return Image.memory(imageBytes, errorBuilder: (_, __, ___) {
-                            return const Icon(Icons.broken_image_outlined);
-                          });
-                        },
-                        listenable: inputController,
-                      ),
+                  child: Center(
+                    child: ListenableBuilder(
+                      builder: (context, _) {
+                        return Image.memory(imageBytes, errorBuilder: (_, __, ___) {
+                          return const Icon(Icons.broken_image_outlined);
+                        });
+                      },
+                      listenable: inputController,
                     ),
                   ),
                 ),

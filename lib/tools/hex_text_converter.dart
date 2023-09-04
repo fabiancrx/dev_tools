@@ -1,7 +1,6 @@
 import 'package:dash_tools/tools/clipboard_service.dart';
 import 'package:dash_tools/widgets/copy_button.dart';
 import 'package:dash_tools/widgets/flex_action_bar.dart';
-import 'package:dash_tools/widgets/rounded_container.dart';
 import 'package:dash_tools/widgets/vendored/split.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -92,14 +91,12 @@ class _HexToTextConverterScreenState extends State<HexToTextConverterScreen> {
                   ),
                 ]),
                 Expanded(
-                  child: RoundedContainer(
-                    child: TextField(
-                      controller: inputController,
-                      textAlignVertical: TextAlignVertical.top,
-                      expands: true,
-                      maxLines: null,
-                      minLines: null,
-                    ),
+                  child: TextField(
+                    controller: inputController,
+                    textAlignVertical: TextAlignVertical.top,
+                    expands: true,
+                    maxLines: null,
+                    minLines: null,
                   ),
                 ),
               ],
@@ -114,14 +111,12 @@ class _HexToTextConverterScreenState extends State<HexToTextConverterScreen> {
                   })
                 ]),
                 Expanded(
-                  child: RoundedContainer(
-                    child: TextField(
-                      controller: outputController,
-                      textAlignVertical: TextAlignVertical.top,
-                      expands: true,
-                      maxLines: null,
-                      minLines: null,
-                    ),
+                  child: TextField(
+                    controller: outputController,
+                    textAlignVertical: TextAlignVertical.top,
+                    expands: true,
+                    maxLines: null,
+                    minLines: null,
                   ),
                 ),
               ],
