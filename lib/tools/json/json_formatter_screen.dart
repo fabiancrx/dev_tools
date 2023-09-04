@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:dash_tools/common/extensions.dart';
 import 'package:dash_tools/tools/clipboard_service.dart';
+import "package:dash_tools/widgets/copy_button.dart";
 import "package:dash_tools/widgets/flex_action_bar.dart";
-import "package:dash_tools/widgets/rounded_container.dart";
-import 'package:dash_tools/widgets/vendored/split.dart';
+
 import "package:flutter/material.dart";
 import "package:code_text_field/code_text_field.dart";
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,8 +24,6 @@ class JsonFormatterScreen extends ConsumerStatefulWidget {
 }
 
 class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
-  late final CodeController inputController = CodeController(language: json);
-
   static const _populatedText = '''{"message":{"text":"Hello world"}}''';
 
   late final CodeController outputController = CodeController(language: json);
@@ -33,20 +31,11 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
   @override
   void initState() {
     _populate();
-    inputController.addListener(() {
-      final pageProvider = ref.read(jsonControllerProvider);
-
-      if (pageProvider.autoProcess) {
-        final jsonObject = ref.read(jsonControllerProvider.notifier).processSync(inputController.text);
-        outputController.text = jsonObject;
-      }
-    });
     super.initState();
   }
 
   _populate() {
-    inputController.text = _populatedText;
-    final jsonObject = ref.read(jsonControllerProvider.notifier).processSync(inputController.text);
+    final jsonObject = ref.read(jsonControllerProvider.notifier).processSync(_populatedText);
     outputController.text = jsonObject;
   }
 
@@ -66,70 +55,67 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
       log("jsonPageProvider changed from $previous to $next");
     });
 
-    return Scaffold(
-      body: CodeTheme(
-        data: CodeThemeData(styles: _theme),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Split(
-            axis: Axis.horizontal,
-            initialFractions: const [0.5, 0.5],
-            minSizes: const [300, 120],
-            children: [
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  FlexActionBar(
-
-                    children: <Widget>[
-                      YaruOptionButton(onPressed: inputController.clear, child: const Icon(Icons.clear_rounded)),
-                      YaruOptionButton(onPressed: getClipboardContent, child: const Icon(Icons.paste_rounded)),
-                      OutlinedButton(
-                          onPressed: () {
-                            inputController.text = pageController.sample;
-                            inputController.notifyListeners();
-                          },
-                          child: const Text("Sample")),
-                      DropdownButton(
-                        value: pageState.mode,
-                        onChanged: (JsonMode? m) {
-                          pageController.changeMode(m);
-                          inputController.notifyListeners();
-                        },
-                        items: JsonMode.values
-                            .map((e) => DropdownMenuItem(
-                                  value: e,
-                                  child: Text(e.name),
-                                ))
-                            .toList(),
-                      ),
-                    ].interleave(const SizedBox(width: 8)),
-                  ),
-                  Expanded(
-                    child: RoundedContainer(
-                      child: TextField(
-                        textAlignVertical: TextAlignVertical.top,
-                        controller: inputController,
-                        expands: true,
-                        maxLines: null,
-                        minLines: null,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              RoundedContainer(
-                child: CodeField(
-                  background: Colors.transparent,
-                  controller: outputController,
-                  expands: true,
-                  lineNumberStyle: const LineNumberStyle(margin: 0, width: 48),
-                  maxLines: null,
-                  minLines: null,
+    return CodeTheme(
+      data: CodeThemeData(styles: _theme),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            FlexActionBar(
+              children: <Widget>[
+                YaruOptionButton(onPressed: outputController.clear, child: const Icon(Icons.clear_rounded)),
+                YaruOptionButton(
+                    onPressed: () async {
+                      final cl = await getClipboardContent();
+                      if (cl != null) {
+                        outputController.text = cl;
+                      }
+                    },
+                    child: const Icon(Icons.paste_rounded)),
+                OutlinedButton(
+                    onPressed: () {
+                      outputController.text = pageController.sample;
+                    },
+                    child: const Text("Sample")),
+                DropdownButton(
+                  value: pageState.mode,
+                  onChanged: (JsonMode? m) {
+                    pageController.changeMode(m);
+                  },
+                  items: JsonMode.values
+                      .map((e) => DropdownMenuItem(
+                            value: e,
+                            child: Text(e.name),
+                          ))
+                      .toList(),
                 ),
-              )
-            ],
-          ),
+                const Spacer(),
+                ElevatedButton(
+                    onPressed: () {
+                      final jsonObject = ref.read(jsonControllerProvider.notifier).processSync(outputController.text);
+                      outputController.text = jsonObject;
+                    },
+                    child: const Text("Format")),
+                CopyButton(
+                  showText: false,
+                  copyCallback: () {
+                    pasteContentToClipboard(outputController.text);
+                  },
+                )
+              ].interleave(const SizedBox(width: 8)),
+            ),
+            Expanded(
+              child: CodeField(
+                background: Colors.transparent,
+                controller: outputController,
+                expands: true,
+                lineNumberStyle: const LineNumberStyle(margin: 0, width: 48),
+                maxLines: null,
+                minLines: null,
+              ),
+            ),
+          ],
         ),
       ),
     );

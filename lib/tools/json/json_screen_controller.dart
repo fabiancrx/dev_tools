@@ -42,17 +42,17 @@ class JsonPageController extends StateNotifier<JsonPageState> {
         final json = _decoder.convert(raw);
         final encoder = JsonEncoder.withIndent(state.mode.indent);
         return encoder.convert(json);
-      case JsonMode.encode:
-        const encoder = JsonEncoder();
-        final result = encoder.convert(raw);
-
-        if (result.length > 2 && (result[0] == '"' && result[result.length - 1] == '"')) {
-          return result.substring(1, result.length - 2);
-        }
-
-        return result;
-      case JsonMode.decode:
-        return _decoder.convert(unEscapeJson(raw));
+      // case JsonMode.encode:
+      //   const encoder = JsonEncoder();
+      //   final result = encoder.convert(raw);
+      //
+      //   if (result.length > 2 && (result[0] == '"' && result[result.length - 1] == '"')) {
+      //     return result.substring(1, result.length - 2);
+      //   }
+      //
+      //   return result;
+      // case JsonMode.decode:
+      //   return _decoder.convert(unEscapeJson(raw));
     }
   }
 
@@ -62,16 +62,12 @@ class JsonPageController extends StateNotifier<JsonPageState> {
     state = JsonPageState(mode: mode);
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 }
 
 enum JsonMode {
   minify,
-  encode,
-  decode,
+  // encode,
+  // decode,
   twoSpaces("  "),
   fourSpaces("    "),
   tab("\t");
