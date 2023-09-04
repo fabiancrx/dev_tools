@@ -61,8 +61,8 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
         padding: const EdgeInsets.all(8.0),
         child: Split(
           axis: Axis.horizontal,
-          initialFractions: [0.5, 0.5],
-          minSizes: [80, 160],
+          initialFractions: const [0.5, 0.5],
+          minSizes: const [80, 160],
           children: [
             Column(
               mainAxisSize: MainAxisSize.max,

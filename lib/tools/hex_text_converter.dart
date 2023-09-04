@@ -65,8 +65,8 @@ class _HexToTextConverterScreenState extends State<HexToTextConverterScreen> {
         padding: const EdgeInsets.all(8.0),
         child: Split(
           axis: Axis.horizontal,
-          initialFractions: [0.5, 0.5],
-          minSizes: [80, 160],
+          initialFractions: const [0.5, 0.5],
+          minSizes: const [80, 160],
           children: [
 
 

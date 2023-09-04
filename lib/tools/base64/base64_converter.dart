@@ -107,7 +107,7 @@ class _Base64ConverterScreenState extends State<Base64ConverterScreen> {
                   child: TextField(
                     controller: inputController,
                     textAlignVertical: TextAlignVertical.top,
-                    decoration: InputDecoration(labelText: "Input", alignLabelWithHint: true),
+                    decoration: const InputDecoration(labelText: "Input", alignLabelWithHint: true),
                     expands: true,
                     maxLines: null,
                     minLines: null,
@@ -122,7 +122,7 @@ class _Base64ConverterScreenState extends State<Base64ConverterScreen> {
                   child: TextField(
                     controller: outputController,
                     textAlignVertical: TextAlignVertical.top,
-                    decoration: InputDecoration(labelText: "Output", alignLabelWithHint: true),
+                    decoration: const InputDecoration(labelText: "Output", alignLabelWithHint: true),
                     expands: true,
                     maxLines: null,
                     minLines: null,

@@ -32,7 +32,7 @@ class _SearchFieldState extends State<SearchField> {
           decoration: InputDecoration(
               prefixIcon: const Icon(Icons.search),
               hintText: 'Search...',
-              hintStyle: TextStyle(),
+              hintStyle: const TextStyle(),
               suffixIcon: ClearTextIcon(controller: searchController, focusNode: searchFocus))),
     );
   }
