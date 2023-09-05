@@ -20,10 +20,11 @@ class Tool {
 }
 
 const List<Tool> tools = [
-  Tool(JsonFormatterScreen(key: ValueKey('json_formatter')),
-      id: 'jsonf', name: 'JSON formatter', description: 'Prettify, minify or just validate a String as JSON ', position: 0),
   Tool(Base64ConverterScreen(),
-      id: 'base64', name: 'BASE 64 encoder/decoder', description: 'Encode or decode a String as base64 ', position: 1),
+      id: 'base64', name: 'BASE 64 encoder/decoder', description: 'Encode or decode a String as base64 ', position: 0),
+  Tool(JsonFormatterScreen(key: ValueKey('json_formatter')),
+      id: 'jsonf', name: 'JSON formatter', description: 'Prettify, minify or just validate a String as JSON ', position: 1),
+
   Tool(Base64ImageConverterScreen(),
       icon: Icon(Icons.image_outlined),
       id: 'base64image',

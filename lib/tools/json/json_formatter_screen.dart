@@ -24,7 +24,6 @@ class JsonFormatterScreen extends ConsumerStatefulWidget {
 }
 
 class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
-  static const _populatedText = '''{"message":{"text":"Hello world"}}''';
 
   late final CodeController outputController = CodeController(language: json);
 
@@ -35,7 +34,7 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
   }
 
   _populate() {
-    final jsonObject = ref.read(jsonControllerProvider.notifier).processSync(_populatedText);
+    final jsonObject = ref.read(jsonControllerProvider.notifier).processSync(kSampleJson);
     outputController.text = jsonObject;
   }
 

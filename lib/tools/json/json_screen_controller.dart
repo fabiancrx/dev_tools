@@ -28,7 +28,7 @@ class JsonPageController extends StateNotifier<JsonPageState> {
   final JsonDecoder _decoder = const JsonDecoder();
 
   /// Paste a sample json text in the input field
-  String get sample => _kSampleJson;
+  String get sample => kSampleJson;
 
   String processSync(String raw) {
     switch (state.mode) {
@@ -60,7 +60,7 @@ enum JsonMode {
   const JsonMode([this.indent]);
 }
 
-const _kSampleJson = r'''{
+const kSampleJson = r'''{
     "widget": {
     "debug": "on",
     "window": {
