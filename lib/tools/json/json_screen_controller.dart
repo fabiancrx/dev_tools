@@ -3,14 +3,11 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final jsonControllerProvider = StateNotifierProvider<JsonPageController, JsonPageState>((ref) {
-  return JsonPageController();
-});
+final jsonControllerProvider = StateNotifierProvider<JsonPageController, JsonPageState>((ref) => JsonPageController());
 
 class JsonPageState with EquatableMixin {
   final JsonMode mode;
   final bool autoProcess;
-// final String jsonPath;
 
   const JsonPageState({required this.mode, this.autoProcess = true});
 
@@ -42,17 +39,6 @@ class JsonPageController extends StateNotifier<JsonPageState> {
         final json = _decoder.convert(raw);
         final encoder = JsonEncoder.withIndent(state.mode.indent);
         return encoder.convert(json);
-      // case JsonMode.encode:
-      //   const encoder = JsonEncoder();
-      //   final result = encoder.convert(raw);
-      //
-      //   if (result.length > 2 && (result[0] == '"' && result[result.length - 1] == '"')) {
-      //     return result.substring(1, result.length - 2);
-      //   }
-      //
-      //   return result;
-      // case JsonMode.decode:
-      //   return _decoder.convert(unEscapeJson(raw));
     }
   }
 
@@ -61,13 +47,10 @@ class JsonPageController extends StateNotifier<JsonPageState> {
     if (mode == null) return;
     state = JsonPageState(mode: mode);
   }
-
 }
 
 enum JsonMode {
   minify,
-  // encode,
-  // decode,
   twoSpaces("  "),
   fourSpaces("    "),
   tab("\t");
@@ -105,30 +88,3 @@ const _kSampleJson = r'''{
     }
 }}    
     ''';
-String unEscapeJson(String t) {
-  if (t.isEmpty) return t;
-
-  const escapes = [r'\"', r"\\", r"\/"];
-  const lb = [
-    r"\b",
-    r"\f",
-    r"\n",
-    r"\r",
-    r"\t",
-    // r"\u",
-  ];
-  final StringBuffer sb = StringBuffer();
-
-  for (int i = 0; i < t.length; i++) {
-    if (i + 1 == t.length) continue;
-    if (escapes.contains(t[i] + t[i + 1])) {
-      continue;
-    } else if (lb.contains(t[i] + t[i + 1])) {
-      i++;
-      continue;
-    } else {
-      sb.write(t[i]);
-    }
-  }
-  return sb.toString();
-}
