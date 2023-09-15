@@ -73,12 +73,15 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
         : wideWindowSize
             ? YaruNavigationRailStyle.labelledExtended
             : YaruNavigationRailStyle.compact;
+
+            final paneWidth=itemStyle==YaruNavigationRailStyle.compact?70.0:null;
     return YaruNavigationPage(
       trailing: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: YaruNavigationRailItem(
           icon: const Icon(Icons.settings),
           label: const Text('Settings'),
+          width: paneWidth,
           style: itemStyle,
           onTap: () => showDialog(
             context: context,
@@ -86,7 +89,7 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
           ),
         ),
       ),
-      leading: SizedBox(height: Platform.isMacOS ? 46 : 24),
+      leading: SizedBox(height: Platform.isMacOS ? 44 : 24),
       length: widget.tools.length,
       onSelected: (value) {
         setState(() {
