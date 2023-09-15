@@ -3,6 +3,7 @@ import 'package:dash_tools/tools/base64/base64_image_converter.dart';
 import 'package:dash_tools/tools/hex_text_converter.dart';
 import 'package:dash_tools/tools/json/json_escape_screen.dart';
 import 'package:dash_tools/tools/json/json_formatter_screen.dart';
+import 'package:dash_tools/tools/jwt_screen.dart';
 import 'package:dash_tools/tools/number_converter/number_converter.dart';
 import 'package:flutter/material.dart';
 
@@ -49,6 +50,7 @@ const List<Tool> tools = [
   ),
   Tool(JsonConverterScreen(key: ValueKey('json_escape')),
       id: 'jsone', name: 'JSON escape/unescape', description: 'Escape or unescape a JSON string', position: 5),
+  Tool(JwtScreen(), id: 'jwt', name: 'JWT', description: 'TBD', position: 6)
 ];
 
 final destinations = tools
