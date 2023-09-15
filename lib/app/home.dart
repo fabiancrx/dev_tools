@@ -1,11 +1,14 @@
+import "dart:io";
+
 import "package:dash_tools/tools/tools.dart";
-import "package:dash_tools/widgets/app_logo.dart";
 import "package:dash_tools/widgets/clear_text.dart";
 import "package:flutter/material.dart";
 import "package:yaru_widgets/yaru_widgets.dart";
 
 class SearchField extends StatefulWidget {
-  const SearchField({super.key});
+  final String hint;
+
+  const SearchField({super.key, required this.hint});
 
   @override
   State<SearchField> createState() => _SearchFieldState();
@@ -24,16 +27,25 @@ class _SearchFieldState extends State<SearchField> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 4, bottom: 5),
-      child: TextField(
-          controller: searchController,
-          focusNode: searchFocus,
-          decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.search),
-              hintText: 'Search...',
-              hintStyle: const TextStyle(),
-              suffixIcon: ClearTextIcon(controller: searchController, focusNode: searchFocus))),
+    return IgnorePointer(
+      ignoring: true,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 4, bottom: 5),
+        child: ListenableBuilder(
+            listenable: searchFocus,
+            builder: (context, child) {
+              return TextField(
+                  controller: searchController,
+                  textAlign: searchFocus.hasFocus ? TextAlign.start :TextAlign.center,
+                  focusNode: searchFocus,
+                  decoration: InputDecoration(
+                      prefixIcon: searchFocus.hasFocus ? const Icon(Icons.search) : SizedBox.shrink(),
+
+                      hintText: searchFocus.hasFocus ? 'Search...' : widget.hint,
+                      hintStyle: const TextStyle(),
+                      suffixIcon: ClearTextIcon(controller: searchController, focusNode: searchFocus)));
+            }),
+      ),
     );
   }
 }
@@ -74,20 +86,7 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
           ),
         ),
       ),
-      leading: AnimatedContainer(
-        width: normalWindowSize
-            ? 100
-            : wideWindowSize
-                ? 250
-                : 60,
-        duration: const Duration(milliseconds: 200),
-        child: YaruWindowTitleBar(
-          title: wideWindowSize
-              ? ConstrainedBox(constraints: const BoxConstraints(maxHeight: 44), child: const SearchField())
-              : const AppLogo(),
-          style: YaruTitleBarStyle.undecorated,
-        ),
-      ),
+      leading: SizedBox(height: Platform.isMacOS ? 46 : 24),
       length: widget.tools.length,
       onSelected: (value) {
         setState(() {
@@ -98,14 +97,14 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
       itemBuilder: (context, index, selected) => YaruNavigationRailItem(
         tooltip: wideWindowSize ? tools[index].description : tools[index].name,
         icon: tools[index].icon ?? const Icon(Icons.compare_arrows),
-        label: Text(tools[index].name), style: itemStyle,
-        // tooltip: pageItems[index].tooltipMessage,
+        label: Text(tools[index].name),
+        style: itemStyle,
       ),
       pageBuilder: (context, index) => YaruDetailPage(
         appBar: YaruWindowTitleBar(
-          leading: Navigator.of(context).canPop() ? const YaruBackButton() : null,
-          title: Text(tools[index].name),
-        ),
+            leading: Navigator.of(context).canPop() ? const YaruBackButton() : null,
+            title: ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 46, maxWidth: 420), child: SearchField(hint: tools[index].name))),
         body: tools[index].screen,
       ),
     );
