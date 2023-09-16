@@ -1,6 +1,7 @@
 import "dart:io";
 
 import "package:dash_tools/tools/tools.dart";
+import "package:dash_tools/widgets/app_logo.dart";
 import "package:dash_tools/widgets/clear_text.dart";
 import "package:flutter/material.dart";
 import "package:yaru_widgets/yaru_widgets.dart";
@@ -36,11 +37,10 @@ class _SearchFieldState extends State<SearchField> {
             builder: (context, child) {
               return TextField(
                   controller: searchController,
-                  textAlign: searchFocus.hasFocus ? TextAlign.start :TextAlign.center,
+                  textAlign: searchFocus.hasFocus ? TextAlign.start : TextAlign.center,
                   focusNode: searchFocus,
                   decoration: InputDecoration(
                       prefixIcon: searchFocus.hasFocus ? const Icon(Icons.search) : SizedBox.shrink(),
-
                       hintText: searchFocus.hasFocus ? 'Search...' : widget.hint,
                       hintStyle: const TextStyle(),
                       suffixIcon: ClearTextIcon(controller: searchController, focusNode: searchFocus)));
@@ -74,7 +74,7 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
             ? YaruNavigationRailStyle.labelledExtended
             : YaruNavigationRailStyle.compact;
 
-            final paneWidth=itemStyle==YaruNavigationRailStyle.compact?70.0:null;
+    final paneWidth = itemStyle == YaruNavigationRailStyle.compact ? 70.0 : null;
     return YaruNavigationPage(
       trailing: Padding(
         padding: const EdgeInsets.only(bottom: 10),
@@ -83,10 +83,20 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
           label: const Text('Settings'),
           width: paneWidth,
           style: itemStyle,
-          onTap: () => showDialog(
-            context: context,
-            builder: (context) => const LicensePage(),
-          ),
+          onTap: () {
+            const licensePage = LicensePage(
+                applicationIcon: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: AppLogo(),
+                ),
+                applicationVersion: '0.0.1');
+
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => const YaruDetailPage(
+                      appBar: YaruWindowTitleBar(title: Text(AppLogo.name)),
+                      body: licensePage,
+                    )));
+          },
         ),
       ),
       leading: SizedBox(height: Platform.isMacOS ? 44 : 24),
@@ -105,7 +115,6 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
       ),
       pageBuilder: (context, index) => YaruDetailPage(
         appBar: YaruWindowTitleBar(
-            leading: Navigator.of(context).canPop() ? const YaruBackButton() : null,
             title: ConstrainedBox(
                 constraints: const BoxConstraints(maxHeight: 46, maxWidth: 420), child: SearchField(hint: tools[index].name))),
         body: tools[index].screen,
