@@ -3,7 +3,7 @@ import 'package:dash_tools/tools/base64/base64_image_converter.dart';
 import 'package:dash_tools/tools/hex_text_converter.dart';
 import 'package:dash_tools/tools/json/json_escape_screen.dart';
 import 'package:dash_tools/tools/json/json_formatter_screen.dart';
-import 'package:dash_tools/tools/jwt_screen.dart';
+import 'package:dash_tools/tools/jwt/jwt_screen.dart';
 import 'package:dash_tools/tools/number_converter/number_converter.dart';
 import 'package:flutter/material.dart';
 
