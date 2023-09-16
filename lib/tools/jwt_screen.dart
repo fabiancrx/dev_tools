@@ -24,10 +24,17 @@ class _JwtScreenState extends State<JwtScreen> {
   final TextEditingController _controller = TextEditingController();
   JWT? jwt;
   DateTime? _expirationDate;
+  DateTime? _issuedDate;
 
   @override
   void initState() {
     super.initState();
+
+    _controller.addListener(() {
+      setState(() {
+        _parse();
+      });
+    });
     _populate();
   }
 
@@ -45,7 +52,6 @@ class _JwtScreenState extends State<JwtScreen> {
                     if (clipboardText != null && clipboardText.isNotEmpty) {
                       _controller.text = clipboardText;
                     }
-                    _parse();
                   },
                   child: const Icon(Icons.paste_rounded)),
               CopyButton(
@@ -54,7 +60,7 @@ class _JwtScreenState extends State<JwtScreen> {
                   pasteContentToClipboard(_controller.text);
                 },
               ),
-              ElevatedButton(onPressed: _parse, child: const Text("Parse")),
+              YaruOptionButton(onPressed: _clear, child: const Icon(Icons.clear_rounded)),
               const Spacer(),
               Tooltip(
                   message: "What is a Json Web token?",
@@ -63,34 +69,40 @@ class _JwtScreenState extends State<JwtScreen> {
                         launchUrlString('https://www.rfc-editor.org/rfc/rfc7519');
                       },
                       child: const Icon(Icons.info_outline))),
-              YaruOptionButton(onPressed: _clear, child: const Icon(Icons.clear_rounded)),
             ].interleave(const SizedBox(width: 8)),
           ),
           Expanded(
             child: ListView(
               children: [
-                const SizedBox.square(dimension: 8),
+                const SizedBox.square(dimension: 4),
                 TextField(
-                  maxLines: 2,
+                  maxLines: 4,
+                  minLines: 2,
                   decoration: const InputDecoration(
                     label: Text("JWT Token"),
                   ),
                   controller: _controller,
                 ),
                 const SizedBox.square(dimension: 8),
-                if (_expirationDate != null)
+                if (_expirationDate != null || _issuedDate != null)
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.only(bottom: 8, left: 12),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        if (_issuedDate != null)
+                          Text(
+                            "Issued on : ${formatDateTime(_issuedDate!)}",
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
                         if (_expirationDate!.isBefore(DateTime.now()))
                           Text(
                             "Expired on: ${formatDateTime(_expirationDate!)}",
-                            style: Theme.of(context).textTheme.headline6!.copyWith(color: Theme.of(context).primaryColor),
+                            style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).primaryColor),
                           )
                         else
                           DefaultTextStyle(
-                            style: Theme.of(context).textTheme.headline6!.copyWith(color: Theme.of(context).successColor),
+                            style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.success),
                             child: TimeRemaining(
                               text: (d) => "Expires on: ${formatDateTime(_expirationDate!)} in $d",
                               duration: _expirationDate!.difference(DateTime.now()),
@@ -132,10 +144,13 @@ class _JwtScreenState extends State<JwtScreen> {
     }
     jwt = null;
     _expirationDate = null;
+    _issuedDate = null;
     try {
       setState(() {
         jwt = JWT.decode(_controller.text);
+
         _expirationDate = _extractNumericDateFromMap(jwt?.payload["exp"]);
+        _issuedDate = _extractNumericDateFromMap(jwt?.payload["iat"]);
       });
     } catch (e) {
       updateWithError(e.toString());
@@ -145,6 +160,8 @@ class _JwtScreenState extends State<JwtScreen> {
   void updateWithError(String error) {
     setState(() {
       jwt = null;
+      _expirationDate = null;
+      _issuedDate = null;
     });
   }
 
@@ -163,22 +180,13 @@ class _Entry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SelectableText(
-            entry.key,
-            style: Theme.of(context).textTheme.headline6,
-          ),
-          Text(
-            ": ",
-            style: Theme.of(context).textTheme.headline6,
-          ),
-          Expanded(
-            child: SelectableText(
-              entry.value.toString(),
-              style: Theme.of(context).textTheme.headline6,
-            ),
+            "${entry.key}: ${entry.value}",
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
           if (JwtRegisteredClaims.fromKey(entry.key) case final claim?)
             Tooltip(message: claim.description, child: const Icon(Icons.info_outline)),
