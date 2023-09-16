@@ -72,7 +72,7 @@ class _JwtScreenState extends State<JwtScreen> {
                 const SizedBox.square(dimension: 8),
                 if (_expirationDate != null)
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.only(bottom: 8),
                     child: Column(
                       children: [
                         if (_expirationDate!.isBefore(DateTime.now()))
@@ -155,29 +155,26 @@ class _Entry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            SelectableText(
-              entry.key,
+      padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
+      child: Row(
+        children: [
+          SelectableText(
+            entry.key,
+            style: Theme.of(context).textTheme.headline6,
+          ),
+          Text(
+            ": ",
+            style: Theme.of(context).textTheme.headline6,
+          ),
+          Expanded(
+            child: SelectableText(
+              entry.value.toString(),
               style: Theme.of(context).textTheme.headline6,
             ),
-            Text(
-              ": ",
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            Expanded(
-              child: SelectableText(
-                entry.value.toString(),
-                style: Theme.of(context).textTheme.headline6,
-              ),
-            ),
-            if (JwtRegisteredClaims.fromKey(entry.key) case final claim?)
-              Tooltip(message: claim.description, child: const Icon(Icons.info_outline)),
-          ],
-        ),
+          ),
+          if (JwtRegisteredClaims.fromKey(entry.key) case final claim?)
+            Tooltip(message: claim.description, child: const Icon(Icons.info_outline)),
+        ],
       ),
     );
   }
