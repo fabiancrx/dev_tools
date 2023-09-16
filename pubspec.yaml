@@ -26,6 +26,7 @@ dependencies:
   super_editor: ^0.2.6
   super_clipboard: ^0.6.4
   dart_jsonwebtoken: ^2.11.0
+  url_launcher: ^6.1.14
 
 dev_dependencies:
   flutter_lints: ^2.0.3

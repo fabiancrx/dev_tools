@@ -50,7 +50,7 @@ const List<Tool> tools = [
   ),
   Tool(JsonConverterScreen(key: ValueKey('json_escape')),
       id: 'jsone', name: 'JSON escape/unescape', description: 'Escape or unescape a JSON string', position: 5),
-  Tool(JwtScreen(), id: 'jwt', name: 'JWT', description: 'TBD', position: 6)
+  Tool(JwtScreen(), id: 'jwt', name: 'JWT Debugger', description: 'JSON Web Token payload and header debugger', position: 6)
 ];
 
 final destinations = tools

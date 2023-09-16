@@ -8,6 +8,7 @@ import 'package:dash_tools/widgets/copy_button.dart';
 import 'package:dash_tools/widgets/flex_action_bar.dart';
 import 'package:dash_tools/widgets/time_remaining.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import 'package:yaru/yaru.dart';
 import 'package:yaru_widgets/yaru_widgets.dart';
@@ -29,7 +30,7 @@ class _JwtScreenState extends State<JwtScreen> {
     super.initState();
     _populate();
   }
-  // todo: reference https://www.rfc-editor.org/rfc/rfc7519
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -55,6 +56,13 @@ class _JwtScreenState extends State<JwtScreen> {
               ),
               ElevatedButton(onPressed: _parse, child: const Text("Parse")),
               const Spacer(),
+              Tooltip(
+                  message: "What is a Json Web token?",
+                  child: YaruOptionButton(
+                      onPressed: () {
+                        launchUrlString('https://www.rfc-editor.org/rfc/rfc7519');
+                      },
+                      child: const Icon(Icons.info_outline))),
               YaruOptionButton(onPressed: _clear, child: const Icon(Icons.clear_rounded)),
             ].interleave(const SizedBox(width: 8)),
           ),
@@ -155,7 +163,7 @@ class _Entry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Row(
         children: [
           SelectableText(
