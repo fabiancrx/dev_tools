@@ -9,6 +9,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:super_clipboard/super_clipboard.dart';
+import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 import 'package:yaru_widgets/widgets.dart';
 
 class Base64ImageConverterScreen extends StatefulWidget {
@@ -174,7 +175,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                                     final f = File(outputFile);
                                     await f.writeAsBytes(imageBytes);
                                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Image saved")));
-                                  } catch (e,st) {
+                                  } catch (e, st) {
                                     print(e);
                                     print(st);
                                   }
@@ -186,13 +187,19 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                 ),
                 Expanded(
                   child: Center(
-                    child: ListenableBuilder(
-                      builder: (context, _) {
-                        return Image.memory(imageBytes, errorBuilder: (_, __, ___) {
-                          return const Icon(Icons.broken_image_outlined);
-                        });
+                    child: _DropZone(
+                      onImageDrop: (Uint8List bytes) {
+                        imageBytes = bytes;
+                        setState(() {});
                       },
-                      listenable: inputController,
+                      child: ListenableBuilder(
+                        builder: (context, _) {
+                          return Image.memory(imageBytes, errorBuilder: (_, __, ___) {
+                            return const Icon(Icons.broken_image_outlined);
+                          });
+                        },
+                        listenable: inputController,
+                      ),
                     ),
                   ),
                 ),
@@ -202,5 +209,67 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
         ),
       ),
     );
+  }
+}
+
+
+
+class _DropZone extends StatefulWidget {
+  final Widget child;
+  final void Function(Uint8List bytes) onImageDrop;
+
+  const _DropZone({super.key, required this.child, required this.onImageDrop});
+
+  @override
+  State<StatefulWidget> createState() => _DropZoneState();
+}
+
+class _DropZoneState extends State<_DropZone> {
+  bool _isDragOver = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return DropRegion(
+      formats: Formats.standardFormats,
+      hitTestBehavior: HitTestBehavior.opaque,
+      onDropOver: _onDropOver,
+      onPerformDrop: _onPerformDrop,
+      onDropLeave: _onDropLeave,
+      child: Stack(
+        children: [
+          Positioned.fill(child: widget.child),
+          Positioned.fill(
+            child: IgnorePointer(
+              child: AnimatedOpacity(opacity: _isDragOver ? 1.0 : 0.0, duration: const Duration(milliseconds: 200)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _onPerformDrop(event )async{
+    final item = event.session.items.first;
+    final reader = item.dataReader!;
+
+    reader.getFile(null, (DataReaderFile file) async {
+      final data = await file.readAll();
+      widget.onImageDrop(data);
+    }, onError: (error) {
+      print('Error reading value from clipboard $error');
+    });
+  }
+
+  DropOperation _onDropOver(DropOverEvent event) {
+    setState(() {
+      _isDragOver = true;
+    });
+    return event.session.allowedOperations.firstOrNull ?? DropOperation.none;
+  }
+
+  void _onDropLeave(DropEvent event) {
+    setState(() {
+      _isDragOver = false;
+    });
   }
 }

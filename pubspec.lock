@@ -426,6 +426,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.3"
+  super_drag_and_drop:
+    dependency: "direct main"
+    description:
+      name: super_drag_and_drop
+      sha256: "616a58eb701e1f21a2c41731b33bf1f7966f3eb8007277e964141fd49ec09b70"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.3"
   super_native_extensions:
     dependency: transitive
     description:

@@ -27,6 +27,7 @@ dependencies:
   dart_jsonwebtoken: ^2.12.1
   url_launcher: ^6.2.1
   file_picker: ^6.1.1
+  super_drag_and_drop: ^0.7.3
 
 dev_dependencies:
   flutter_lints: ^3.0.1
