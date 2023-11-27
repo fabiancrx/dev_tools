@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:dash_tools/tools/base64/dart_logo.dart';
 import 'package:dash_tools/widgets/clear_text.dart';
@@ -146,7 +145,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                               }
                             },
                             child: (const Icon(Icons.copy)))),
-                    Spacer(),
+                    const Spacer(),
                     Tooltip(
                         message: "Load File",
                         child: YaruOptionButton(
@@ -174,7 +173,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                                   try {
                                     final f = File(outputFile);
                                     await f.writeAsBytes(imageBytes);
-                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Image saved")));
+                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Image saved")));
                                   } catch (e,st) {
                                     print(e);
                                     print(st);
