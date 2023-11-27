@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:ui';
 
 import 'package:dash_tools/tools/base64/dart_logo.dart';
 import 'package:dash_tools/widgets/clear_text.dart';
 import 'package:dash_tools/widgets/flex_action_bar.dart';
 import 'package:dash_tools/widgets/vendored/split.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:super_clipboard/super_clipboard.dart';
@@ -142,7 +145,44 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                                 await ClipboardWriter.instance.write([item]);
                               }
                             },
-                            child: (const Icon(Icons.copy))))
+                            child: (const Icon(Icons.copy)))),
+                    Spacer(),
+                    Tooltip(
+                        message: "Load File",
+                        child: YaruOptionButton(
+                            onPressed: () async {
+                              FilePickerResult? result = await FilePicker.platform.pickFiles();
+                              if (result != null) {
+                                File file = File(result.files.single.path!);
+                                imageBytes = await file.readAsBytes();
+                                if (context.mounted) setState(() {});
+                              } else {
+                                print('User cancelled picker');
+                              }
+                            },
+                            child: (const Icon(Icons.upload_file)))),
+                    const SizedBox.square(dimension: 8),
+                    Tooltip(
+                        message: "Save",
+                        child: YaruOptionButton(
+                            onPressed: () async {
+                              if (imageBytes.isNotEmpty) {
+                                String? outputFile =
+                                    await FilePicker.platform.saveFile(dialogTitle: 'Please select an output file:', fileName: 'image.png');
+
+                                if (outputFile != null) {
+                                  try {
+                                    final f = File(outputFile);
+                                    await f.writeAsBytes(imageBytes);
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Image saved")));
+                                  } catch (e,st) {
+                                    print(e);
+                                    print(st);
+                                  }
+                                }
+                              }
+                            },
+                            child: (const Icon(Icons.save)))),
                   ],
                 ),
                 Expanded(
