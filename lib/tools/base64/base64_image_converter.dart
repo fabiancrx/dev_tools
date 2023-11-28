@@ -23,7 +23,6 @@ class Base64ImageConverterScreen extends StatefulWidget {
 
 class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen> {
   final inputController = TextEditingController();
-  final outputController = TextEditingController();
   var imageBytes = Uint8List.fromList([]);
 
   @override
@@ -42,6 +41,12 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
     }
   }
 
+  _updateImage(Uint8List data) {
+    imageBytes = data;
+    inputController.text = base64String(imageBytes);
+    if (context.mounted) setState(() {});
+  }
+
   Uint8List dataFromBase64String(String base64String) {
     return base64Decode(base64String);
   }
@@ -53,9 +58,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
   @override
   void dispose() {
     super.dispose();
-    for (var e in [inputController, outputController]) {
-      e.dispose();
-    }
+    inputController.dispose();
   }
 
   @override
@@ -129,10 +132,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                               final reader = await ClipboardReader.readClipboard();
                               if (reader.canProvide(Formats.png)) {
                                 reader.getFile(Formats.png, (file) async {
-                                  // Do something with the PNG image
-                                  imageBytes = await file.readAll();
-                                  inputController.text = base64String(imageBytes);
-                                  setState(() {});
+                                  _updateImage(await file.readAll());
                                 });
                               }
                             },
@@ -157,8 +157,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                               FilePickerResult? result = await FilePicker.platform.pickFiles();
                               if (result != null) {
                                 File file = File(result.files.single.path!);
-                                imageBytes = await file.readAsBytes();
-                                if (context.mounted) setState(() {});
+                                _updateImage(await file.readAsBytes());
                               } else {
                                 print('User cancelled picker');
                               }
@@ -192,8 +191,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                   child: Center(
                     child: _DropZone(
                       onImageDrop: (Uint8List bytes) {
-                        imageBytes = bytes;
-                        setState(() {});
+                        _updateImage(bytes);
                       },
                       child: ListenableBuilder(
                         builder: (context, _) {
@@ -211,7 +209,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                 ),
                 Text(
                   " ${bytes.format(imageBytes.lengthInBytes, unitType: bytes.UnitType.decimal)} ",
-                  style: TextStyle(fontSize: 12),
+                  style: const TextStyle(fontSize: 12),
                 )
               ],
             ),
