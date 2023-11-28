@@ -6,8 +6,10 @@ import 'package:dash_tools/widgets/clear_text.dart';
 import 'package:dash_tools/widgets/flex_action_bar.dart';
 import 'package:dash_tools/widgets/vendored/split.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:format_bytes/format_bytes.dart' as bytes;
 import 'package:super_clipboard/super_clipboard.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 import 'package:yaru_widgets/widgets.dart';
@@ -116,6 +118,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
             ),
             Column(
               mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 FlexActionBar(
                   children: [
@@ -194,15 +197,22 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                       },
                       child: ListenableBuilder(
                         builder: (context, _) {
-                          return Image.memory(imageBytes, errorBuilder: (_, __, ___) {
-                            return const Icon(Icons.broken_image_outlined);
-                          });
+                          return Image.memory(
+                            imageBytes,
+                            errorBuilder: (_, __, ___) {
+                              return const Icon(Icons.broken_image_outlined);
+                            },
+                          );
                         },
                         listenable: inputController,
                       ),
                     ),
                   ),
                 ),
+                Text(
+                  " ${bytes.format(imageBytes.lengthInBytes, unitType: bytes.UnitType.decimal)} ",
+                  style: TextStyle(fontSize: 12),
+                )
               ],
             ),
           ],
@@ -212,7 +222,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
   }
 }
 
-
+//     var decodedImage = await decodeImageFromList(widget.image);
 
 class _DropZone extends StatefulWidget {
   final Widget child;
@@ -248,7 +258,7 @@ class _DropZoneState extends State<_DropZone> {
     );
   }
 
-  Future<void> _onPerformDrop(event )async{
+  Future<void> _onPerformDrop(event) async {
     final item = event.session.items.first;
     final reader = item.dataReader!;
 

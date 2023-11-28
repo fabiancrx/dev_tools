@@ -205,6 +205,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  format_bytes:
+    dependency: "direct main"
+    description:
+      name: format_bytes
+      sha256: "1d51717e9d59c517241416a62140a42bdaf2afbdec02086369e68d86fc6691e9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   gtk:
     dependency: transitive
     description:
