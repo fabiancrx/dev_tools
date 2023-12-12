@@ -195,11 +195,14 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                       },
                       child: ListenableBuilder(
                         builder: (context, _) {
-                          return Image.memory(
-                            imageBytes,
-                            errorBuilder: (_, __, ___) {
-                              return const Icon(Icons.broken_image_outlined);
-                            },
+                          return _DraggableImage(
+                            image: imageBytes,
+                            child: Image.memory(
+                              imageBytes,
+                              errorBuilder: (_, __, ___) {
+                                return const Icon(Icons.broken_image_outlined);
+                              },
+                            ),
                           );
                         },
                         listenable: inputController,
@@ -215,6 +218,37 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _DraggableImage extends StatelessWidget {
+  final Uint8List image;
+  final Widget child;
+
+  const _DraggableImage({super.key, required this.image, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    // DragItemWidget provides the content for the drag (DragItem).
+    return DragItemWidget(
+      dragItemProvider: (request) async {
+        // DragItem represents the content begin dragged.
+        final item = DragItem(
+            // This data is only accessible when dropping within same
+            );
+        // Add data for this item that other applications can read
+        // on drop. (optional)
+        item.add(Formats.png.lazy(() => image));
+
+        return item;
+      },
+      allowedOperations: () => [DropOperation.copy],
+      // DraggableWidget represents the actual draggable area. It looks
+      // for parent DragItemWidget in widget hierarchy to provide the DragItem.
+      child: DraggableWidget(
+        child: child,
       ),
     );
   }
