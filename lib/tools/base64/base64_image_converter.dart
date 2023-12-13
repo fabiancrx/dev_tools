@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:format_bytes/format_bytes.dart' as bytes;
 import 'package:super_clipboard/super_clipboard.dart';
+import 'package:super_context_menu/super_context_menu.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 import 'package:yaru_widgets/widgets.dart';
 
@@ -61,6 +62,24 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
     inputController.dispose();
   }
 
+  Future<void> loadImage() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      _updateImage(await file.readAsBytes());
+    } else {
+      print('User cancelled picker');
+    }
+  }
+
+  Future<void> copyImageToClipboard() async {
+    if (imageBytes.isNotEmpty) {
+      final item = DataWriterItem();
+      item.add(Formats.png.lazy(() => imageBytes));
+      await ClipboardWriter.instance.write([item]);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +99,8 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                       message: "Paste base 64 encoded image from clipboard",
                       child: YaruOptionButton(
                           onPressed: () async {
-                            final reader = await ClipboardReader.readClipboard();
+                            final reader = await SystemClipboard.instance?.read();
+                            if (reader == null) throw Exception('Clipboard not available');
                             if (reader.canProvide(Formats.plainText)) {
                               reader.getValue(Formats.plainText, (data) async {
                                 if (data != null && data.isNotEmpty) {
@@ -140,29 +160,9 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                     const SizedBox.square(dimension: 8),
                     Tooltip(
                         message: "Copy image to clipboard",
-                        child: YaruOptionButton(
-                            onPressed: () async {
-                              if (imageBytes.isNotEmpty) {
-                                final item = DataWriterItem();
-                                item.add(Formats.png.lazy(() => imageBytes));
-                                await ClipboardWriter.instance.write([item]);
-                              }
-                            },
-                            child: (const Icon(Icons.copy)))),
+                        child: YaruOptionButton(onPressed: copyImageToClipboard, child: (const Icon(Icons.copy)))),
                     const Spacer(),
-                    Tooltip(
-                        message: "Load File",
-                        child: YaruOptionButton(
-                            onPressed: () async {
-                              FilePickerResult? result = await FilePicker.platform.pickFiles();
-                              if (result != null) {
-                                File file = File(result.files.single.path!);
-                                _updateImage(await file.readAsBytes());
-                              } else {
-                                print('User cancelled picker');
-                              }
-                            },
-                            child: (const Icon(Icons.upload_file)))),
+                    Tooltip(message: "Load File", child: YaruOptionButton(onPressed: loadImage, child: (const Icon(Icons.upload_file)))),
                     const SizedBox.square(dimension: 8),
                     Tooltip(
                         message: "Save",
@@ -197,11 +197,31 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                         builder: (context, _) {
                           return _DraggableImage(
                             image: imageBytes,
-                            child: Image.memory(
-                              imageBytes,
-                              errorBuilder: (_, __, ___) {
-                                return const Icon(Icons.broken_image_outlined);
-                              },
+                            child: _ImageContextMenu(
+                              enabled: imageBytes.isNotEmpty,
+                              onCopy: copyImageToClipboard,
+                              onClear: inputController.clear,
+                              child: Image.memory(
+                                imageBytes,
+                                errorBuilder: (_, __, ___) {
+                                  return Center(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        const Icon(Icons.broken_image_outlined),
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            TextButton(onPressed: _populate, child: Text("Sample")),
+                                            TextButton(onPressed: loadImage, child: Text("Load Image"))
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                           );
                         },
@@ -220,6 +240,30 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
         ),
       ),
     );
+  }
+}
+
+class _ImageContextMenu extends StatelessWidget {
+  final Widget child;
+  final VoidCallback onCopy;
+  final VoidCallback onClear;
+  final bool enabled;
+
+  const _ImageContextMenu({super.key, required this.child, required this.onCopy, required this.onClear, required this.enabled});
+
+  @override
+  Widget build(BuildContext context) {
+    return ContextMenuWidget(
+        contextMenuIsAllowed: (_) => enabled,
+        child: Card(child: child),
+        menuProvider: (_) {
+          return Menu(
+            children: [
+              MenuAction(title: 'Copy to clipboard', callback: onCopy),
+              MenuAction(title: 'Clear', callback: onClear),
+            ],
+          );
+        });
   }
 }
 
