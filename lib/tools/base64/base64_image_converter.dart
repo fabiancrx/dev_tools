@@ -36,10 +36,8 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
   }
 
   void _populate() {
-    if (inputController.text.isEmpty) {
-      inputController.text = base64DartLogo;
-      imageBytes = dataFromBase64String(inputController.text);
-    }
+    inputController.text = base64DartLogo;
+    imageBytes = dataFromBase64String(inputController.text);
   }
 
   _updateImage(Uint8List data) {
@@ -76,7 +74,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
     if (imageBytes.isNotEmpty) {
       final item = DataWriterItem();
       item.add(Formats.png.lazy(() => imageBytes));
-      await ClipboardWriter.instance.write([item]);
+      await SystemClipboard.instance?.write([item]);
     }
   }
 
@@ -120,7 +118,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                               if (imageBytes.isNotEmpty) {
                                 final item = DataWriterItem();
                                 item.add(Formats.plainText.lazy(() => inputController.text));
-                                await ClipboardWriter.instance.write([item]);
+                                await SystemClipboard.instance?.write([item]);
                               }
                             },
                             child: (const Icon(Icons.copy)))),
@@ -149,7 +147,8 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                         message: "Paste image from clipboard",
                         child: YaruOptionButton(
                             onPressed: () async {
-                              final reader = await ClipboardReader.readClipboard();
+                              final reader = await SystemClipboard.instance?.read();
+                              if (reader == null) throw Exception('no Reader');
                               if (reader.canProvide(Formats.png)) {
                                 reader.getFile(Formats.png, (file) async {
                                   _updateImage(await file.readAll());
@@ -230,10 +229,12 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                     ),
                   ),
                 ),
-                Text(
-                  " ${bytes.format(imageBytes.lengthInBytes, unitType: bytes.UnitType.decimal)} ",
-                  style: const TextStyle(fontSize: 12),
-                )
+                ListenableBuilder(
+                    builder: (BuildContext context, Widget? child) => Text(
+                          " ${bytes.format(imageBytes.lengthInBytes, unitType: bytes.UnitType.decimal)} ",
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                    listenable: inputController)
               ],
             ),
           ],
