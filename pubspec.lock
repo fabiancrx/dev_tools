@@ -430,26 +430,34 @@ packages:
     dependency: "direct main"
     description:
       name: super_clipboard
-      sha256: "1031873af66c796177eff073d1453c9f19a75e6f9b308ca0b950928d0a20aedd"
+      sha256: "7644905757c630b3a9eb3f6a44fbe9e26b9de8a1b22998ce2c5d77bcd9b57f9a"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.3"
+    version: "0.8.0-dev.3"
+  super_context_menu:
+    dependency: "direct main"
+    description:
+      name: super_context_menu
+      sha256: c8e1bdd0966629503c829801081e950ca485f8178e6898d1125a5f92f7f3b2c2
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.0-dev.3"
   super_drag_and_drop:
     dependency: "direct main"
     description:
       name: super_drag_and_drop
-      sha256: "616a58eb701e1f21a2c41731b33bf1f7966f3eb8007277e964141fd49ec09b70"
+      sha256: "212dd4a832a1242cff812f88738dac7e7ae5369cc8bcc3688532f86cd0aa2851"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.3"
+    version: "0.8.0-dev.3"
   super_native_extensions:
     dependency: transitive
     description:
       name: super_native_extensions
-      sha256: fd658e096e99ed7555c0727a8201dbe3b8afc0059742ac14bdcff115e08f589c
+      sha256: eaed74b91a46c7716876184c12e09820d122ffc169014ada35e99a9bee0908b9
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.3"
+    version: "0.8.0-dev.3"
   term_glyph:
     dependency: transitive
     description:
@@ -478,10 +486,10 @@ packages:
     dependency: "direct main"
     description:
       name: url_launcher
-      sha256: b1c9e98774adf8820c96fbc7ae3601231d324a7d5ebd8babe27b6dfac91357ba
+      sha256: e9aa5ea75c84cf46b3db4eea212523591211c3cf2e13099ee4ec147f54201c86
       url: "https://pub.dev"
     source: hosted
-    version: "6.2.1"
+    version: "6.2.2"
   url_launcher_android:
     dependency: transitive
     description:

@@ -5,6 +5,7 @@ import 'package:dash_tools/tools/json/json_escape_screen.dart';
 import 'package:dash_tools/tools/json/json_formatter_screen.dart';
 import 'package:dash_tools/tools/jwt/jwt_screen.dart';
 import 'package:dash_tools/tools/number_converter/number_converter.dart';
+import 'package:dash_tools/tools/unix_converter.dart';
 import 'package:flutter/material.dart';
 
 class Tool {
@@ -50,7 +51,8 @@ const List<Tool> tools = [
   ),
   Tool(JsonConverterScreen(key: ValueKey('json_escape')),
       id: 'jsone', name: 'JSON escape/unescape', description: 'Escape or unescape a JSON string', position: 5),
-  Tool(JwtScreen(), id: 'jwt', name: 'JWT Debugger', description: 'JSON Web Token payload and header debugger', position: 6)
+  Tool(JwtScreen(), id: 'jwt', name: 'JWT Debugger', description: 'JSON Web Token payload and header debugger', position: 6),
+  Tool(UnixTimestampScreen(), id: 'unix', name: 'Unix Timestamp', description: 'Unix timestamp converter', position: 7)
 ];
 
 final destinations = tools
