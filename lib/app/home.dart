@@ -40,7 +40,7 @@ class _SearchFieldState extends State<SearchField> {
                   textAlign: searchFocus.hasFocus ? TextAlign.start : TextAlign.center,
                   focusNode: searchFocus,
                   decoration: InputDecoration(
-                      prefixIcon: searchFocus.hasFocus ? const Icon(Icons.search) : SizedBox.shrink(),
+                      prefixIcon: searchFocus.hasFocus ? const Icon(Icons.search) : const SizedBox.shrink(),
                       hintText: searchFocus.hasFocus ? 'Search...' : widget.hint,
                       hintStyle: const TextStyle(),
                       suffixIcon: ClearTextIcon(controller: searchController, focusNode: searchFocus)));
