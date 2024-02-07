@@ -1,31 +1,29 @@
 import 'dart:developer';
 
+import "package:dash_tools/common/code_field.dart";
 import 'package:dash_tools/common/extensions.dart';
 import 'package:dash_tools/tools/clipboard_service.dart';
 import "package:dash_tools/widgets/copy_button.dart";
 import "package:dash_tools/widgets/flex_action_bar.dart";
-
 import "package:flutter/material.dart";
-import "package:code_text_field/code_text_field.dart";
+import "package:flutter_highlight/themes/atom-one-light.dart";
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import "package:highlight/languages/json.dart" show json;
 import "package:flutter_highlight/themes/androidstudio.dart";
-import "package:flutter_highlight/themes/github.dart";
+
+import "package:re_editor/re_editor.dart";
+import "package:re_highlight/languages/json.dart";
 import 'package:yaru_widgets/yaru_widgets.dart';
 import "json_screen_controller.dart";
 
 class JsonFormatterScreen extends ConsumerStatefulWidget {
-  const JsonFormatterScreen({
-    Key? key,
-  }) : super(key: key);
+  const JsonFormatterScreen({super.key});
 
   @override
   ConsumerState createState() => _JsonFormatterScreenState();
 }
 
 class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
-
-  late final CodeController outputController = CodeController(language: json);
+  late final CodeLineEditingController outputController = CodeLineEditingController();
 
   @override
   void initState() {
@@ -40,7 +38,7 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
 
   get _theme {
     return switch (Theme.of(context).brightness) {
-      Brightness.light => githubTheme,
+      Brightness.light => atomOneLightTheme,
       Brightness.dark => androidstudioTheme,
     };
   }
@@ -54,68 +52,81 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
       log("jsonPageProvider changed from $previous to $next");
     });
 
-    return CodeTheme(
-      data: CodeThemeData(styles: _theme),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            FlexActionBar(
-              children: <Widget>[
-                YaruOptionButton(onPressed: outputController.clear, child: const Icon(Icons.clear_rounded)),
-                YaruOptionButton(
-                    onPressed: () async {
-                      final cl = await getClipboardContent();
-                      if (cl != null) {
-                        outputController.text = cl;
-                      }
-                    },
-                    child: const Icon(Icons.paste_rounded)),
-                OutlinedButton(
-                    onPressed: () {
-                      outputController.text = pageController.sample;
-                    },
-                    child: const Text("Sample")),
-                DropdownButton(
-                  value: pageState.mode,
-                  onChanged: (JsonMode? m) {
-                    pageController.changeMode(m);
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          FlexActionBar(
+            children: <Widget>[
+              YaruOptionButton(
+                  onPressed: () {
+                    outputController.text = '';
                   },
-                  items: JsonMode.values
-                      .map((e) => DropdownMenuItem(
-                            value: e,
-                            child: Text(e.name),
-                          ))
-                      .toList(),
-                ),
-                const Spacer(),
-                ElevatedButton(
-                    onPressed: () {
-                      final jsonObject = ref.read(jsonControllerProvider.notifier).processSync(outputController.text);
-                      outputController.text = jsonObject;
-                    },
-                    child: const Text("Format")),
-                CopyButton(
-                  showText: false,
-                  copyCallback: () {
-                    pasteContentToClipboard(outputController.text);
+                  child: const Icon(Icons.clear_rounded)),
+              YaruOptionButton(
+                  onPressed: () async {
+                    final cl = await getClipboardContent();
+                    if (cl != null) {
+                      outputController.text = cl;
+                    }
                   },
-                )
-              ].interleave(const SizedBox(width: 8)),
-            ),
-            Expanded(
-              child: CodeField(
-                background: Colors.transparent,
-                controller: outputController,
-                expands: true,
-                lineNumberStyle: const LineNumberStyle(margin: 0, width: 48),
-                maxLines: null,
-                minLines: null,
+                  child: const Icon(Icons.paste_rounded)),
+              OutlinedButton(
+                  onPressed: () {
+                    outputController.text = pageController.sample;
+                  },
+                  child: const Text("Sample")),
+              DropdownButton(
+                value: pageState.mode,
+                onChanged: (JsonMode? m) {
+                  pageController.changeMode(m);
+                },
+                items: JsonMode.values
+                    .map((e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e.name),
+                        ))
+                    .toList(),
               ),
+              const Spacer(),
+              ElevatedButton(
+                  onPressed: () {
+                    final jsonObject = ref.read(jsonControllerProvider.notifier).processSync(outputController.text);
+                    outputController.text = jsonObject;
+                  },
+                  child: const Text("Format")),
+              CopyButton(
+                showText: false,
+                copyCallback: () {
+                  pasteContentToClipboard(outputController.text);
+                },
+              )
+            ].interleave(const SizedBox(width: 8)),
+          ),
+          Expanded(
+            child: CodeEditor(
+              style: CodeEditorStyle(
+                codeTheme: CodeHighlightTheme(languages: {'json': CodeHighlightThemeMode(mode: langJson)}, theme: _theme),
+              ),
+              controller: outputController,
+              wordWrap: false,
+              indicatorBuilder: (context, editingController, chunkController, notifier) {
+                return Row(
+                  children: [
+                    DefaultCodeLineNumber(
+                      controller: editingController,
+                      notifier: notifier,
+                    ),
+                    DefaultCodeChunkIndicator(width: 20, controller: chunkController, notifier: notifier)
+                  ],
+                );
+              },
+              findBuilder: (context, controller, readOnly) => CodeFindPanelView(controller: controller, readOnly: readOnly),
+              toolbarController: const ContextMenuControllerImpl(),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

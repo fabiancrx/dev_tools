@@ -41,14 +41,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
-  code_text_field:
-    dependency: "direct main"
-    description:
-      name: code_text_field
-      sha256: "0cbffbb2932cf82e1d022996388041de3493a476acad3fbb13e5917cac0fc5f2"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   collection:
     dependency: transitive
     description:
@@ -158,14 +150,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_highlight:
-    dependency: "direct main"
-    description:
-      name: flutter_highlight
-      sha256: "7b96333867aa07e122e245c033b8ad622e4e3a42a1a2372cbb098a2541d8782c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.7.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -249,10 +233,10 @@ packages:
     dependency: transitive
     description:
       name: irondash_engine_context
-      sha256: f66a1af95756d5fece5034d357853d0127e09b9e4ef58be1f022ca47e11c6f7e
+      sha256: "0e803321935ca7af1a88f1391be9edfdb940df800353670bfc694934c7643ff3"
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.0"
+    version: "0.4.1"
   irondash_message_channel:
     dependency: transitive
     description:
@@ -269,14 +253,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.7"
-  linked_scroll_controller:
-    dependency: transitive
-    description:
-      name: linked_scroll_controller
-      sha256: e6020062bcf4ffc907ee7fd090fa971e65d8dfaac3c62baf601a3ced0b37986a
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.0"
   lints:
     dependency: transitive
     description:
@@ -357,6 +333,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.7.3"
+  re_editor:
+    dependency: "direct main"
+    description:
+      name: re_editor
+      sha256: bd61e0edb73465479bd09ff58d9889d5aa2134f95f494947933b5fc3f3f23270
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
+  re_highlight:
+    dependency: "direct main"
+    description:
+      name: re_highlight
+      sha256: "6c4ac3f76f939fb7ca9df013df98526634e17d8f7460e028bd23a035870024f2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
   riverpod:
     dependency: transitive
     description:
@@ -430,26 +422,34 @@ packages:
     dependency: "direct main"
     description:
       name: super_clipboard
-      sha256: "1031873af66c796177eff073d1453c9f19a75e6f9b308ca0b950928d0a20aedd"
+      sha256: "4d60238ca99aa2c6ca6696d80aaec5976d231b8962da37b6388b799d1f4e1168"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.3"
+    version: "0.8.0"
+  super_context_menu:
+    dependency: "direct main"
+    description:
+      name: super_context_menu
+      sha256: "34da60707f3e221006fd71c719c12c774064f91409d3dbc885c41593c35eb3ad"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.0"
   super_drag_and_drop:
     dependency: "direct main"
     description:
       name: super_drag_and_drop
-      sha256: "616a58eb701e1f21a2c41731b33bf1f7966f3eb8007277e964141fd49ec09b70"
+      sha256: "17a75954418c3fad2b73a5a97099ece9109175559442d62bf9537e888ea52231"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.3"
+    version: "0.8.0"
   super_native_extensions:
     dependency: transitive
     description:
       name: super_native_extensions
-      sha256: fd658e096e99ed7555c0727a8201dbe3b8afc0059742ac14bdcff115e08f589c
+      sha256: "30f2a49e41d11d32e9555cc2fe2e60458521db5fef221f29b46ef94e089591dd"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.3"
+    version: "0.8.0"
   term_glyph:
     dependency: transitive
     description:
@@ -478,10 +478,10 @@ packages:
     dependency: "direct main"
     description:
       name: url_launcher
-      sha256: b1c9e98774adf8820c96fbc7ae3601231d324a7d5ebd8babe27b6dfac91357ba
+      sha256: e9aa5ea75c84cf46b3db4eea212523591211c3cf2e13099ee4ec147f54201c86
       url: "https://pub.dev"
     source: hosted
-    version: "6.2.1"
+    version: "6.2.2"
   url_launcher_android:
     dependency: transitive
     description:
