@@ -1,5 +1,5 @@
 name: dash_tools
-description: A Very Good Project created by Very Good CLI.
+description: Set of utilities to simplify a programmers day to day tasks
 version: 0.0.2+2
 publish_to: none
 
@@ -13,16 +13,18 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.18.1
-  code_text_field: ^1.1.0
-  flutter_highlight: ^0.7.0
-  highlight: ^0.7.0
+
   yaru_widgets: ^3.3.1
   yaru: ^1.2.0
   yaru_icons: ^2.2.2
   window_manager: ^0.3.7
   handy_window: ^0.3.1
+
+  highlight: ^0.7.0
+
   flutter_riverpod: ^2.4.9
   equatable: ^2.0.5
+
   dart_jsonwebtoken: ^2.12.1
   url_launcher: ^6.2.2
   file_picker: ^6.1.1
@@ -30,6 +32,8 @@ dependencies:
   super_drag_and_drop: ^0.8.0-dev.3
   super_context_menu: ^0.8.0-dev.3
   format_bytes: ^2.1.0
+  re_editor: ^0.0.3
+  re_highlight: ^0.0.3
 
 dev_dependencies:
   flutter_lints: ^3.0.1
