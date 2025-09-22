@@ -12,7 +12,7 @@ import "package:flutter_highlight/themes/androidstudio.dart";
 
 import "package:re_editor/re_editor.dart";
 import "package:re_highlight/languages/json.dart";
-import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:yaru/yaru.dart';
 import "json_screen_controller.dart";
 
 class JsonFormatterScreen extends ConsumerStatefulWidget {
@@ -77,7 +77,7 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
                     outputController.text = pageController.sample;
                   },
                   child: const Text("Sample")),
-              DropdownButton(
+              DropdownButton<JsonMode>(
                 value: pageState.mode,
                 onChanged: (JsonMode? m) {
                   pageController.changeMode(m);

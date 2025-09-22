@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import 'package:yaru/yaru.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
 
 class JwtScreen extends StatefulWidget {
   const JwtScreen({super.key});
@@ -47,28 +46,34 @@ class _JwtScreenState extends State<JwtScreen> {
           FlexActionBar(
             children: <Widget>[
               YaruOptionButton(
-                  onPressed: () async {
-                    final clipboardText = await getClipboardContent();
-                    if (clipboardText != null && clipboardText.isNotEmpty) {
-                      _controller.text = clipboardText;
-                    }
-                  },
-                  child: const Icon(Icons.paste_rounded)),
+                onPressed: () async {
+                  final clipboardText = await getClipboardContent();
+                  if (clipboardText != null && clipboardText.isNotEmpty) {
+                    _controller.text = clipboardText;
+                  }
+                },
+                child: const Icon(Icons.paste_rounded),
+              ),
               CopyButton(
                 showText: false,
                 copyCallback: () {
                   pasteContentToClipboard(_controller.text);
                 },
               ),
-              YaruOptionButton(onPressed: _clear, child: const Icon(Icons.clear_rounded)),
+              YaruOptionButton(
+                onPressed: _clear,
+                child: const Icon(Icons.clear_rounded),
+              ),
               const Spacer(),
               Tooltip(
-                  message: "What is a Json Web token?",
-                  child: YaruOptionButton(
-                      onPressed: () {
-                        launchUrlString('https://www.rfc-editor.org/rfc/rfc7519');
-                      },
-                      child: const Icon(Icons.info_outline))),
+                message: "What is a Json Web token?",
+                child: YaruOptionButton(
+                  onPressed: () {
+                    launchUrlString('https://www.rfc-editor.org/rfc/rfc7519');
+                  },
+                  child: const Icon(Icons.info_outline),
+                ),
+              ),
             ].interleave(const SizedBox(width: 8)),
           ),
           Expanded(
@@ -78,9 +83,7 @@ class _JwtScreenState extends State<JwtScreen> {
                 TextField(
                   maxLines: 4,
                   minLines: 2,
-                  decoration: const InputDecoration(
-                    label: Text("JWT Token"),
-                  ),
+                  decoration: const InputDecoration(label: Text("JWT Token")),
                   controller: _controller,
                 ),
                 const SizedBox.square(dimension: 8),
@@ -90,35 +93,47 @@ class _JwtScreenState extends State<JwtScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (_issuedDate != null)
+                        if (_issuedDate case final issuedDate?)
                           Text(
-                            "Issued on : ${formatDateTime(_issuedDate!)}",
+                            "Issued on : ${formatDateTime(issuedDate)}",
                             style: Theme.of(context).textTheme.bodyLarge,
                           ),
-                        if (_expirationDate!.isBefore(DateTime.now()))
-                          Text(
-                            "Expired on: ${formatDateTime(_expirationDate!)}",
-                            style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).primaryColor),
-                          )
-                        else
-                          DefaultTextStyle(
-                            style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.success),
-                            child: TimeRemaining(
-                              text: (d) => "Expires on: ${formatDateTime(_expirationDate!)} in $d",
-                              duration: _expirationDate!.difference(DateTime.now()),
-                              onTimeOver: () {
-                                setState(() {});
-                              },
-                            ),
-                          ),
+                        if (_expirationDate case final expirationDate?)
+                          expirationDate.isBefore(DateTime.now())
+                              ? Text(
+                                  "Expired on: ${formatDateTime(_expirationDate!)}",
+                                  style: Theme.of(context).textTheme.bodyLarge!
+                                      .copyWith(
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                )
+                              : DefaultTextStyle(
+                                  style: Theme.of(context).textTheme.bodyLarge!
+                                      .copyWith(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.success,
+                                      ),
+                                  child: TimeRemaining(
+                                    text: (d) =>
+                                        "Expires on: ${formatDateTime(expirationDate)} in $d",
+                                    duration: expirationDate.difference(
+                                      DateTime.now(),
+                                    ),
+                                    onTimeOver: () {
+                                      setState(() {});
+                                    },
+                                  ),
+                                ),
                       ],
                     ),
                   ),
                 if (jwt case final token?)
                   ...<Widget>[
                     _JwtDetails(data: token.payload, title: 'Payload'),
-                    if (token.header case final header?) _JwtDetails(data: header, title: "Header"),
-                  ].interleave(const SizedBox.square(dimension: 8))
+                    if (token.header case final header?)
+                      _JwtDetails(data: header, title: "Header"),
+                  ].interleave(const SizedBox.square(dimension: 8)),
               ],
             ),
           ),
@@ -136,6 +151,7 @@ class _JwtScreenState extends State<JwtScreen> {
     _controller.clear();
     jwt = null;
     _expirationDate = null;
+    _issuedDate = null;
   }
 
   void _parse() {
@@ -189,7 +205,10 @@ class _Entry extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           if (JwtRegisteredClaims.fromKey(entry.key) case final claim?)
-            Tooltip(message: claim.description, child: const Icon(Icons.info_outline)),
+            Tooltip(
+              message: claim.description,
+              child: const Icon(Icons.info_outline),
+            ),
         ],
       ),
     );
@@ -205,54 +224,61 @@ class _JwtDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return YaruSection(
-        headline: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(title),
-            CopyButton(
-                showText: false,
-                copyCallback: () {
-                  pasteContentToClipboard(jsonEncode(data));
-                })
-          ],
-        ),
-        child: Column(
-          children: [
-            for (var entry in data.entries) _Entry(entry: entry),
-          ],
-        ));
+      headline: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(title),
+          CopyButton(
+            showText: false,
+            copyCallback: () {
+              pasteContentToClipboard(jsonEncode(data));
+            },
+          ),
+        ],
+      ),
+      child: Column(
+        children: [for (var entry in data.entries) _Entry(entry: entry)],
+      ),
+    );
   }
 }
 
 extension JwtRegisteredClaimsX on JwtRegisteredClaims {
   String get description => switch (this) {
-        JwtRegisteredClaims.iss => "Issuer Claim\n identifies the principal that issued the "
-            "JWT.  The processing of this claim is generally application specific.",
-        JwtRegisteredClaims.sub => "Subject Claim\n identifies the principal that is the "
-            "subject of the JWT.  The claims in a JWT are normally statements "
-            "about the subject.  The subject value MUST either be scoped to be "
-            "locally unique in the context of the issuer or be globally unique. "
-            "The processing of this claim is generally application specific. ",
-        JwtRegisteredClaims.exp => "Expiration time claim\n identifies the expiration time on "
-            "or after which the JWT MUST NOT be accepted for processing.  The "
-            "processing of the 'exp' claim requires that the current date/time "
-            "MUST be before the expiration date/time listed in the 'exp' claim.",
-        JwtRegisteredClaims.nbf => "Not before claim\n identifies the time before which the JWT "
-            "MUST NOT be accepted for processing.  The processing of the 'nbf' "
-            "claim requires that the current date/time MUST be after or equal to "
-            "the not-before date/time listed in the 'nbf' claim.",
-        JwtRegisteredClaims.iat => "Issued at claim\n identifies the time at which the JWT was "
-            "issued.  This claim can be used to determine the age of the JWT.",
-        JwtRegisteredClaims.jti => "JWT ID claim\n provides a unique identifier for the JWT. "
-            "The identifier value MUST be assigned in a manner that ensures that "
-            "there is a negligible probability that the same value will be "
-            "accidentally assigned to a different data object; if the application "
-            "uses multiple issuers, collisions MUST be prevented among values "
-            "produced by different issuers as well. ",
-        JwtRegisteredClaims.aud => "Audience claim\n identifies the recipients that the JWT is "
-            "intended for.  Each principal intended to process the JWT MUST "
-            "identify itself with a value in the audience claim.",
-      };
+    JwtRegisteredClaims.iss =>
+      "Issuer Claim\n identifies the principal that issued the "
+          "JWT.  The processing of this claim is generally application specific.",
+    JwtRegisteredClaims.sub =>
+      "Subject Claim\n identifies the principal that is the "
+          "subject of the JWT.  The claims in a JWT are normally statements "
+          "about the subject.  The subject value MUST either be scoped to be "
+          "locally unique in the context of the issuer or be globally unique. "
+          "The processing of this claim is generally application specific. ",
+    JwtRegisteredClaims.exp =>
+      "Expiration time claim\n identifies the expiration time on "
+          "or after which the JWT MUST NOT be accepted for processing.  The "
+          "processing of the 'exp' claim requires that the current date/time "
+          "MUST be before the expiration date/time listed in the 'exp' claim.",
+    JwtRegisteredClaims.nbf =>
+      "Not before claim\n identifies the time before which the JWT "
+          "MUST NOT be accepted for processing.  The processing of the 'nbf' "
+          "claim requires that the current date/time MUST be after or equal to "
+          "the not-before date/time listed in the 'nbf' claim.",
+    JwtRegisteredClaims.iat =>
+      "Issued at claim\n identifies the time at which the JWT was "
+          "issued.  This claim can be used to determine the age of the JWT.",
+    JwtRegisteredClaims.jti =>
+      "JWT ID claim\n provides a unique identifier for the JWT. "
+          "The identifier value MUST be assigned in a manner that ensures that "
+          "there is a negligible probability that the same value will be "
+          "accidentally assigned to a different data object; if the application "
+          "uses multiple issuers, collisions MUST be prevented among values "
+          "produced by different issuers as well. ",
+    JwtRegisteredClaims.aud =>
+      "Audience claim\n identifies the recipients that the JWT is "
+          "intended for.  Each principal intended to process the JWT MUST "
+          "identify itself with a value in the audience claim.",
+  };
 }
 
 enum JwtRegisteredClaims {
@@ -276,7 +302,8 @@ enum JwtRegisteredClaims {
     return s.toString();
   }
 
-  static bool isRegisteredClaim(MapEntry entry) => JwtRegisteredClaims.values.any((claim) => claim.name == entry.key);
+  static bool isRegisteredClaim(MapEntry entry) =>
+      JwtRegisteredClaims.values.any((claim) => claim.name == entry.key);
 
   static JwtRegisteredClaims? fromKey(String key) {
     for (final claim in JwtRegisteredClaims.values) {

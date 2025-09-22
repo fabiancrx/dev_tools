@@ -5,7 +5,8 @@ import 'package:dash_tools/widgets/copy_button.dart';
 import 'package:dash_tools/widgets/flex_action_bar.dart';
 import 'package:dash_tools/widgets/vendored/split.dart';
 import 'package:flutter/material.dart';
-import 'package:yaru_widgets/widgets.dart';
+import 'package:yaru/yaru.dart';
+
 
 
 String unescape(String input) {
@@ -158,7 +159,7 @@ class _JsonConverterScreenState extends State<JsonConverterScreen> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Split(
+        child: SplitWrap(
           axis: Axis.vertical,
           initialFractions: const [0.5, 0.5],
           minSizes: const [278, 80],

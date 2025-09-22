@@ -16,9 +16,9 @@ import 'package:flutter/material.dart';
 ///
 /// [initialFractions] defines how much space to give each child when building
 /// this widget.
-class Split extends StatefulWidget {
+class SplitWrap extends StatefulWidget {
   /// Builds a split oriented along [axis].
-  Split({
+  SplitWrap({
     Key? key,
     required this.axis,
     required this.children,
@@ -81,10 +81,10 @@ class Split extends StatefulWidget {
   }
 
   @override
-  State<StatefulWidget> createState() => _SplitState();
+  State<StatefulWidget> createState() => _SplitWrapState();
 }
 
-class _SplitState extends State<Split> {
+class _SplitWrapState extends State<SplitWrap> {
   late final List<double> fractions;
 
   bool get isHorizontal => widget.axis == Axis.horizontal;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:yaru_widgets/widgets.dart';
+import 'package:yaru/widgets.dart';
+
 
 class CopyButton extends StatelessWidget {
   final VoidCallback copyCallback;

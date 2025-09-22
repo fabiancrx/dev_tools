@@ -1,6 +1,7 @@
 import 'package:dash_tools/common/breakpoints.dart';
 import 'package:flutter/material.dart';
-import 'package:yaru_widgets/yaru_widgets.dart';
+import 'package:yaru/yaru.dart';
+
 
 class AdaptiveNavigation extends StatelessWidget {
   /// Weather to display a [NavigationBar] when the viewport is small. If false A full screen navigation drawer is shown

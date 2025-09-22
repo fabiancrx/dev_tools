@@ -5,7 +5,7 @@ import 'package:dash_tools/widgets/copy_button.dart';
 import 'package:dash_tools/widgets/flex_action_bar.dart';
 import 'package:dash_tools/widgets/vendored/split.dart';
 import 'package:flutter/material.dart';
-import 'package:yaru_widgets/widgets.dart';
+import "package:yaru/widgets.dart";
 
 class Base64ConverterScreen extends StatefulWidget {
   const Base64ConverterScreen({super.key});
@@ -54,7 +54,7 @@ class _Base64ConverterScreenState extends State<Base64ConverterScreen> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Split(
+        child: SplitWrap(
           axis: Axis.vertical,
           initialFractions: const [0.5, 0.5],
           minSizes: const [278, 80],
