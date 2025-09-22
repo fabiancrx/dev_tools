@@ -1,6 +1,6 @@
 {
-    "name": "dev_tools",
-    "short_name": "dev_tools",
+    "name": "dash_tools",
+    "short_name": "dash_tools",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

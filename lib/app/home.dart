@@ -4,8 +4,7 @@ import "package:dash_tools/tools/tools.dart";
 import "package:dash_tools/widgets/app_logo.dart";
 import "package:dash_tools/widgets/clear_text.dart";
 import "package:flutter/material.dart";
-import "package:yaru_widgets/yaru_widgets.dart";
-
+import "package:yaru/widgets.dart";
 class SearchField extends StatefulWidget {
   final String hint;
 

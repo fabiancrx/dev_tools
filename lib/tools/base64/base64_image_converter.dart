@@ -13,7 +13,8 @@ import 'package:format_bytes/format_bytes.dart' as bytes;
 import 'package:super_clipboard/super_clipboard.dart';
 import 'package:super_context_menu/super_context_menu.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
-import 'package:yaru_widgets/widgets.dart';
+import 'package:yaru/yaru.dart';
+
 
 class Base64ImageConverterScreen extends StatefulWidget {
   const Base64ImageConverterScreen({super.key});
@@ -83,7 +84,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Split(
+        child: SplitWrap(
           axis: Axis.horizontal,
           initialFractions: const [0.5, 0.5],
           minSizes: const [80, 160],

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final jsonControllerProvider = StateNotifierProvider<JsonPageController, JsonPageState>((ref) => JsonPageController());
+final jsonControllerProvider = NotifierProvider(JsonPageController.new);
 
 class JsonPageState with EquatableMixin {
   final JsonMode mode;
@@ -11,7 +11,8 @@ class JsonPageState with EquatableMixin {
 
   const JsonPageState({required this.mode, this.autoProcess = true});
 
-  factory JsonPageState.initial() => const JsonPageState(mode: JsonMode.twoSpaces);
+  factory JsonPageState.initial() =>
+      const JsonPageState(mode: JsonMode.twoSpaces);
 
   @override
   String toString() {
@@ -22,9 +23,7 @@ class JsonPageState with EquatableMixin {
   List<Object?> get props => [mode, autoProcess];
 }
 
-class JsonPageController extends StateNotifier<JsonPageState> {
-  JsonPageController({JsonPageState? state}) : super(state ?? JsonPageState.initial());
-
+class JsonPageController extends Notifier<JsonPageState> {
   final JsonDecoder _decoder = const JsonDecoder();
 
   /// Paste a sample json text in the input field
@@ -46,6 +45,11 @@ class JsonPageController extends StateNotifier<JsonPageState> {
   void changeMode(JsonMode? mode) {
     if (mode == null) return;
     state = JsonPageState(mode: mode);
+  }
+
+  @override
+  JsonPageState build({JsonPageState? state}) {
+    return state ?? JsonPageState.initial();
   }
 }
 

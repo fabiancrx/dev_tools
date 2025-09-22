@@ -1,5 +1,5 @@
 import "package:dash_tools/app/home.dart";
-import "package:dash_tools/l10n/l10n.dart";
+import "package:dash_tools/l10n/generated/app_localizations.dart";
 import "package:dash_tools/tools/tools.dart";
 import "package:flutter/material.dart";
 import "package:flutter_localizations/flutter_localizations.dart";
@@ -16,7 +16,7 @@ class App extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: yaruLight,
         darkTheme: yaruDark,
-        localizationsDelegates: const [
+        localizationsDelegates:  const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
         ],
