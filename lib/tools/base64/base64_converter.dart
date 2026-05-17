@@ -27,12 +27,12 @@ class _Base64ConverterScreenState extends State<Base64ConverterScreen> {
     inputController.addListener(_convert);
   }
 
-  _populate([String value = 'aguacate']) {
+  void _populate([String value = 'aguacate']) {
     inputController.text = value;
     _convert();
   }
 
-  _convert() {
+  void _convert() {
     switch (mode.value) {
       case Base64ConverterMode.encode:
         outputController.text = base64.encode(codec.value.encode(inputController.text));
@@ -64,7 +64,7 @@ class _Base64ConverterScreenState extends State<Base64ConverterScreen> {
               children: [
                 ListenableBuilder(
                   listenable: mode,
-                  builder: (_, __) {
+                  builder: (_, _) {
                     return FlexActionBar(
                       children: [
                         ...Base64ConverterMode.values
@@ -75,7 +75,7 @@ class _Base64ConverterScreenState extends State<Base64ConverterScreen> {
                                   mode.value = e;
                                 },
                                 title: Text(e.name)))
-                            .toList(),
+                            ,
                         const SizedBox.square(dimension: 8),
                         Tooltip(
                           message: "Encoding",

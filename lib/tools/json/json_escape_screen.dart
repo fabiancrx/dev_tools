@@ -126,12 +126,12 @@ class _JsonConverterScreenState extends State<JsonConverterScreen> {
     inputController.addListener(_convert);
   }
 
-  _populate([String value = _populatedText]) {
+  void _populate([String value = _populatedText]) {
     inputController.text = value;
     _convert();
   }
 
-  _convert() {
+  void _convert() {
     switch (mode.value) {
       case JsonEncodeMode.escape:
         var result = encoder.convert(inputController.text);
@@ -169,7 +169,7 @@ class _JsonConverterScreenState extends State<JsonConverterScreen> {
               children: [
                 ListenableBuilder(
                   listenable: mode,
-                  builder: (_, __) {
+                  builder: (_, _) {
                     return FlexActionBar(
                       children: [
                         ...JsonEncodeMode.values
@@ -180,7 +180,7 @@ class _JsonConverterScreenState extends State<JsonConverterScreen> {
                                   mode.value = e;
                                 },
                                 title: Text(e.name)))
-                            .toList(),
+                            ,
                         const Spacer(),
                         CopyButton(copyCallback: () {
                           pasteContentToClipboard(outputController.text);

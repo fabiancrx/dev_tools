@@ -12,28 +12,28 @@ class AdaptiveNavigation extends StatelessWidget {
   final Widget child;
 
   const AdaptiveNavigation({
-    Key? key,
+    super.key,
     required this.destinations,
     required this.selectedIndex,
     required this.onDestinationSelected,
     required this.child,
     this.showNavigationBar,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    final _showNavigationBar = showNavigationBar ?? isSmallMobileDevice(context);
+    final showBar = showNavigationBar ?? isSmallMobileDevice(context);
 
     return LayoutBuilder(
       builder: (context, dimens) {
-        if (dimens.maxWidth >= Breakpoint.sm.size || !_showNavigationBar) {
+        if (dimens.maxWidth >= Breakpoint.sm.size || !showBar) {
           return Scaffold(
             appBar: const YaruWindowTitleBar(title: Text('Dash tools')),
             body: Row(
               children: [
                 NavigationRail(
                   minWidth: 52,
-                  extended: dimens.maxWidth >= Breakpoint.lg.size || (!_showNavigationBar && dimens.maxWidth <= Breakpoint.sm.size),
+                  extended: dimens.maxWidth >= Breakpoint.lg.size || (!showBar && dimens.maxWidth <= Breakpoint.sm.size),
                   destinations: destinations
                       .map((e) => NavigationRailDestination(
                             icon: e.icon,
@@ -51,7 +51,7 @@ class AdaptiveNavigation extends StatelessWidget {
         // Mobile Layout
         return Scaffold(
           body: child,
-          bottomNavigationBar: showNavigationBar ?? isSmallMobileDevice(context)
+          bottomNavigationBar: showBar
               ? NavigationBar(
                   destinations: destinations,
                   selectedIndex: selectedIndex,

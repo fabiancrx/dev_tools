@@ -30,15 +30,8 @@ class JsonPageController extends Notifier<JsonPageState> {
   String get sample => kSampleJson;
 
   String processSync(String raw) {
-    switch (state.mode) {
-      case JsonMode.twoSpaces:
-      case JsonMode.fourSpaces:
-      case JsonMode.tab:
-      case JsonMode.minify:
-        final json = _decoder.convert(raw);
-        final encoder = JsonEncoder.withIndent(state.mode.indent);
-        return encoder.convert(json);
-    }
+    final json = _decoder.convert(raw);
+    return JsonEncoder.withIndent(state.mode.indent).convert(json);
   }
 
   /// Change the processing mode

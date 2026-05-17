@@ -191,7 +191,7 @@ class _JwtScreenState extends State<JwtScreen> {
 class _Entry extends StatelessWidget {
   final MapEntry entry;
 
-  const _Entry({super.key, required this.entry});
+  const _Entry({required this.entry});
 
   @override
   Widget build(BuildContext context) {
@@ -219,7 +219,7 @@ class _JwtDetails extends StatelessWidget {
   final Map<String, dynamic> data;
   final String title;
 
-  const _JwtDetails({super.key, required this.data, required this.title});
+  const _JwtDetails({required this.data, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -305,20 +305,12 @@ enum JwtRegisteredClaims {
   static bool isRegisteredClaim(MapEntry entry) =>
       JwtRegisteredClaims.values.any((claim) => claim.name == entry.key);
 
-  static JwtRegisteredClaims? fromKey(String key) {
-    for (final claim in JwtRegisteredClaims.values) {
-      if (claim.name == key) return claim;
-    }
-    return null;
-  }
+  static JwtRegisteredClaims? fromKey(String key) =>
+      JwtRegisteredClaims.values.where((c) => c.name == key).firstOrNull;
 }
 
-DateTime? _extractNumericDateFromMap(dynamic entry) {
-  if (entry is int) {
-    return DateTime.fromMillisecondsSinceEpoch(entry * 1000);
-  } else if (entry is String) {
-    return DateTime.parse(entry);
-  }
-
-  return null;
-}
+DateTime? _extractNumericDateFromMap(dynamic entry) => switch (entry) {
+  final int i => DateTime.fromMillisecondsSinceEpoch(i * 1000),
+  final String s => DateTime.parse(s),
+  _ => null,
+};

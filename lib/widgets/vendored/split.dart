@@ -19,7 +19,7 @@ import 'package:flutter/material.dart';
 class SplitWrap extends StatefulWidget {
   /// Builds a split oriented along [axis].
   SplitWrap({
-    Key? key,
+    super.key,
     required this.axis,
     required this.children,
     required this.initialFractions,
@@ -27,8 +27,7 @@ class SplitWrap extends StatefulWidget {
     this.splitters,
   })  : assert(children.length >= 2),
         assert(initialFractions.length >= 2),
-        assert(children.length == initialFractions.length),
-        super(key: key) {
+        assert(children.length == initialFractions.length) {
     _verifyFractionsSumTo1(initialFractions);
     if (minSizes != null) {
       assert(minSizes!.length == children.length);
@@ -108,7 +107,7 @@ class _SplitWrapState extends State<SplitWrap> {
     final availableSize = axisSize - _totalSplitterSize();
 
     // Size calculation helpers.
-    double _minSizeForIndex(int index) {
+    double minSizeForIndex(int index) {
       if (widget.minSizes == null) return 0.0;
 
       double totalMinSize = 0;
@@ -125,18 +124,18 @@ class _SplitWrapState extends State<SplitWrap> {
       }
     }
 
-    double _minFractionForIndex(int index) => _minSizeForIndex(index) / availableSize;
+    double minFractionForIndex0(int index) => minSizeForIndex(index) / availableSize;
 
-    void _clampFraction(int index) {
-      fractions[index] = fractions[index].clamp(_minFractionForIndex(index), 1.0);
+    void clampFraction(int index) {
+      fractions[index] = fractions[index].clamp(minFractionForIndex0(index), 1.0);
     }
 
-    double _sizeForIndex(int index) => availableSize * fractions[index];
+    double sizeForIndex(int index) => availableSize * fractions[index];
 
     double fractionDeltaRequired = 0.0;
     double fractionDeltaAvailable = 0.0;
 
-    double deltaFromMinimumSize(int index) => fractions[index] - _minFractionForIndex(index);
+    double deltaFromMinimumSize(int index) => fractions[index] - minFractionForIndex0(index);
 
     for (int i = 0; i < fractions.length; ++i) {
       final delta = deltaFromMinimumSize(i);
@@ -159,7 +158,7 @@ class _SplitWrapState extends State<SplitWrap> {
         final delta = deltaFromMinimumSize(i);
         if (delta < 0) {
           // This is equivalent to adding delta but avoids rounding error.
-          fractions[i] = _minFractionForIndex(i);
+          fractions[i] = minFractionForIndex0(i);
         } else {
           // Reduce all fractions that are above their minimum size by an amount
           // proportional to their ability to reduce their size without
@@ -171,7 +170,7 @@ class _SplitWrapState extends State<SplitWrap> {
 
     // Determine what fraction to give each child, including enough space to
     // display the divider.
-    final sizes = List.generate(fractions.length, (i) => _sizeForIndex(i));
+    final sizes = List.generate(fractions.length, (i) => sizeForIndex(i));
 
     void updateSpacing(DragUpdateDetails dragDetails, int splitterIndex) {
       final dragDelta = isHorizontal ? dragDetails.delta.dx : dragDetails.delta.dy;
@@ -183,13 +182,13 @@ class _SplitWrapState extends State<SplitWrap> {
         var index = splitterIndex;
         while (index >= 0) {
           fractions[index] += delta;
-          final minFractionForIndex = _minFractionForIndex(index);
+          final minFractionForIndex = minFractionForIndex0(index);
           if (fractions[index] >= minFractionForIndex) {
-            _clampFraction(index);
+            clampFraction(index);
             return startingDelta;
           }
           delta = fractions[index] - minFractionForIndex;
-          _clampFraction(index);
+          clampFraction(index);
           index--;
         }
         // At this point, we know that both [startingDelta] and [delta] are
@@ -204,13 +203,13 @@ class _SplitWrapState extends State<SplitWrap> {
         var index = splitterIndex + 1;
         while (index < fractions.length) {
           fractions[index] += delta;
-          final minFractionForIndex = _minFractionForIndex(index);
+          final minFractionForIndex = minFractionForIndex0(index);
           if (fractions[index] >= minFractionForIndex) {
-            _clampFraction(index);
+            clampFraction(index);
             return startingDelta;
           }
           delta = fractions[index] - minFractionForIndex;
-          _clampFraction(index);
+          clampFraction(index);
           index++;
         }
         // At this point, we know that both [startingDelta] and [delta] are

@@ -6,7 +6,7 @@ import "package:flutter_localizations/flutter_localizations.dart";
 import "package:yaru/yaru.dart";
 
 class App extends StatelessWidget {
-  const App({Key? key}) : super(key: key);
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -8,7 +8,6 @@ import 'package:dash_tools/widgets/vendored/split.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:format_bytes/format_bytes.dart' as bytes;
 import 'package:super_clipboard/super_clipboard.dart';
 import 'package:super_context_menu/super_context_menu.dart';
@@ -41,7 +40,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
     imageBytes = dataFromBase64String(inputController.text);
   }
 
-  _updateImage(Uint8List data) {
+  void _updateImage(Uint8List data) {
     imageBytes = data;
     inputController.text = base64String(imageBytes);
     if (context.mounted) setState(() {});
@@ -62,12 +61,10 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
   }
 
   Future<void> loadImage() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    FilePickerResult? result = await FilePicker.pickFiles();
     if (result != null) {
       File file = File(result.files.single.path!);
       _updateImage(await file.readAsBytes());
-    } else {
-      print('User cancelled picker');
     }
   }
 
@@ -170,16 +167,17 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                             onPressed: () async {
                               if (imageBytes.isNotEmpty) {
                                 String? outputFile =
-                                    await FilePicker.platform.saveFile(dialogTitle: 'Please select an output file:', fileName: 'image.png');
+                                    await FilePicker.saveFile(dialogTitle: 'Please select an output file:', fileName: 'image.png');
 
                                 if (outputFile != null) {
                                   try {
                                     final f = File(outputFile);
                                     await f.writeAsBytes(imageBytes);
-                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Image saved")));
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Image saved")));
+                                    }
                                   } catch (e, st) {
-                                    print(e);
-                                    print(st);
+                                    debugPrint('$e\n$st');
                                   }
                                 }
                               }
@@ -203,7 +201,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                               onClear: inputController.clear,
                               child: Image.memory(
                                 imageBytes,
-                                errorBuilder: (_, __, ___) {
+                                errorBuilder: (_, _, _) {
                                   return Center(
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.center,
@@ -251,7 +249,7 @@ class _ImageContextMenu extends StatelessWidget {
   final VoidCallback onClear;
   final bool enabled;
 
-  const _ImageContextMenu({super.key, required this.child, required this.onCopy, required this.onClear, required this.enabled});
+  const _ImageContextMenu({required this.child, required this.onCopy, required this.onClear, required this.enabled});
 
   @override
   Widget build(BuildContext context) {
@@ -273,7 +271,7 @@ class _DraggableImage extends StatelessWidget {
   final Uint8List image;
   final Widget child;
 
-  const _DraggableImage({super.key, required this.image, required this.child});
+  const _DraggableImage({required this.image, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -306,7 +304,7 @@ class _DropZone extends StatefulWidget {
   final Widget child;
   final void Function(Uint8List bytes) onImageDrop;
 
-  const _DropZone({super.key, required this.child, required this.onImageDrop});
+  const _DropZone({required this.child, required this.onImageDrop});
 
   @override
   State<StatefulWidget> createState() => _DropZoneState();
@@ -336,7 +334,7 @@ class _DropZoneState extends State<_DropZone> {
     );
   }
 
-  Future<void> _onPerformDrop(event) async {
+  Future<void> _onPerformDrop(PerformDropEvent event) async {
     final item = event.session.items.first;
     final reader = item.dataReader!;
 
@@ -344,7 +342,7 @@ class _DropZoneState extends State<_DropZone> {
       final data = await file.readAll();
       widget.onImageDrop(data);
     }, onError: (error) {
-      print('Error reading value from clipboard $error');
+      debugPrint('Error reading value from clipboard $error');
     });
   }
 

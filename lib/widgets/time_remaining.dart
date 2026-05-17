@@ -13,11 +13,11 @@ class TimeRemaining extends StatefulWidget {
   final String Function(String duration) text;
 
   const TimeRemaining({
-    Key? key,
+    super.key,
     required this.duration,
     this.onTimeOver,
     required this.text,
-  }) : super(key: key);
+  });
 
   @override
   State<TimeRemaining> createState() => _TimeRemainingState();

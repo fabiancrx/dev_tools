@@ -34,7 +34,7 @@ class _NumberConverterScreenState extends State<NumberConverterScreen> {
     _populate();
   }
 
-  _populate([int value = 95]) {
+  void _populate([int value = 95]) {
     decimalController.text = '$value';
     decimalFocusNode.requestFocus();
     _decimalConverter();
@@ -129,7 +129,7 @@ class _NumberTextField extends StatelessWidget {
   final TextInputFormatter inputFormatter;
   final String text;
 
-  const _NumberTextField({super.key, required this.controller, required this.focusNode, required this.inputFormatter, required this.text});
+  const _NumberTextField({required this.controller, required this.focusNode, required this.inputFormatter, required this.text});
 
   @override
   Widget build(BuildContext context) {

@@ -76,7 +76,7 @@ class _HexToTextConverterScreenState extends State<HexToTextConverterScreen> {
                 FlexActionBar(children: [
                   ListenableBuilder(
                     listenable: mode,
-                    builder: (_, __) {
+                    builder: (_, _) {
                       return Row(
                         children: HexTextConvertMode.values
                             .map((e) => YaruRadioButton(
