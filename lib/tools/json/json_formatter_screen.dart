@@ -10,7 +10,7 @@ import "package:flutter_highlight/themes/atom-one-light.dart";
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import "package:flutter_highlight/themes/androidstudio.dart";
 
-import "package:re_editor/re_editor.dart";
+import "package:code_forge/code_forge.dart";
 import "package:re_highlight/languages/json.dart";
 import 'package:yaru/yaru.dart';
 import "json_screen_controller.dart";
@@ -23,7 +23,7 @@ class JsonFormatterScreen extends ConsumerStatefulWidget {
 }
 
 class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
-  late final CodeLineEditingController outputController = CodeLineEditingController();
+  late final CodeForgeController outputController = CodeForgeController();
 
   @override
   void initState() {
@@ -31,12 +31,18 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
     super.initState();
   }
 
-  _populate() {
+  @override
+  void dispose() {
+    outputController.dispose();
+    super.dispose();
+  }
+
+  void _populate() {
     final jsonObject = ref.read(jsonControllerProvider.notifier).processSync(kSampleJson);
     outputController.text = jsonObject;
   }
 
-  get _theme {
+  Map<String, TextStyle> get _theme {
     return switch (Theme.of(context).brightness) {
       Brightness.light => atomOneLightTheme,
       Brightness.dark => androidstudioTheme,
@@ -92,7 +98,8 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
               const Spacer(),
               ElevatedButton(
                   onPressed: () {
-                    final jsonObject = ref.read(jsonControllerProvider.notifier).processSync(outputController.text);
+                    final jsonObject =
+                        ref.read(jsonControllerProvider.notifier).processSync(outputController.text);
                     outputController.text = jsonObject;
                   },
                   child: const Text("Format")),
@@ -105,25 +112,14 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
             ].interleave(const SizedBox(width: 8)),
           ),
           Expanded(
-            child: CodeEditor(
-              style: CodeEditorStyle(
-                codeTheme: CodeHighlightTheme(languages: {'json': CodeHighlightThemeMode(mode: langJson)}, theme: _theme),
-              ),
+            child: CodeForge(
+              editorTheme: _theme,
+              language: langJson,
               controller: outputController,
-              wordWrap: false,
-              indicatorBuilder: (context, editingController, chunkController, notifier) {
-                return Row(
-                  children: [
-                    DefaultCodeLineNumber(
-                      controller: editingController,
-                      notifier: notifier,
-                    ),
-                    DefaultCodeChunkIndicator(width: 20, controller: chunkController, notifier: notifier)
-                  ],
-                );
-              },
-              findBuilder: (context, controller, readOnly) => CodeFindPanelView(controller: controller, readOnly: readOnly),
-              toolbarController: const ContextMenuControllerImpl(),
+              lineWrap: false,
+              enableGutter: true,
+              enableFolding: true,
+              finderBuilder: (context, controller) => CodeFindPanelView(controller: controller),
             ),
           ),
         ],
