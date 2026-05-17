@@ -112,14 +112,21 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
             ].interleave(const SizedBox(width: 8)),
           ),
           Expanded(
-            child: CodeForge(
-              editorTheme: _theme,
-              language: langJson,
-              controller: outputController,
-              lineWrap: false,
-              enableGutter: true,
-              enableFolding: true,
-              finderBuilder: (context, controller) => CodeFindPanelView(controller: controller),
+            child: Container(
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(kYaruButtonRadius),
+                border: Border.all(color: Theme.of(context).colorScheme.outline),
+              ),
+              child: CodeForge(
+                editorTheme: _theme,
+                language: langJson,
+                controller: outputController,
+                lineWrap: false,
+                enableGutter: true,
+                enableFolding: true,
+                finderBuilder: (context, controller) => CodeFindPanelView(controller: controller),
+              ),
             ),
           ),
         ],
