@@ -6,8 +6,10 @@ import 'package:dash_tools/widgets/clear_text.dart';
 import 'package:dash_tools/widgets/copy_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widget_previews.dart';
 
 class NumberConverterScreen extends StatefulWidget {
+  @Preview(name: 'Number Converter', group: 'Tools', size: Size(500, 400))
   const NumberConverterScreen({super.key});
 
   @override

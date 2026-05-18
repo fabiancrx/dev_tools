@@ -5,9 +5,11 @@ import 'package:dash_tools/widgets/copy_button.dart';
 import 'package:dash_tools/widgets/flex_action_bar.dart';
 import 'package:dash_tools/widgets/vendored/split.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widget_previews.dart';
 import 'package:yaru/widgets.dart';
 
 class Base64ConverterScreen extends StatefulWidget {
+  @Preview(name: 'Base64 Converter', group: 'Tools', size: Size(900, 700))
   const Base64ConverterScreen({super.key});
 
   @override

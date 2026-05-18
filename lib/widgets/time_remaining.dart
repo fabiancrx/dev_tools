@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dash_tools/common/extensions.dart';
+import 'package:dash_tools/previews.dart';
 import 'package:flutter/material.dart';
 
 class TimeRemaining extends StatefulWidget {
@@ -87,3 +88,9 @@ class _TimeRemainingState extends State<TimeRemaining> {
     return Text(widget.text(text));
   }
 }
+
+@MultiBrightnessPreview(name: 'TimeRemaining')
+Widget timeRemainingPreview() => TimeRemaining(
+      duration: const Duration(hours: 2, minutes: 30),
+      text: (d) => 'Expires in $d',
+    );

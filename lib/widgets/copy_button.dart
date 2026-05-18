@@ -1,3 +1,4 @@
+import 'package:dash_tools/previews.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru/widgets.dart';
 
@@ -31,3 +32,9 @@ class CopyButton extends StatelessWidget {
     );
   }
 }
+
+@MultiBrightnessPreview(name: 'CopyButton · with text')
+Widget copyButtonWithTextPreview() => CopyButton(copyCallback: () {});
+
+@MultiBrightnessPreview(name: 'CopyButton · icon only')
+Widget copyButtonIconOnlyPreview() => CopyButton(copyCallback: () {}, showText: false);

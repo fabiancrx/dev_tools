@@ -1,3 +1,4 @@
+import 'package:dash_tools/previews.dart';
 import 'package:flutter/material.dart';
 
 class FlexActionBar extends StatelessWidget {
@@ -16,3 +17,14 @@ class FlexActionBar extends StatelessWidget {
     );
   }
 }
+
+@MultiBrightnessPreview(name: 'FlexActionBar')
+Widget flexActionBarPreview() => FlexActionBar(
+      children: [
+        const Icon(Icons.search),
+        const SizedBox(width: 8),
+        const Text('Action'),
+        const Spacer(),
+        const Icon(Icons.settings),
+      ],
+    );

@@ -5,9 +5,11 @@ import 'package:dash_tools/widgets/copy_button.dart';
 import 'package:dash_tools/widgets/flex_action_bar.dart';
 import 'package:dash_tools/widgets/vendored/split.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widget_previews.dart';
 import 'package:yaru/yaru.dart';
 
 class HexToTextConverterScreen extends StatefulWidget {
+  @Preview(name: 'Hex/Text Converter', group: 'Tools', size: Size(900, 600))
   const HexToTextConverterScreen({super.key});
 
   @override

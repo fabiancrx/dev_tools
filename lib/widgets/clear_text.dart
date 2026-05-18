@@ -1,3 +1,4 @@
+import 'package:dash_tools/previews.dart';
 import 'package:flutter/material.dart';
 
 class ClearTextIcon extends StatelessWidget {
@@ -25,3 +26,9 @@ class ClearTextIcon extends StatelessWidget {
         });
   }
 }
+
+@MultiBrightnessPreview(name: 'ClearTextIcon · visible')
+Widget clearTextIconVisiblePreview() => ClearTextIcon(controller: TextEditingController(text: 'Some text'));
+
+@MultiBrightnessPreview(name: 'ClearTextIcon · hidden')
+Widget clearTextIconHiddenPreview() => ClearTextIcon(controller: TextEditingController());

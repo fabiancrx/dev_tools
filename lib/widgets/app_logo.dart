@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widget_previews.dart';
 
 class AppLogo extends StatelessWidget {
+  @Preview(name: 'App Logo', group: 'Shared Widgets')
   const AppLogo({super.key});
 
   static const String name = 'Dash tools';
