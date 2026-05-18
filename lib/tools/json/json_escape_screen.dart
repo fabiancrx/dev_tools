@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dash_tools/l10n/l10n.dart';
 import 'package:dash_tools/tools/clipboard_service.dart';
 import 'package:dash_tools/widgets/copy_button.dart';
 import 'package:dash_tools/widgets/flex_action_bar.dart';
@@ -29,69 +30,48 @@ String unescape(String input) {
     switch (select) {
       case '\\':
         sb.write('\\');
-        break;
       case 't':
         sb.write('\t');
-        break;
       case 'r':
         sb.write('\r');
-        break;
       case 'n':
         sb.write('\n');
-        break;
       case 'f':
         sb.write('\f');
-        break;
       case 'b':
         sb.write('\b');
-        break;
       case 'v':
         sb.write('\v');
-        break;
       case 'u':
         if (input.length < 4) {
           input = '';
           break;
         }
         if (input[0] != '{') {
-          String digit = input.substring(0, 4);
-          int? intDigit = int.tryParse(digit, radix: 16);
-          if (intDigit == null || intDigit < 0) {
-            break;
+          final digit = input.substring(0, 4);
+          if (int.tryParse(digit, radix: 16) case final intDigit? when intDigit >= 0) {
+            input = input.substring(4);
+            sb.writeCharCode(intDigit);
           }
-          input = input.substring(4);
-          sb.writeCharCode(intDigit);
-        } else {
-          final match = RegExp(r"{([a-zA-Z0-9]+)}").matchAsPrefix(input);
-          if (match == null) {
-            break;
-          } else {
-            input = input.substring(match.end);
-            String digit = match[1]!;
-            int? intDigit = int.tryParse(digit, radix: 16);
-            if (intDigit == null || intDigit < 0) {
-              break;
-            }
+        } else if (RegExp(r"{([a-zA-Z0-9]+)}").matchAsPrefix(input) case final match?) {
+          input = input.substring(match.end);
+          final digit = match[1]!;
+          if (int.tryParse(digit, radix: 16) case final intDigit? when intDigit >= 0) {
             sb.writeCharCode(intDigit);
           }
         }
-        break;
       case 'x':
         if (input.length < 2) {
           input = '';
           break;
         }
-        String digit = input.substring(0, 2);
+        final digit = input.substring(0, 2);
         input = input.substring(2);
-        int? intDigit = int.tryParse(digit, radix: 16);
-        if (intDigit == null || intDigit < 0) {
-          break;
+        if (int.tryParse(digit, radix: 16) case final intDigit? when intDigit >= 0) {
+          sb.writeCharCode(intDigit);
         }
-        sb.writeCharCode(intDigit);
-        break;
       default:
         sb.write(select);
-        break;
     }
   }
 
@@ -156,6 +136,7 @@ class _JsonConverterScreenState extends State<JsonConverterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -179,8 +160,7 @@ class _JsonConverterScreenState extends State<JsonConverterScreen> {
                                 onChanged: (_) {
                                   mode.value = e;
                                 },
-                                title: Text(e.name)))
-                            ,
+                                title: Text(e.localizedName(l10n)))),
                         const Spacer(),
                         CopyButton(copyCallback: () {
                           pasteContentToClipboard(outputController.text);
@@ -193,7 +173,7 @@ class _JsonConverterScreenState extends State<JsonConverterScreen> {
                   child: TextField(
                     controller: inputController,
                     textAlignVertical: TextAlignVertical.top,
-                    decoration: const InputDecoration(labelText: "Input", alignLabelWithHint: true),
+                    decoration: InputDecoration(labelText: l10n.input, alignLabelWithHint: true),
                     expands: true,
                     maxLines: null,
                     minLines: null,
@@ -207,9 +187,8 @@ class _JsonConverterScreenState extends State<JsonConverterScreen> {
                 Expanded(
                   child: TextField(
                     controller: outputController,
-
                     textAlignVertical: TextAlignVertical.top,
-                    decoration: const InputDecoration(labelText: "Output", alignLabelWithHint: true),
+                    decoration: InputDecoration(labelText: l10n.output, alignLabelWithHint: true),
                     expands: true,
                     maxLines: null,
                     minLines: null,
@@ -225,3 +204,10 @@ class _JsonConverterScreenState extends State<JsonConverterScreen> {
 }
 
 enum JsonEncodeMode { escape, unescape }
+
+extension JsonEncodeModeX on JsonEncodeMode {
+  String localizedName(AppLocalizations l10n) => switch (this) {
+        JsonEncodeMode.escape => l10n.jsonEscapeModeEscape,
+        JsonEncodeMode.unescape => l10n.jsonEscapeModeUnescape,
+      };
+}

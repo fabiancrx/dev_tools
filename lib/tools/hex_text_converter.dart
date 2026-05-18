@@ -1,3 +1,4 @@
+import 'package:dash_tools/l10n/l10n.dart';
 import 'package:dash_tools/tools/clipboard_service.dart';
 import 'package:dash_tools/widgets/copy_button.dart';
 import 'package:dash_tools/widgets/flex_action_bar.dart';
@@ -26,12 +27,11 @@ class _HexToTextConverterScreenState extends State<HexToTextConverterScreen> {
       outputController.text = hexToAscii(inputController.text);
     }
     inputController.addListener(() {
-      switch (mode.value) {
-        case HexTextConvertMode.hexToText:
-          outputController.text = hexToAscii(inputController.text.replaceAll(RegExp(r"\s+"), ""));
-        case HexTextConvertMode.textToHex:
-          outputController.text = asciiToHex(inputController.text.replaceAll(RegExp(r"\s+"), ""));
-      }
+      final cleanInput = inputController.text.replaceAll(RegExp(r"\s+"), "");
+      outputController.text = switch (mode.value) {
+        HexTextConvertMode.hexToText => hexToAscii(cleanInput),
+        HexTextConvertMode.textToHex => asciiToHex(cleanInput),
+      };
       setState(() {});
     });
   }
@@ -60,6 +60,7 @@ class _HexToTextConverterScreenState extends State<HexToTextConverterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -68,8 +69,6 @@ class _HexToTextConverterScreenState extends State<HexToTextConverterScreen> {
           initialFractions: const [0.5, 0.5],
           minSizes: const [80, 160],
           children: [
-
-
             Column(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -85,7 +84,7 @@ class _HexToTextConverterScreenState extends State<HexToTextConverterScreen> {
                             onChanged: (_) {
                               mode.value = e;
                             },
-                            title: Text(e.name)))
+                            title: Text(e.localizedName(l10n))))
                             .toList(),
                       );
                     },
@@ -130,3 +129,10 @@ class _HexToTextConverterScreenState extends State<HexToTextConverterScreen> {
 }
 
 enum HexTextConvertMode { hexToText, textToHex }
+
+extension HexTextConvertModeX on HexTextConvertMode {
+  String localizedName(AppLocalizations l10n) => switch (this) {
+        HexTextConvertMode.hexToText => l10n.hexTextModeHexToText,
+        HexTextConvertMode.textToHex => l10n.hexTextModeTextToHex,
+      };
+}

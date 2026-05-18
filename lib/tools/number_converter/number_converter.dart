@@ -1,4 +1,5 @@
 import 'package:dash_tools/common/text_formatters.dart';
+import 'package:dash_tools/l10n/l10n.dart';
 import 'package:dash_tools/tools/clipboard_service.dart';
 import 'package:dash_tools/widgets/clear_text.dart';
 import 'package:dash_tools/widgets/copy_button.dart';
@@ -103,15 +104,15 @@ class _NumberConverterScreenState extends State<NumberConverterScreen> {
     }
   }
 
-  List<_NumericalSystemConfiguration> get numericalSystems => [
-        (controller: hexController, focus: hexFocusNode, formatter: AppTextFormatters.hexadecimal, label: "Hex"),
-        (controller: decimalController, focus: decimalFocusNode, formatter: AppTextFormatters.decimal, label: "Decimal"),
-        (controller: octalController, focus: octalFocusNode, formatter: AppTextFormatters.octal, label: "Octal"),
-        (controller: binaryController, focus: binaryFocusNode, formatter: AppTextFormatters.binary, label: "Binary"),
-      ];
-
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final numericalSystems = <_NumericalSystemConfiguration>[
+      (controller: hexController, focus: hexFocusNode, formatter: AppTextFormatters.hexadecimal, label: l10n.hex),
+      (controller: decimalController, focus: decimalFocusNode, formatter: AppTextFormatters.decimal, label: l10n.decimal),
+      (controller: octalController, focus: octalFocusNode, formatter: AppTextFormatters.octal, label: l10n.octal),
+      (controller: binaryController, focus: binaryFocusNode, formatter: AppTextFormatters.binary, label: l10n.binary),
+    ];
     return ListView.separated(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
         itemBuilder: (BuildContext context, int index) {
@@ -154,5 +155,3 @@ class _NumberTextField extends StatelessWidget {
     );
   }
 }
-
-

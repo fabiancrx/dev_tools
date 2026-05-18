@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dash_tools/l10n/l10n.dart';
 import 'package:dash_tools/tools/base64/dart_logo.dart';
 import 'package:dash_tools/widgets/clear_text.dart';
 import 'package:dash_tools/widgets/flex_action_bar.dart';
@@ -78,6 +79,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -92,7 +94,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                 FlexActionBar(
                   children: [
                     Tooltip(
-                      message: "Paste base 64 encoded image from clipboard",
+                      message: l10n.pasteBase64FromClipboard,
                       child: YaruOptionButton(
                           onPressed: () async {
                             final reader = await SystemClipboard.instance?.read();
@@ -110,7 +112,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                     ),
                     const SizedBox.square(dimension: 8),
                     Tooltip(
-                        message: "Copy base 64 encoded image to clipboard",
+                        message: l10n.copyBase64ToClipboard,
                         child: YaruOptionButton(
                             onPressed: () async {
                               if (imageBytes.isNotEmpty) {
@@ -142,7 +144,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                 FlexActionBar(
                   children: [
                     Tooltip(
-                        message: "Paste image from clipboard",
+                        message: l10n.pasteImageFromClipboard,
                         child: YaruOptionButton(
                             onPressed: () async {
                               final reader = await SystemClipboard.instance?.read();
@@ -156,25 +158,26 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                             child: (const Icon(Icons.paste)))),
                     const SizedBox.square(dimension: 8),
                     Tooltip(
-                        message: "Copy image to clipboard",
+                        message: l10n.copyImageToClipboard,
                         child: YaruOptionButton(onPressed: copyImageToClipboard, child: (const Icon(Icons.copy)))),
                     const Spacer(),
-                    Tooltip(message: "Load File", child: YaruOptionButton(onPressed: loadImage, child: (const Icon(Icons.upload_file)))),
+                    Tooltip(message: l10n.loadFile, child: YaruOptionButton(onPressed: loadImage, child: (const Icon(Icons.upload_file)))),
                     const SizedBox.square(dimension: 8),
                     Tooltip(
-                        message: "Save",
+                        message: l10n.save,
                         child: YaruOptionButton(
                             onPressed: () async {
                               if (imageBytes.isNotEmpty) {
+                                final dialogTitle = l10n.selectOutputFile;
                                 String? outputFile =
-                                    await FilePicker.saveFile(dialogTitle: 'Please select an output file:', fileName: 'image.png');
+                                    await FilePicker.saveFile(dialogTitle: dialogTitle, fileName: 'image.png');
 
                                 if (outputFile != null) {
                                   try {
                                     final f = File(outputFile);
                                     await f.writeAsBytes(imageBytes);
                                     if (context.mounted) {
-                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Image saved")));
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.l10n.imageSaved)));
                                     }
                                   } catch (e, st) {
                                     debugPrint('$e\n$st');
@@ -211,8 +214,8 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            TextButton(onPressed: _populate, child: Text("Sample")),
-                                            TextButton(onPressed: loadImage, child: Text("Load Image"))
+                                            TextButton(onPressed: _populate, child: Text(context.l10n.sample)),
+                                            TextButton(onPressed: loadImage, child: Text(context.l10n.loadImage))
                                           ],
                                         )
                                       ],
@@ -253,14 +256,15 @@ class _ImageContextMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return ContextMenuWidget(
         contextMenuIsAllowed: (_) => enabled,
         child: Card(child: child),
         menuProvider: (_) {
           return Menu(
             children: [
-              MenuAction(title: 'Copy to clipboard', callback: onCopy),
-              MenuAction(title: 'Clear', callback: onClear),
+              MenuAction(title: l10n.copyToClipboard, callback: onCopy),
+              MenuAction(title: l10n.clear, callback: onClear),
             ],
           );
         });

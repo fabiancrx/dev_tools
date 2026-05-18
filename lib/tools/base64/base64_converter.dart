@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dash_tools/l10n/l10n.dart';
 import 'package:dash_tools/tools/clipboard_service.dart';
 import 'package:dash_tools/widgets/copy_button.dart';
 import 'package:dash_tools/widgets/flex_action_bar.dart';
@@ -33,12 +34,10 @@ class _Base64ConverterScreenState extends State<Base64ConverterScreen> {
   }
 
   void _convert() {
-    switch (mode.value) {
-      case Base64ConverterMode.encode:
-        outputController.text = base64.encode(codec.value.encode(inputController.text));
-      case Base64ConverterMode.decode:
-        outputController.text = codec.value.decode(base64.decode(inputController.text));
-    }
+    outputController.text = switch (mode.value) {
+      Base64ConverterMode.encode => base64.encode(codec.value.encode(inputController.text)),
+      Base64ConverterMode.decode => codec.value.decode(base64.decode(inputController.text)),
+    };
   }
 
   @override
@@ -51,6 +50,7 @@ class _Base64ConverterScreenState extends State<Base64ConverterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -74,22 +74,21 @@ class _Base64ConverterScreenState extends State<Base64ConverterScreen> {
                                 onChanged: (_) {
                                   mode.value = e;
                                 },
-                                title: Text(e.name)))
-                            ,
+                                title: Text(e.localizedName(l10n)))),
                         const SizedBox.square(dimension: 8),
                         Tooltip(
-                          message: "Encoding",
+                          message: l10n.encoding,
                           child: ValueListenableBuilder(
                             builder: (context, selected, child) {
                               return YaruPopupMenuButton(
-                                  child: Text(selected.name),
+                                  child: Text(selected.displayName),
                                   itemBuilder: (ctx) => Codec.values
                                       .map((e) => PopupMenuItem(
                                           value: e,
                                           onTap: () {
                                             codec.value = e;
                                           },
-                                          child: Text(e.name)))
+                                          child: Text(e.displayName)))
                                       .toList());
                             },
                             valueListenable: codec,
@@ -107,7 +106,7 @@ class _Base64ConverterScreenState extends State<Base64ConverterScreen> {
                   child: TextField(
                     controller: inputController,
                     textAlignVertical: TextAlignVertical.top,
-                    decoration: const InputDecoration(labelText: "Input", alignLabelWithHint: true),
+                    decoration: InputDecoration(labelText: l10n.input, alignLabelWithHint: true),
                     expands: true,
                     maxLines: null,
                     minLines: null,
@@ -122,7 +121,7 @@ class _Base64ConverterScreenState extends State<Base64ConverterScreen> {
                   child: TextField(
                     controller: outputController,
                     textAlignVertical: TextAlignVertical.top,
-                    decoration: const InputDecoration(labelText: "Output", alignLabelWithHint: true),
+                    decoration: InputDecoration(labelText: l10n.output, alignLabelWithHint: true),
                     expands: true,
                     maxLines: null,
                     minLines: null,
@@ -139,6 +138,13 @@ class _Base64ConverterScreenState extends State<Base64ConverterScreen> {
 
 enum Base64ConverterMode { encode, decode }
 
+extension Base64ConverterModeX on Base64ConverterMode {
+  String localizedName(AppLocalizations l10n) => switch (this) {
+        Base64ConverterMode.encode => l10n.base64ModeEncode,
+        Base64ConverterMode.decode => l10n.base64ModeDecode,
+      };
+}
+
 enum Codec {
   utf8(Utf8Codec()),
   latin1(Latin1Codec()),
@@ -151,4 +157,12 @@ enum Codec {
   String decode(List<int> i) => _encoding.decode(i);
 
   List<int> encode(String i) => _encoding.encode(i);
+}
+
+extension CodecX on Codec {
+  String get displayName => switch (this) {
+        Codec.utf8 => 'UTF-8',
+        Codec.latin1 => 'Latin-1',
+        Codec.ascii => 'ASCII',
+      };
 }

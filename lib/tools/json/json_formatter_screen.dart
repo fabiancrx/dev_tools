@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import "package:dash_tools/common/code_field.dart";
 import 'package:dash_tools/common/extensions.dart';
+import 'package:dash_tools/l10n/l10n.dart';
 import 'package:dash_tools/tools/clipboard_service.dart';
 import "package:dash_tools/widgets/copy_button.dart";
 import "package:dash_tools/widgets/flex_action_bar.dart";
@@ -51,6 +52,7 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final pageController = ref.watch(jsonControllerProvider.notifier);
     final pageState = ref.watch(jsonControllerProvider);
 
@@ -82,7 +84,7 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
                   onPressed: () {
                     outputController.text = pageController.sample;
                   },
-                  child: const Text("Sample")),
+                  child: Text(l10n.sample)),
               DropdownButton<JsonMode>(
                 value: pageState.mode,
                 onChanged: (JsonMode? m) {
@@ -91,7 +93,7 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
                 items: JsonMode.values
                     .map((e) => DropdownMenuItem(
                           value: e,
-                          child: Text(e.name),
+                          child: Text(e.localizedName(l10n)),
                         ))
                     .toList(),
               ),
@@ -102,7 +104,7 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
                         ref.read(jsonControllerProvider.notifier).processSync(outputController.text);
                     outputController.text = jsonObject;
                   },
-                  child: const Text("Format")),
+                  child: Text(l10n.format)),
               CopyButton(
                 showText: false,
                 copyCallback: () {
@@ -133,4 +135,13 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
       ),
     );
   }
+}
+
+extension JsonModeX on JsonMode {
+  String localizedName(AppLocalizations l10n) => switch (this) {
+        JsonMode.minify => l10n.jsonModeMinify,
+        JsonMode.twoSpaces => l10n.jsonModeTwoSpaces,
+        JsonMode.fourSpaces => l10n.jsonModeFourSpaces,
+        JsonMode.tab => l10n.jsonModeTab,
+      };
 }

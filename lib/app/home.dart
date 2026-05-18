@@ -1,10 +1,12 @@
 import "dart:io";
 
+import "package:dash_tools/l10n/l10n.dart";
 import "package:dash_tools/tools/tools.dart";
 import "package:dash_tools/widgets/app_logo.dart";
 import "package:dash_tools/widgets/clear_text.dart";
 import "package:flutter/material.dart";
 import "package:yaru/widgets.dart";
+
 class SearchField extends StatefulWidget {
   final String hint;
 
@@ -40,7 +42,7 @@ class _SearchFieldState extends State<SearchField> {
                   focusNode: searchFocus,
                   decoration: InputDecoration(
                       prefixIcon: searchFocus.hasFocus ? const Icon(Icons.search) : const SizedBox.shrink(),
-                      hintText: searchFocus.hasFocus ? 'Search...' : widget.hint,
+                      hintText: searchFocus.hasFocus ? context.l10n.search : widget.hint,
                       hintStyle: const TextStyle(),
                       suffixIcon: ClearTextIcon(controller: searchController, focusNode: searchFocus)));
             }),
@@ -79,7 +81,7 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
         padding: const EdgeInsets.only(bottom: 10),
         child: YaruNavigationRailItem(
           icon: const Icon(Icons.settings),
-          label: const Text('Settings'),
+          label: Text(context.l10n.settings),
           width: paneWidth,
           style: itemStyle,
           onTap: () {
@@ -107,15 +109,16 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
       },
       initialIndex: selectedIndex,
       itemBuilder: (context, index, selected) => YaruNavigationRailItem(
-        tooltip: wideWindowSize ? tools[index].description : tools[index].name,
+        tooltip: wideWindowSize ? context.l10n.toolDescription(tools[index].id) : context.l10n.toolName(tools[index].id),
         icon: tools[index].icon ?? const Icon(Icons.compare_arrows),
-        label: Text(tools[index].name),
+        label: Text(context.l10n.toolName(tools[index].id)),
         style: itemStyle,
       ),
       pageBuilder: (context, index) => YaruDetailPage(
         appBar: YaruWindowTitleBar(
             title: ConstrainedBox(
-                constraints: const BoxConstraints(maxHeight: 46, maxWidth: 420), child: SearchField(hint: tools[index].name))),
+                constraints: const BoxConstraints(maxHeight: 46, maxWidth: 420),
+                child: SearchField(hint: context.l10n.toolName(tools[index].id)))),
         body: tools[index].screen,
       ),
     );

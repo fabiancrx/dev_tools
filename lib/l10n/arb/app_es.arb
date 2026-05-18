@@ -1,7 +1,87 @@
 {
     "@@locale": "es",
-    "counterAppBarTitle": "Contador",
-    "@counterAppBarTitle": {
-        "description": "Texto mostrado en la AppBar de la página del contador"
-    }
+
+    "search": "Buscar...",
+    "settings": "Configuración",
+    "input": "Entrada",
+    "output": "Salida",
+    "sample": "Ejemplo",
+    "clear": "Limpiar",
+    "format": "Formatear",
+    "loadImage": "Cargar imagen",
+    "loadFile": "Cargar archivo",
+    "save": "Guardar",
+    "encoding": "Codificación",
+    "copyToClipboard": "Copiar al portapapeles",
+    "imageSaved": "Imagen guardada",
+    "selectOutputFile": "Por favor seleccione un archivo de salida:",
+    "pasteBase64FromClipboard": "Pegar imagen base 64 codificada desde el portapapeles",
+    "copyBase64ToClipboard": "Copiar imagen base 64 codificada al portapapeles",
+    "pasteImageFromClipboard": "Pegar imagen desde el portapapeles",
+    "copyImageToClipboard": "Copiar imagen al portapapeles",
+    "jwtTokenLabel": "Token JWT",
+    "whatIsJwt": "¿Qué es un token web JSON?",
+
+    "issuedOn": "Emitido el: {date}",
+    "@issuedOn": {
+        "placeholders": {
+            "date": { "type": "String" }
+        }
+    },
+
+    "expiredOn": "Expirado el: {date}",
+    "@expiredOn": {
+        "placeholders": {
+            "date": { "type": "String" }
+        }
+    },
+
+    "expiresOn": "Expira el: {date} en {remaining}",
+    "@expiresOn": {
+        "placeholders": {
+            "date": { "type": "String" },
+            "remaining": { "type": "String" }
+        }
+    },
+
+    "jwtPayload": "Carga útil",
+    "jwtHeader": "Encabezado",
+    "jwtClaimIss": "Claim del emisor\nIdentifica el principal que emitió el JWT. El procesamiento de este claim generalmente es específico de la aplicación.",
+    "jwtClaimSub": "Claim del sujeto\nIdentifica el principal que es el sujeto del JWT. Los claims en un JWT son normalmente declaraciones sobre el sujeto. El valor del sujeto DEBE estar restringido para ser localmente único en el contexto del emisor o ser globalmente único. El procesamiento de este claim generalmente es específico de la aplicación.",
+    "jwtClaimExp": "Claim de tiempo de expiración\nIdentifica el tiempo de expiración tras el cual el JWT NO DEBE ser aceptado para procesamiento. El procesamiento del claim 'exp' requiere que la fecha/hora actual DEBE ser antes de la fecha/hora de expiración indicada en el claim 'exp'.",
+    "jwtClaimNbf": "Claim de no antes de\nIdentifica el tiempo antes del cual el JWT NO DEBE ser aceptado para procesamiento. El procesamiento del claim 'nbf' requiere que la fecha/hora actual DEBE ser después o igual a la fecha/hora indicada en el claim 'nbf'.",
+    "jwtClaimIat": "Claim de emitido en\nIdentifica el tiempo en el que se emitió el JWT. Este claim puede usarse para determinar la antigüedad del JWT.",
+    "jwtClaimJti": "Claim de ID del JWT\nProporciona un identificador único para el JWT. El valor del identificador DEBE asignarse de manera que garantice una probabilidad insignificante de que el mismo valor sea asignado accidentalmente a otro objeto de datos.",
+    "jwtClaimAud": "Claim de audiencia\nIdentifica los destinatarios para los que está destinado el JWT. Cada principal que pretenda procesar el JWT DEBE identificarse con un valor en el claim de audiencia.",
+
+    "hex": "Hexadecimal",
+    "decimal": "Decimal",
+    "octal": "Octal",
+    "binary": "Binario",
+
+    "base64ModeEncode": "Codificar",
+    "base64ModeDecode": "Decodificar",
+    "jsonEscapeModeEscape": "Escapar",
+    "jsonEscapeModeUnescape": "Desescapar",
+    "hexTextModeHexToText": "Hex a Texto",
+    "hexTextModeTextToHex": "Texto a Hex",
+    "jsonModeMinify": "Minificar",
+    "jsonModeTwoSpaces": "2 Espacios",
+    "jsonModeFourSpaces": "4 Espacios",
+    "jsonModeTab": "Tabulación",
+
+    "toolBase64Name": "Codificador/decodificador BASE 64",
+    "toolBase64Description": "Codifica o decodifica una cadena en base64",
+    "toolJsonFormatterName": "Formateador JSON",
+    "toolJsonFormatterDescription": "Embellece, minifica o valida una cadena JSON",
+    "toolBase64ImageName": "Codificador/decodificador de imágenes BASE 64",
+    "toolBase64ImageDescription": "Codifica o decodifica una imagen en base64",
+    "toolNumberConverterName": "Convertidor de números",
+    "toolNumberConverterDescription": "Convierte números de una base a otra",
+    "toolHexToAsciiName": "Hex a ASCII",
+    "toolHexToAsciiDescription": "Conversión de Hex a ASCII",
+    "toolJsonEscapeName": "Escapado/desescapado JSON",
+    "toolJsonEscapeDescription": "Escapa o desescapa una cadena JSON",
+    "toolJwtDebuggerName": "Depurador JWT",
+    "toolJwtDebuggerDescription": "Depurador de carga útil y encabezado de Token Web JSON"
 }

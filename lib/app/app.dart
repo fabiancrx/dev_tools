@@ -16,9 +16,11 @@ class App extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: yaruLight,
         darkTheme: yaruDark,
-        localizationsDelegates:  const [
+        localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: AppLocalizations.supportedLocales,
         home: const DropdownButtonHideUnderline(child: AdaptiveNavigationPane(tools: tools)),

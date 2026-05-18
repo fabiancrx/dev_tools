@@ -1,7 +1,199 @@
 {
     "@@locale": "en",
-    "counterAppBarTitle": "Counter",
-    "@counterAppBarTitle": {
-        "description": "Text shown in the AppBar of the Counter Page"
-    }
+
+    "search": "Search...",
+    "@search": { "description": "Search field hint text" },
+
+    "settings": "Settings",
+    "@settings": { "description": "Settings navigation item label" },
+
+    "input": "Input",
+    "@input": { "description": "Input text field label" },
+
+    "output": "Output",
+    "@output": { "description": "Output text field label" },
+
+    "sample": "Sample",
+    "@sample": { "description": "Sample button label" },
+
+    "clear": "Clear",
+    "@clear": { "description": "Clear action label" },
+
+    "format": "Format",
+    "@format": { "description": "Format button label in JSON formatter" },
+
+    "loadImage": "Load Image",
+    "@loadImage": { "description": "Load image button label" },
+
+    "loadFile": "Load File",
+    "@loadFile": { "description": "Load file tooltip" },
+
+    "save": "Save",
+    "@save": { "description": "Save button tooltip" },
+
+    "encoding": "Encoding",
+    "@encoding": { "description": "Encoding selector tooltip in Base64 converter" },
+
+    "copyToClipboard": "Copy to clipboard",
+    "@copyToClipboard": { "description": "Copy to clipboard context menu item" },
+
+    "imageSaved": "Image saved",
+    "@imageSaved": { "description": "Snackbar message when image is saved successfully" },
+
+    "selectOutputFile": "Please select an output file:",
+    "@selectOutputFile": { "description": "File save dialog title" },
+
+    "pasteBase64FromClipboard": "Paste base 64 encoded image from clipboard",
+    "@pasteBase64FromClipboard": { "description": "Tooltip for paste base64 button in image converter" },
+
+    "copyBase64ToClipboard": "Copy base 64 encoded image to clipboard",
+    "@copyBase64ToClipboard": { "description": "Tooltip for copy base64 button in image converter" },
+
+    "pasteImageFromClipboard": "Paste image from clipboard",
+    "@pasteImageFromClipboard": { "description": "Tooltip for paste image button in image converter" },
+
+    "copyImageToClipboard": "Copy image to clipboard",
+    "@copyImageToClipboard": { "description": "Tooltip for copy image button in image converter" },
+
+    "jwtTokenLabel": "JWT Token",
+    "@jwtTokenLabel": { "description": "JWT token input field label" },
+
+    "whatIsJwt": "What is a Json Web token?",
+    "@whatIsJwt": { "description": "Tooltip for JWT info button" },
+
+    "issuedOn": "Issued on: {date}",
+    "@issuedOn": {
+        "description": "JWT issued date label",
+        "placeholders": {
+            "date": { "type": "String", "description": "The formatted issue date" }
+        }
+    },
+
+    "expiredOn": "Expired on: {date}",
+    "@expiredOn": {
+        "description": "JWT expiration label when token is already expired",
+        "placeholders": {
+            "date": { "type": "String", "description": "The formatted expiration date" }
+        }
+    },
+
+    "expiresOn": "Expires on: {date} in {remaining}",
+    "@expiresOn": {
+        "description": "JWT expiration label when token is still valid",
+        "placeholders": {
+            "date": { "type": "String", "description": "The formatted expiration date" },
+            "remaining": { "type": "String", "description": "Human-readable remaining time" }
+        }
+    },
+
+    "jwtPayload": "Payload",
+    "@jwtPayload": { "description": "JWT payload section title" },
+
+    "jwtHeader": "Header",
+    "@jwtHeader": { "description": "JWT header section title" },
+
+    "jwtClaimIss": "Issuer Claim\nIdentifies the principal that issued the JWT. The processing of this claim is generally application specific.",
+    "@jwtClaimIss": { "description": "JWT iss claim tooltip description" },
+
+    "jwtClaimSub": "Subject Claim\nIdentifies the principal that is the subject of the JWT. The claims in a JWT are normally statements about the subject. The subject value MUST either be scoped to be locally unique in the context of the issuer or be globally unique. The processing of this claim is generally application specific.",
+    "@jwtClaimSub": { "description": "JWT sub claim tooltip description" },
+
+    "jwtClaimExp": "Expiration time claim\nIdentifies the expiration time on or after which the JWT MUST NOT be accepted for processing. The processing of the 'exp' claim requires that the current date/time MUST be before the expiration date/time listed in the 'exp' claim.",
+    "@jwtClaimExp": { "description": "JWT exp claim tooltip description" },
+
+    "jwtClaimNbf": "Not before claim\nIdentifies the time before which the JWT MUST NOT be accepted for processing. The processing of the 'nbf' claim requires that the current date/time MUST be after or equal to the not-before date/time listed in the 'nbf' claim.",
+    "@jwtClaimNbf": { "description": "JWT nbf claim tooltip description" },
+
+    "jwtClaimIat": "Issued at claim\nIdentifies the time at which the JWT was issued. This claim can be used to determine the age of the JWT.",
+    "@jwtClaimIat": { "description": "JWT iat claim tooltip description" },
+
+    "jwtClaimJti": "JWT ID claim\nProvides a unique identifier for the JWT. The identifier value MUST be assigned in a manner that ensures that there is a negligible probability that the same value will be accidentally assigned to a different data object; if the application uses multiple issuers, collisions MUST be prevented among values produced by different issuers as well.",
+    "@jwtClaimJti": { "description": "JWT jti claim tooltip description" },
+
+    "jwtClaimAud": "Audience claim\nIdentifies the recipients that the JWT is intended for. Each principal intended to process the JWT MUST identify itself with a value in the audience claim.",
+    "@jwtClaimAud": { "description": "JWT aud claim tooltip description" },
+
+    "hex": "Hex",
+    "@hex": { "description": "Hexadecimal number system label" },
+
+    "decimal": "Decimal",
+    "@decimal": { "description": "Decimal number system label" },
+
+    "octal": "Octal",
+    "@octal": { "description": "Octal number system label" },
+
+    "binary": "Binary",
+    "@binary": { "description": "Binary number system label" },
+
+    "base64ModeEncode": "Encode",
+    "@base64ModeEncode": { "description": "Base64 encode mode label" },
+
+    "base64ModeDecode": "Decode",
+    "@base64ModeDecode": { "description": "Base64 decode mode label" },
+
+    "jsonEscapeModeEscape": "Escape",
+    "@jsonEscapeModeEscape": { "description": "JSON escape mode label" },
+
+    "jsonEscapeModeUnescape": "Unescape",
+    "@jsonEscapeModeUnescape": { "description": "JSON unescape mode label" },
+
+    "hexTextModeHexToText": "Hex to Text",
+    "@hexTextModeHexToText": { "description": "Hex to text conversion mode label" },
+
+    "hexTextModeTextToHex": "Text to Hex",
+    "@hexTextModeTextToHex": { "description": "Text to hex conversion mode label" },
+
+    "jsonModeMinify": "Minify",
+    "@jsonModeMinify": { "description": "JSON minify mode label" },
+
+    "jsonModeTwoSpaces": "2 Spaces",
+    "@jsonModeTwoSpaces": { "description": "JSON format with 2-space indent label" },
+
+    "jsonModeFourSpaces": "4 Spaces",
+    "@jsonModeFourSpaces": { "description": "JSON format with 4-space indent label" },
+
+    "jsonModeTab": "Tab",
+    "@jsonModeTab": { "description": "JSON format with tab indent label" },
+
+    "toolBase64Name": "BASE 64 encoder/decoder",
+    "@toolBase64Name": { "description": "Base64 tool name" },
+
+    "toolBase64Description": "Encode or decode a String as base64",
+    "@toolBase64Description": { "description": "Base64 tool description" },
+
+    "toolJsonFormatterName": "JSON formatter",
+    "@toolJsonFormatterName": { "description": "JSON formatter tool name" },
+
+    "toolJsonFormatterDescription": "Prettify, minify or just validate a String as JSON",
+    "@toolJsonFormatterDescription": { "description": "JSON formatter tool description" },
+
+    "toolBase64ImageName": "BASE 64 Image encoder/decoder",
+    "@toolBase64ImageName": { "description": "Base64 image tool name" },
+
+    "toolBase64ImageDescription": "Encode or decode an image as base64",
+    "@toolBase64ImageDescription": { "description": "Base64 image tool description" },
+
+    "toolNumberConverterName": "Number Converter",
+    "@toolNumberConverterName": { "description": "Number converter tool name" },
+
+    "toolNumberConverterDescription": "Convert numbers from one base to another",
+    "@toolNumberConverterDescription": { "description": "Number converter tool description" },
+
+    "toolHexToAsciiName": "Hex to ASCII",
+    "@toolHexToAsciiName": { "description": "Hex to ASCII tool name" },
+
+    "toolHexToAsciiDescription": "Hex to ASCII conversion",
+    "@toolHexToAsciiDescription": { "description": "Hex to ASCII tool description" },
+
+    "toolJsonEscapeName": "JSON escape/unescape",
+    "@toolJsonEscapeName": { "description": "JSON escape tool name" },
+
+    "toolJsonEscapeDescription": "Escape or unescape a JSON string",
+    "@toolJsonEscapeDescription": { "description": "JSON escape tool description" },
+
+    "toolJwtDebuggerName": "JWT Debugger",
+    "@toolJwtDebuggerName": { "description": "JWT debugger tool name" },
+
+    "toolJwtDebuggerDescription": "JSON Web Token payload and header debugger",
+    "@toolJwtDebuggerDescription": { "description": "JWT debugger tool description" }
 }
