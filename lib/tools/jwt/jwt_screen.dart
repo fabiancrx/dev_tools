@@ -21,9 +21,22 @@ class JwtScreen extends StatefulWidget {
 
 class _JwtScreenState extends State<JwtScreen> {
   late final _controller = JwtController();
+  late final _tokenTec = TextEditingController(text: _controller.token);
+
+  @override
+  void initState() {
+    super.initState();
+    _tokenTec.addListener(() => _controller.setToken(_tokenTec.text));
+    _controller.addListener(() {
+      if (_tokenTec.text != _controller.token) {
+        _tokenTec.text = _controller.token;
+      }
+    });
+  }
 
   @override
   void dispose() {
+    _tokenTec.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -44,14 +57,14 @@ class _JwtScreenState extends State<JwtScreen> {
                     onPressed: () async {
                       final text = await getClipboardContent();
                       if (text != null && text.isNotEmpty) {
-                        _controller.tokenController.text = text;
+                        _tokenTec.text = text;
                       }
                     },
                     child: const Icon(Icons.paste_rounded),
                   ),
                   CopyButton(
                     showText: false,
-                    copyCallback: () => pasteContentToClipboard(_controller.tokenController.text),
+                    copyCallback: () => pasteContentToClipboard(_controller.token),
                   ),
                   YaruOptionButton(
                     onPressed: _controller.clear,
@@ -75,7 +88,7 @@ class _JwtScreenState extends State<JwtScreen> {
                       maxLines: 4,
                       minLines: 2,
                       decoration: InputDecoration(label: Text(l10n.jwtTokenLabel)),
-                      controller: _controller.tokenController,
+                      controller: _tokenTec,
                     ),
                     const SizedBox.square(dimension: 8),
                     if (_controller.expirationDate != null || _controller.issuedDate != null)

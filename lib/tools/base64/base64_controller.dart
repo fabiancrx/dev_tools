@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 
 enum Base64ConverterMode { encode, decode }
 
@@ -24,48 +24,49 @@ enum Codec {
 }
 
 class Base64Controller extends ChangeNotifier {
+  static const _initialInput = 'aguacate';
+
   Base64Controller() {
-    inputController.text = 'aguacate';
-    _convert();
-    inputController.addListener(_convert);
+    _output = _computeOutput(_input);
   }
 
-  final inputController = TextEditingController();
-  final outputController = TextEditingController();
+  String _input = _initialInput;
+  String _output = '';
 
   Base64ConverterMode _mode = Base64ConverterMode.encode;
   Codec _codec = Codec.utf8;
 
+  String get input => _input;
+  String get output => _output;
   Base64ConverterMode get mode => _mode;
   Codec get codec => _codec;
 
+  void setInput(String value) {
+    _input = value;
+    _output = _computeOutput(value);
+    notifyListeners();
+  }
+
   void setMode(Base64ConverterMode mode) {
     _mode = mode;
-    _convert();
+    _output = _computeOutput(_input);
     notifyListeners();
   }
 
   void setCodec(Codec codec) {
     _codec = codec;
-    _convert();
+    _output = _computeOutput(_input);
     notifyListeners();
   }
 
-  void _convert() {
+  String _computeOutput(String input) {
     try {
-      outputController.text = switch (_mode) {
-        Base64ConverterMode.encode => base64.encode(_codec.encode(inputController.text)),
-        Base64ConverterMode.decode => _codec.decode(base64.decode(inputController.text)),
+      return switch (_mode) {
+        Base64ConverterMode.encode => base64.encode(_codec.encode(input)),
+        Base64ConverterMode.decode => _codec.decode(base64.decode(input)),
       };
     } catch (_) {
-      outputController.text = '';
+      return '';
     }
-  }
-
-  @override
-  void dispose() {
-    inputController.dispose();
-    outputController.dispose();
-    super.dispose();
   }
 }

@@ -17,32 +17,32 @@ void main() {
 
     test('encodes initial input on construction', () {
       expect(
-        controller.outputController.text,
+        controller.output,
         base64.encode(utf8.encode('aguacate')),
       );
     });
 
     test('encodes new input text', () {
-      controller.inputController.text = 'hello';
-      expect(controller.outputController.text, base64.encode(utf8.encode('hello')));
+      controller.setInput('hello');
+      expect(controller.output, base64.encode(utf8.encode('hello')));
     });
 
     test('decodes base64 input in decode mode', () {
       controller.setMode(Base64ConverterMode.decode);
-      controller.inputController.text = base64.encode(utf8.encode('world'));
-      expect(controller.outputController.text, 'world');
+      controller.setInput(base64.encode(utf8.encode('world')));
+      expect(controller.output, 'world');
     });
 
     test('produces empty output for invalid base64 in decode mode', () {
       controller.setMode(Base64ConverterMode.decode);
-      controller.inputController.text = 'not!!valid!!base64';
-      expect(controller.outputController.text, '');
+      controller.setInput('not!!valid!!base64');
+      expect(controller.output, '');
     });
 
     test('re-encodes when codec changes', () {
-      controller.inputController.text = 'hello';
+      controller.setInput('hello');
       controller.setCodec(Codec.latin1);
-      expect(controller.outputController.text, base64.encode(latin1.encode('hello')));
+      expect(controller.output, base64.encode(latin1.encode('hello')));
     });
 
     test('notifies listeners when mode changes', () {

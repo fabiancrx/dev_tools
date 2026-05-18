@@ -1,39 +1,41 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 
 enum HexTextConvertMode { hexToText, textToHex }
 
 class HexTextController extends ChangeNotifier {
+  static const _initialInput = '6167756163617465';
+
   HexTextController() {
-    inputController.text = '6167756163617465';
-    outputController.text = hexToAscii(inputController.text);
-    inputController.addListener(_convert);
+    _output = _computeOutput(_input);
   }
 
-  final inputController = TextEditingController();
-  final outputController = TextEditingController();
+  String _input = _initialInput;
+  String _output = '';
 
   HexTextConvertMode _mode = HexTextConvertMode.hexToText;
+
+  String get input => _input;
+  String get output => _output;
   HexTextConvertMode get mode => _mode;
 
-  void setMode(HexTextConvertMode mode) {
-    _mode = mode;
-    _convert();
+  void setInput(String value) {
+    _input = value;
+    _output = _computeOutput(value);
     notifyListeners();
   }
 
-  void _convert() {
-    final cleanInput = inputController.text.replaceAll(RegExp(r'\s+'), '');
-    outputController.text = switch (_mode) {
-      HexTextConvertMode.hexToText => hexToAscii(cleanInput),
-      HexTextConvertMode.textToHex => asciiToHex(cleanInput),
-    };
+  void setMode(HexTextConvertMode mode) {
+    _mode = mode;
+    _output = _computeOutput(_input);
+    notifyListeners();
   }
 
-  @override
-  void dispose() {
-    inputController.dispose();
-    outputController.dispose();
-    super.dispose();
+  String _computeOutput(String input) {
+    final clean = input.replaceAll(RegExp(r'\s+'), '');
+    return switch (_mode) {
+      HexTextConvertMode.hexToText => hexToAscii(clean),
+      HexTextConvertMode.textToHex => asciiToHex(clean),
+    };
   }
 }
 

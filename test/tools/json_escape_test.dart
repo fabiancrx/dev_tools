@@ -59,35 +59,35 @@ void main() {
     });
 
     test('produces non-empty output for the initial populated text', () {
-      expect(controller.outputController.text, isNotEmpty);
+      expect(controller.output, isNotEmpty);
     });
 
     test('escapes inner quotes without surrounding quotes', () {
-      controller.inputController.text = 'say "hi"';
-      final output = controller.outputController.text;
+      controller.setInput('say "hi"');
+      final output = controller.output;
       expect(output, r'say \"hi\"');
       expect(output, isNot(startsWith('"')));
     });
 
     test('escapes a newline character', () {
-      controller.inputController.text = 'line1\nline2';
-      expect(controller.outputController.text, r'line1\nline2');
+      controller.setInput('line1\nline2');
+      expect(controller.output, r'line1\nline2');
     });
 
     test('unescapes escaped quotes in unescape mode', () {
       controller.setMode(JsonEncodeMode.unescape);
-      controller.inputController.text = r'say \"hi\"';
-      expect(controller.outputController.text, 'say "hi"');
+      controller.setInput(r'say \"hi\"');
+      expect(controller.output, 'say "hi"');
     });
 
     test('round-trip: escape then unescape recovers original', () {
       const original = 'Hello, "world"!\nNew line.';
-      controller.inputController.text = original;
-      final escaped = controller.outputController.text;
+      controller.setInput(original);
+      final escaped = controller.output;
 
       controller.setMode(JsonEncodeMode.unescape);
-      controller.inputController.text = escaped;
-      expect(controller.outputController.text, original);
+      controller.setInput(escaped);
+      expect(controller.output, original);
     });
 
     test('notifies listeners on mode change', () {

@@ -18,9 +18,20 @@ class HexToTextConverterScreen extends StatefulWidget {
 
 class _HexToTextConverterScreenState extends State<HexToTextConverterScreen> {
   late final _controller = HexTextController();
+  late final _inputTec = TextEditingController(text: _controller.input);
+  late final _outputTec = TextEditingController(text: _controller.output);
+
+  @override
+  void initState() {
+    super.initState();
+    _inputTec.addListener(() => _controller.setInput(_inputTec.text));
+    _controller.addListener(() => _outputTec.text = _controller.output);
+  }
 
   @override
   void dispose() {
+    _inputTec.dispose();
+    _outputTec.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -58,7 +69,7 @@ class _HexToTextConverterScreenState extends State<HexToTextConverterScreen> {
                 ]),
                 Expanded(
                   child: TextField(
-                    controller: _controller.inputController,
+                    controller: _inputTec,
                     textAlignVertical: TextAlignVertical.top,
                     expands: true,
                     maxLines: null,
@@ -73,12 +84,12 @@ class _HexToTextConverterScreenState extends State<HexToTextConverterScreen> {
               children: [
                 FlexActionBar(children: [
                   CopyButton(copyCallback: () {
-                    pasteContentToClipboard(_controller.outputController.text);
+                    pasteContentToClipboard(_controller.output);
                   }),
                 ]),
                 Expanded(
                   child: TextField(
-                    controller: _controller.outputController,
+                    controller: _outputTec,
                     textAlignVertical: TextAlignVertical.top,
                     expands: true,
                     maxLines: null,

@@ -1,93 +1,79 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 
 class NumberConverterController extends ChangeNotifier {
+  String _hex = '';
+  String _decimal = '';
+  String _octal = '';
+  String _binary = '';
+
+  String get hex => _hex;
+  String get decimal => _decimal;
+  String get octal => _octal;
+  String get binary => _binary;
+
   NumberConverterController() {
-    hexController.addListener(_hexConverter);
-    decimalController.addListener(_decimalConverter);
-    octalController.addListener(_octalConverter);
-    binaryController.addListener(_binaryConverter);
-    _populate();
+    _setFromDecimal(95);
   }
 
-  final hexController = TextEditingController();
-  final decimalController = TextEditingController();
-  final octalController = TextEditingController();
-  final binaryController = TextEditingController();
-  final hexFocusNode = FocusNode();
-  final decimalFocusNode = FocusNode();
-  final octalFocusNode = FocusNode();
-  final binaryFocusNode = FocusNode();
-
-  void _populate([int value = 95]) {
-    decimalController.text = '$value';
-    decimalFocusNode.requestFocus();
-    _decimalConverter();
-  }
-
-  void _hexConverter() {
-    if (!hexFocusNode.hasFocus) return;
-    if (int.tryParse(hexController.text, radix: 16) case final d?) {
-      decimalController.text = d.toString();
-      octalController.text = d.toRadixString(8);
-      binaryController.text = d.toRadixString(2);
+  void convertFromHex(String value) {
+    if (int.tryParse(value, radix: 16) case final d?) {
+      _hex = value;
+      _decimal = d.toString();
+      _octal = d.toRadixString(8);
+      _binary = d.toRadixString(2);
     } else {
-      _invalidNumber();
+      _clearAll();
     }
+    notifyListeners();
   }
 
-  void _decimalConverter() {
-    if (!decimalFocusNode.hasFocus) return;
-    if (int.tryParse(decimalController.text) case final d?) {
-      hexController.text = d.toRadixString(16);
-      octalController.text = d.toRadixString(8);
-      binaryController.text = d.toRadixString(2);
+  void convertFromDecimal(String value) {
+    if (int.tryParse(value) case final d?) {
+      _hex = d.toRadixString(16);
+      _decimal = value;
+      _octal = d.toRadixString(8);
+      _binary = d.toRadixString(2);
     } else {
-      _invalidNumber();
+      _clearAll();
     }
+    notifyListeners();
   }
 
-  void _octalConverter() {
-    if (!octalFocusNode.hasFocus) return;
-    if (int.tryParse(octalController.text, radix: 8) case final d?) {
-      hexController.text = d.toRadixString(16);
-      decimalController.text = d.toString();
-      binaryController.text = d.toRadixString(2);
+  void convertFromOctal(String value) {
+    if (int.tryParse(value, radix: 8) case final d?) {
+      _hex = d.toRadixString(16);
+      _decimal = d.toString();
+      _octal = value;
+      _binary = d.toRadixString(2);
     } else {
-      _invalidNumber();
+      _clearAll();
     }
+    notifyListeners();
   }
 
-  void _binaryConverter() {
-    if (!binaryFocusNode.hasFocus) return;
-    if (int.tryParse(binaryController.text, radix: 2) case final d?) {
-      hexController.text = d.toRadixString(16);
-      decimalController.text = d.toString();
-      octalController.text = d.toRadixString(8);
+  void convertFromBinary(String value) {
+    if (int.tryParse(value, radix: 2) case final d?) {
+      _hex = d.toRadixString(16);
+      _decimal = d.toString();
+      _octal = d.toRadixString(8);
+      _binary = value;
     } else {
-      _invalidNumber();
+      _clearAll();
     }
+    notifyListeners();
   }
 
-  void _invalidNumber() {
-    for (final c in [hexController, decimalController, octalController, binaryController]) {
-      c.text = '';
-    }
+  void _setFromDecimal(int value) {
+    _hex = value.toRadixString(16);
+    _decimal = value.toString();
+    _octal = value.toRadixString(8);
+    _binary = value.toRadixString(2);
   }
 
-  @override
-  void dispose() {
-    for (final e in [
-      hexController,
-      decimalController,
-      octalController,
-      binaryController,
-      hexFocusNode,
-      decimalFocusNode,
-      octalFocusNode,
-      binaryFocusNode,
-    ]) {
-      e.dispose();
-    }
-    super.dispose();
+  void _clearAll() {
+    _hex = '';
+    _decimal = '';
+    _octal = '';
+    _binary = '';
   }
 }

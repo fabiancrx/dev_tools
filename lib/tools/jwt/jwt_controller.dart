@@ -1,29 +1,36 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 
 class JwtController extends ChangeNotifier {
   static const _sampleToken =
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJpc3MiOiJKb2UiLCJleHAiOjE1MTYyMzkwMjJ9.W_2iFbDheNPQFxhRENNDoF5G9V32X-Qz03FK59VjNWQ';
 
   JwtController() {
-    tokenController.addListener(_parse);
     populate();
   }
 
-  final tokenController = TextEditingController();
-
+  String _token = '';
   JWT? _jwt;
   DateTime? _expirationDate;
   DateTime? _issuedDate;
 
+  String get token => _token;
   JWT? get jwt => _jwt;
   DateTime? get expirationDate => _expirationDate;
   DateTime? get issuedDate => _issuedDate;
 
-  void populate() => tokenController.text = _sampleToken;
+  void populate() {
+    _token = _sampleToken;
+    _parse();
+  }
+
+  void setToken(String value) {
+    _token = value;
+    _parse();
+  }
 
   void clear() {
-    tokenController.clear();
+    _token = '';
     _jwt = null;
     _expirationDate = null;
     _issuedDate = null;
@@ -33,9 +40,15 @@ class JwtController extends ChangeNotifier {
   void refresh() => notifyListeners();
 
   void _parse() {
-    if (tokenController.text.isEmpty) return;
+    if (_token.isEmpty) {
+      _jwt = null;
+      _expirationDate = null;
+      _issuedDate = null;
+      notifyListeners();
+      return;
+    }
     try {
-      final decoded = JWT.decode(tokenController.text);
+      final decoded = JWT.decode(_token);
       _jwt = decoded;
       _expirationDate = _extractNumericDate(decoded.payload['exp']);
       _issuedDate = _extractNumericDate(decoded.payload['iat']);
@@ -45,12 +58,6 @@ class JwtController extends ChangeNotifier {
       _issuedDate = null;
     }
     notifyListeners();
-  }
-
-  @override
-  void dispose() {
-    tokenController.dispose();
-    super.dispose();
   }
 }
 

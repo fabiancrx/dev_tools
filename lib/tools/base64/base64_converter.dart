@@ -18,9 +18,20 @@ class Base64ConverterScreen extends StatefulWidget {
 
 class _Base64ConverterScreenState extends State<Base64ConverterScreen> {
   late final _controller = Base64Controller();
+  late final _inputTec = TextEditingController(text: _controller.input);
+  late final _outputTec = TextEditingController(text: _controller.output);
+
+  @override
+  void initState() {
+    super.initState();
+    _inputTec.addListener(() => _controller.setInput(_inputTec.text));
+    _controller.addListener(() => _outputTec.text = _controller.output);
+  }
 
   @override
   void dispose() {
+    _inputTec.dispose();
+    _outputTec.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -66,7 +77,7 @@ class _Base64ConverterScreenState extends State<Base64ConverterScreen> {
                         ),
                         const Spacer(),
                         CopyButton(copyCallback: () {
-                          pasteContentToClipboard(_controller.outputController.text);
+                          pasteContentToClipboard(_controller.output);
                         }),
                       ],
                     );
@@ -74,7 +85,7 @@ class _Base64ConverterScreenState extends State<Base64ConverterScreen> {
                 ),
                 Expanded(
                   child: TextField(
-                    controller: _controller.inputController,
+                    controller: _inputTec,
                     textAlignVertical: TextAlignVertical.top,
                     decoration: InputDecoration(labelText: l10n.input, alignLabelWithHint: true),
                     expands: true,
@@ -89,7 +100,7 @@ class _Base64ConverterScreenState extends State<Base64ConverterScreen> {
               children: [
                 Expanded(
                   child: TextField(
-                    controller: _controller.outputController,
+                    controller: _outputTec,
                     textAlignVertical: TextAlignVertical.top,
                     decoration: InputDecoration(labelText: l10n.output, alignLabelWithHint: true),
                     expands: true,

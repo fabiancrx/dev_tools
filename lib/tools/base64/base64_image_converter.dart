@@ -23,9 +23,22 @@ class Base64ImageConverterScreen extends StatefulWidget {
 
 class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen> {
   late final _controller = Base64ImageController();
+  late final _inputTec = TextEditingController(text: _controller.inputText);
+
+  @override
+  void initState() {
+    super.initState();
+    _inputTec.addListener(() => _controller.setInputText(_inputTec.text));
+    _controller.addListener(() {
+      if (_inputTec.text != _controller.inputText) {
+        _inputTec.text = _controller.inputText;
+      }
+    });
+  }
 
   @override
   void dispose() {
+    _inputTec.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -62,12 +75,12 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                       ),
                     ),
                     const Spacer(),
-                    ClearTextIcon(controller: _controller.inputController),
+                    ClearTextIcon(controller: _inputTec),
                   ],
                 ),
                 Expanded(
                   child: TextField(
-                    controller: _controller.inputController,
+                    controller: _inputTec,
                     textAlignVertical: TextAlignVertical.top,
                     expands: true,
                     maxLines: null,
@@ -145,7 +158,7 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                             child: _ImageContextMenu(
                               enabled: _controller.imageBytes.isNotEmpty,
                               onCopy: _controller.copyImageToClipboard,
-                              onClear: _controller.inputController.clear,
+                              onClear: _controller.clearInput,
                               child: Image.memory(
                                 _controller.imageBytes,
                                 errorBuilder: (_, _, _) {

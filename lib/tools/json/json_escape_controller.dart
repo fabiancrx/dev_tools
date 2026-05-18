@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 
 enum JsonEncodeMode { escape, unescape }
 
@@ -9,33 +9,35 @@ class JsonEscapeController extends ChangeNotifier {
   static const _encoder = JsonEncoder();
 
   JsonEscapeController() {
-    _populate();
-    _convert();
-    inputController.addListener(_convert);
+    _input = _populatedText;
+    _output = _computeOutput(_input);
   }
 
-  final inputController = TextEditingController();
-  final outputController = TextEditingController();
+  String _input = '';
+  String _output = '';
 
   JsonEncodeMode _mode = JsonEncodeMode.escape;
+
+  String get input => _input;
+  String get output => _output;
   JsonEncodeMode get mode => _mode;
 
-  void setMode(JsonEncodeMode mode) {
-    _mode = mode;
-    _convert();
+  void setInput(String value) {
+    _input = value;
+    _output = _computeOutput(value);
     notifyListeners();
   }
 
-  void _populate([String value = _populatedText]) {
-    inputController.text = value;
+  void setMode(JsonEncodeMode mode) {
+    _mode = mode;
+    _output = _computeOutput(_input);
+    notifyListeners();
   }
 
-  void _convert() {
-    outputController.text = switch (_mode) {
-      JsonEncodeMode.escape => _escape(inputController.text),
-      JsonEncodeMode.unescape => unescape(inputController.text),
-    };
-  }
+  String _computeOutput(String input) => switch (_mode) {
+        JsonEncodeMode.escape => _escape(input),
+        JsonEncodeMode.unescape => unescape(input),
+      };
 
   String _escape(String input) {
     var result = _encoder.convert(input);
@@ -43,13 +45,6 @@ class JsonEscapeController extends ChangeNotifier {
       result = result.substring(1, result.length - 1);
     }
     return result;
-  }
-
-  @override
-  void dispose() {
-    inputController.dispose();
-    outputController.dispose();
-    super.dispose();
   }
 }
 

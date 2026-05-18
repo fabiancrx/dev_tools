@@ -26,9 +26,53 @@ typedef _SystemConfig = ({
 class _NumberConverterScreenState extends State<NumberConverterScreen> {
   late final _controller = NumberConverterController();
 
+  late final _hexTec = TextEditingController();
+  late final _decimalTec = TextEditingController();
+  late final _octalTec = TextEditingController();
+  late final _binaryTec = TextEditingController();
+
+  late final _hexFocus = FocusNode();
+  late final _decimalFocus = FocusNode();
+  late final _octalFocus = FocusNode();
+  late final _binaryFocus = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _hexTec.addListener(() {
+      if (_hexFocus.hasFocus) _controller.convertFromHex(_hexTec.text);
+    });
+    _decimalTec.addListener(() {
+      if (_decimalFocus.hasFocus) _controller.convertFromDecimal(_decimalTec.text);
+    });
+    _octalTec.addListener(() {
+      if (_octalFocus.hasFocus) _controller.convertFromOctal(_octalTec.text);
+    });
+    _binaryTec.addListener(() {
+      if (_binaryFocus.hasFocus) _controller.convertFromBinary(_binaryTec.text);
+    });
+    _controller.addListener(_syncFromController);
+    _syncFromController();
+  }
+
+  void _syncFromController() {
+    if (!_hexFocus.hasFocus) _hexTec.text = _controller.hex;
+    if (!_decimalFocus.hasFocus) _decimalTec.text = _controller.decimal;
+    if (!_octalFocus.hasFocus) _octalTec.text = _controller.octal;
+    if (!_binaryFocus.hasFocus) _binaryTec.text = _controller.binary;
+  }
+
   @override
   void dispose() {
     _controller.dispose();
+    _hexTec.dispose();
+    _decimalTec.dispose();
+    _octalTec.dispose();
+    _binaryTec.dispose();
+    _hexFocus.dispose();
+    _decimalFocus.dispose();
+    _octalFocus.dispose();
+    _binaryFocus.dispose();
     super.dispose();
   }
 
@@ -36,10 +80,10 @@ class _NumberConverterScreenState extends State<NumberConverterScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final systems = <_SystemConfig>[
-      (controller: _controller.hexController, focus: _controller.hexFocusNode, formatter: AppTextFormatters.hexadecimal, label: l10n.hex),
-      (controller: _controller.decimalController, focus: _controller.decimalFocusNode, formatter: AppTextFormatters.decimal, label: l10n.decimal),
-      (controller: _controller.octalController, focus: _controller.octalFocusNode, formatter: AppTextFormatters.octal, label: l10n.octal),
-      (controller: _controller.binaryController, focus: _controller.binaryFocusNode, formatter: AppTextFormatters.binary, label: l10n.binary),
+      (controller: _hexTec, focus: _hexFocus, formatter: AppTextFormatters.hexadecimal, label: l10n.hex),
+      (controller: _decimalTec, focus: _decimalFocus, formatter: AppTextFormatters.decimal, label: l10n.decimal),
+      (controller: _octalTec, focus: _octalFocus, formatter: AppTextFormatters.octal, label: l10n.octal),
+      (controller: _binaryTec, focus: _binaryFocus, formatter: AppTextFormatters.binary, label: l10n.binary),
     ];
     return ListView.separated(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),

@@ -4,31 +4,39 @@ import 'dart:io';
 import 'package:dash_tools/tools/base64/dart_logo.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:super_clipboard/super_clipboard.dart';
 
 class Base64ImageController extends ChangeNotifier {
   Base64ImageController() {
-    inputController.addListener(_onTextChanged);
     populate();
   }
 
-  final inputController = TextEditingController();
+  String _inputText = '';
+  String get inputText => _inputText;
 
   Uint8List _imageBytes = Uint8List.fromList([]);
   Uint8List get imageBytes => _imageBytes;
 
   void populate() {
-    inputController.text = base64DartLogo;
-    _imageBytes = _decodeBase64(inputController.text);
+    _inputText = base64DartLogo;
+    _imageBytes = _decodeBase64(_inputText);
+    notifyListeners();
+  }
+
+  void setInputText(String text) {
+    if (_inputText == text) return;
+    _inputText = text;
+    _imageBytes = _decodeBase64(text);
+    notifyListeners();
+  }
+
+  void clearInput() {
+    setInputText('');
   }
 
   void updateImage(Uint8List data) {
     _imageBytes = data;
-    // Temporarily remove listener to avoid re-decoding what we just encoded.
-    inputController.removeListener(_onTextChanged);
-    inputController.text = base64Encode(data);
-    inputController.addListener(_onTextChanged);
+    _inputText = base64Encode(data);
     notifyListeners();
   }
 
@@ -40,18 +48,13 @@ class Base64ImageController extends ChangeNotifier {
     }
   }
 
-  void _onTextChanged() {
-    _imageBytes = _decodeBase64(inputController.text);
-    notifyListeners();
-  }
-
   Future<void> pasteBase64FromClipboard() async {
     final reader = await SystemClipboard.instance?.read();
     if (reader == null) return;
     if (reader.canProvide(Formats.plainText)) {
       reader.getValue(Formats.plainText, (data) {
         if (data != null && data.isNotEmpty) {
-          inputController.text = data;
+          setInputText(data);
         }
       });
     }
@@ -60,7 +63,7 @@ class Base64ImageController extends ChangeNotifier {
   Future<void> copyBase64ToClipboard() async {
     if (_imageBytes.isNotEmpty) {
       final item = DataWriterItem();
-      item.add(Formats.plainText.lazy(() => inputController.text));
+      item.add(Formats.plainText.lazy(() => _inputText));
       await SystemClipboard.instance?.write([item]);
     }
   }
@@ -89,11 +92,5 @@ class Base64ImageController extends ChangeNotifier {
       final data = await File(result.files.single.path!).readAsBytes();
       updateImage(data);
     }
-  }
-
-  @override
-  void dispose() {
-    inputController.dispose();
-    super.dispose();
   }
 }

@@ -42,21 +42,18 @@ void main() {
     });
 
     test('initial output decodes the initial hex input', () {
-      expect(
-        controller.outputController.text,
-        hexToAscii(controller.inputController.text),
-      );
+      expect(controller.output, hexToAscii(controller.input));
     });
 
     test('strips whitespace from hex input before converting', () {
-      controller.inputController.text = '61 62 63';
-      expect(controller.outputController.text, 'abc');
+      controller.setInput('61 62 63');
+      expect(controller.output, 'abc');
     });
 
     test('switches to textToHex mode and re-converts', () {
       controller.setMode(HexTextConvertMode.textToHex);
-      controller.inputController.text = 'hello';
-      expect(controller.outputController.text, asciiToHex('hello'));
+      controller.setInput('hello');
+      expect(controller.output, asciiToHex('hello'));
     });
 
     test('notifies listeners on mode change', () {
