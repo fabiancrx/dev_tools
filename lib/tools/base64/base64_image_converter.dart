@@ -1,8 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dash_tools/l10n/l10n.dart';
-import 'package:dash_tools/tools/base64/dart_logo.dart';
+import 'package:dash_tools/tools/base64/base64_image_controller.dart';
 import 'package:dash_tools/widgets/clear_text.dart';
 import 'package:dash_tools/widgets/flex_action_bar.dart';
 import 'package:dash_tools/widgets/vendored/split.dart';
@@ -15,7 +14,6 @@ import 'package:super_context_menu/super_context_menu.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 import 'package:yaru/yaru.dart';
 
-
 class Base64ImageConverterScreen extends StatefulWidget {
   const Base64ImageConverterScreen({super.key});
 
@@ -24,57 +22,12 @@ class Base64ImageConverterScreen extends StatefulWidget {
 }
 
 class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen> {
-  final inputController = TextEditingController();
-  var imageBytes = Uint8List.fromList([]);
-
-  @override
-  void initState() {
-    super.initState();
-    _populate();
-    inputController.addListener(() {
-      imageBytes = dataFromBase64String(inputController.text);
-    });
-  }
-
-  void _populate() {
-    inputController.text = base64DartLogo;
-    imageBytes = dataFromBase64String(inputController.text);
-  }
-
-  void _updateImage(Uint8List data) {
-    imageBytes = data;
-    inputController.text = base64String(imageBytes);
-    if (context.mounted) setState(() {});
-  }
-
-  Uint8List dataFromBase64String(String base64String) {
-    return base64Decode(base64String);
-  }
-
-  String base64String(Uint8List data) {
-    return base64Encode(data);
-  }
+  late final _controller = Base64ImageController();
 
   @override
   void dispose() {
+    _controller.dispose();
     super.dispose();
-    inputController.dispose();
-  }
-
-  Future<void> loadImage() async {
-    FilePickerResult? result = await FilePicker.pickFiles();
-    if (result != null) {
-      File file = File(result.files.single.path!);
-      _updateImage(await file.readAsBytes());
-    }
-  }
-
-  Future<void> copyImageToClipboard() async {
-    if (imageBytes.isNotEmpty) {
-      final item = DataWriterItem();
-      item.add(Formats.png.lazy(() => imageBytes));
-      await SystemClipboard.instance?.write([item]);
-    }
   }
 
   @override
@@ -96,39 +49,25 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                     Tooltip(
                       message: l10n.pasteBase64FromClipboard,
                       child: YaruOptionButton(
-                          onPressed: () async {
-                            final reader = await SystemClipboard.instance?.read();
-                            if (reader == null) throw Exception('Clipboard not available');
-                            if (reader.canProvide(Formats.plainText)) {
-                              reader.getValue(Formats.plainText, (data) async {
-                                if (data != null && data.isNotEmpty) {
-                                  inputController.text = data;
-                                  setState(() {});
-                                }
-                              });
-                            }
-                          },
-                          child: (const Icon(Icons.paste))),
+                        onPressed: _controller.pasteBase64FromClipboard,
+                        child: const Icon(Icons.paste),
+                      ),
                     ),
                     const SizedBox.square(dimension: 8),
                     Tooltip(
-                        message: l10n.copyBase64ToClipboard,
-                        child: YaruOptionButton(
-                            onPressed: () async {
-                              if (imageBytes.isNotEmpty) {
-                                final item = DataWriterItem();
-                                item.add(Formats.plainText.lazy(() => inputController.text));
-                                await SystemClipboard.instance?.write([item]);
-                              }
-                            },
-                            child: (const Icon(Icons.copy)))),
+                      message: l10n.copyBase64ToClipboard,
+                      child: YaruOptionButton(
+                        onPressed: _controller.copyBase64ToClipboard,
+                        child: const Icon(Icons.copy),
+                      ),
+                    ),
                     const Spacer(),
-                    ClearTextIcon(controller: inputController)
+                    ClearTextIcon(controller: _controller.inputController),
                   ],
                 ),
                 Expanded(
                   child: TextField(
-                    controller: inputController,
+                    controller: _controller.inputController,
                     textAlignVertical: TextAlignVertical.top,
                     expands: true,
                     maxLines: null,
@@ -144,66 +83,71 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                 FlexActionBar(
                   children: [
                     Tooltip(
-                        message: l10n.pasteImageFromClipboard,
-                        child: YaruOptionButton(
-                            onPressed: () async {
-                              final reader = await SystemClipboard.instance?.read();
-                              if (reader == null) throw Exception('no Reader');
-                              if (reader.canProvide(Formats.png)) {
-                                reader.getFile(Formats.png, (file) async {
-                                  _updateImage(await file.readAll());
-                                });
-                              }
-                            },
-                            child: (const Icon(Icons.paste)))),
+                      message: l10n.pasteImageFromClipboard,
+                      child: YaruOptionButton(
+                        onPressed: _controller.pasteImageFromClipboard,
+                        child: const Icon(Icons.paste),
+                      ),
+                    ),
                     const SizedBox.square(dimension: 8),
                     Tooltip(
-                        message: l10n.copyImageToClipboard,
-                        child: YaruOptionButton(onPressed: copyImageToClipboard, child: (const Icon(Icons.copy)))),
+                      message: l10n.copyImageToClipboard,
+                      child: YaruOptionButton(
+                        onPressed: _controller.copyImageToClipboard,
+                        child: const Icon(Icons.copy),
+                      ),
+                    ),
                     const Spacer(),
-                    Tooltip(message: l10n.loadFile, child: YaruOptionButton(onPressed: loadImage, child: (const Icon(Icons.upload_file)))),
+                    Tooltip(
+                      message: l10n.loadFile,
+                      child: YaruOptionButton(
+                        onPressed: _controller.loadImage,
+                        child: const Icon(Icons.upload_file),
+                      ),
+                    ),
                     const SizedBox.square(dimension: 8),
                     Tooltip(
-                        message: l10n.save,
-                        child: YaruOptionButton(
-                            onPressed: () async {
-                              if (imageBytes.isNotEmpty) {
-                                final dialogTitle = l10n.selectOutputFile;
-                                String? outputFile =
-                                    await FilePicker.saveFile(dialogTitle: dialogTitle, fileName: 'image.png');
-
-                                if (outputFile != null) {
-                                  try {
-                                    final f = File(outputFile);
-                                    await f.writeAsBytes(imageBytes);
-                                    if (context.mounted) {
-                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.l10n.imageSaved)));
-                                    }
-                                  } catch (e, st) {
-                                    debugPrint('$e\n$st');
-                                  }
-                                }
+                      message: l10n.save,
+                      child: YaruOptionButton(
+                        onPressed: () async {
+                          if (_controller.imageBytes.isEmpty) return;
+                          final outputFile = await FilePicker.saveFile(
+                            dialogTitle: l10n.selectOutputFile,
+                            fileName: 'image.png',
+                          );
+                          if (outputFile != null) {
+                            try {
+                              await File(outputFile).writeAsBytes(_controller.imageBytes);
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(context.l10n.imageSaved)),
+                                );
                               }
-                            },
-                            child: (const Icon(Icons.save)))),
+                            } catch (e, st) {
+                              debugPrint('$e\n$st');
+                            }
+                          }
+                        },
+                        child: const Icon(Icons.save),
+                      ),
+                    ),
                   ],
                 ),
                 Expanded(
                   child: Center(
                     child: _DropZone(
-                      onImageDrop: (Uint8List bytes) {
-                        _updateImage(bytes);
-                      },
+                      onImageDrop: _controller.updateImage,
                       child: ListenableBuilder(
+                        listenable: _controller,
                         builder: (context, _) {
                           return _DraggableImage(
-                            image: imageBytes,
+                            image: _controller.imageBytes,
                             child: _ImageContextMenu(
-                              enabled: imageBytes.isNotEmpty,
-                              onCopy: copyImageToClipboard,
-                              onClear: inputController.clear,
+                              enabled: _controller.imageBytes.isNotEmpty,
+                              onCopy: _controller.copyImageToClipboard,
+                              onClear: _controller.inputController.clear,
                               child: Image.memory(
-                                imageBytes,
+                                _controller.imageBytes,
                                 errorBuilder: (_, _, _) {
                                   return Center(
                                     child: Column(
@@ -214,10 +158,16 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            TextButton(onPressed: _populate, child: Text(context.l10n.sample)),
-                                            TextButton(onPressed: loadImage, child: Text(context.l10n.loadImage))
+                                            TextButton(
+                                              onPressed: _controller.populate,
+                                              child: Text(context.l10n.sample),
+                                            ),
+                                            TextButton(
+                                              onPressed: _controller.loadImage,
+                                              child: Text(context.l10n.loadImage),
+                                            ),
                                           ],
-                                        )
+                                        ),
                                       ],
                                     ),
                                   );
@@ -226,17 +176,17 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
                             ),
                           );
                         },
-                        listenable: inputController,
                       ),
                     ),
                   ),
                 ),
                 ListenableBuilder(
-                    builder: (BuildContext context, Widget? child) => Text(
-                          " ${bytes.format(imageBytes.lengthInBytes, unitType: bytes.UnitType.decimal)} ",
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                    listenable: inputController)
+                  listenable: _controller,
+                  builder: (_, _) => Text(
+                    ' ${bytes.format(_controller.imageBytes.lengthInBytes, unitType: bytes.UnitType.decimal)} ',
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ),
               ],
             ),
           ],
@@ -247,68 +197,59 @@ class _Base64ImageConverterScreenState extends State<Base64ImageConverterScreen>
 }
 
 class _ImageContextMenu extends StatelessWidget {
+  const _ImageContextMenu({
+    required this.child,
+    required this.onCopy,
+    required this.onClear,
+    required this.enabled,
+  });
+
   final Widget child;
   final VoidCallback onCopy;
   final VoidCallback onClear;
   final bool enabled;
 
-  const _ImageContextMenu({required this.child, required this.onCopy, required this.onClear, required this.enabled});
-
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return ContextMenuWidget(
-        contextMenuIsAllowed: (_) => enabled,
-        child: Card(child: child),
-        menuProvider: (_) {
-          return Menu(
-            children: [
-              MenuAction(title: l10n.copyToClipboard, callback: onCopy),
-              MenuAction(title: l10n.clear, callback: onClear),
-            ],
-          );
-        });
-  }
-}
-
-class _DraggableImage extends StatelessWidget {
-  final Uint8List image;
-  final Widget child;
-
-  const _DraggableImage({required this.image, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    // DragItemWidget provides the content for the drag (DragItem).
-    return DragItemWidget(
-      dragItemProvider: (request) async {
-        // DragItem represents the content begin dragged.
-        final item = DragItem(
-            // This data is only accessible when dropping within same
-            );
-        // Add data for this item that other applications can read
-        // on drop. (optional)
-        item.add(Formats.png.lazy(() => image));
-
-        return item;
-      },
-      allowedOperations: () => [DropOperation.copy],
-      // DraggableWidget represents the actual draggable area. It looks
-      // for parent DragItemWidget in widget hierarchy to provide the DragItem.
-      child: DraggableWidget(
-        child: child,
+      contextMenuIsAllowed: (_) => enabled,
+      child: Card(child: child),
+      menuProvider: (_) => Menu(
+        children: [
+          MenuAction(title: l10n.copyToClipboard, callback: onCopy),
+          MenuAction(title: l10n.clear, callback: onClear),
+        ],
       ),
     );
   }
 }
 
-//     var decodedImage = await decodeImageFromList(widget.image);
+class _DraggableImage extends StatelessWidget {
+  const _DraggableImage({required this.image, required this.child});
+
+  final Uint8List image;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return DragItemWidget(
+      dragItemProvider: (request) async {
+        final item = DragItem();
+        item.add(Formats.png.lazy(() => image));
+        return item;
+      },
+      allowedOperations: () => [DropOperation.copy],
+      child: DraggableWidget(child: child),
+    );
+  }
+}
 
 class _DropZone extends StatefulWidget {
+  const _DropZone({required this.child, required this.onImageDrop});
+
   final Widget child;
   final void Function(Uint8List bytes) onImageDrop;
-
-  const _DropZone({required this.child, required this.onImageDrop});
 
   @override
   State<StatefulWidget> createState() => _DropZoneState();
@@ -339,27 +280,20 @@ class _DropZoneState extends State<_DropZone> {
   }
 
   Future<void> _onPerformDrop(PerformDropEvent event) async {
-    final item = event.session.items.first;
-    final reader = item.dataReader!;
-
+    final reader = event.session.items.first.dataReader!;
     reader.getFile(null, (DataReaderFile file) async {
-      final data = await file.readAll();
-      widget.onImageDrop(data);
+      widget.onImageDrop(await file.readAll());
     }, onError: (error) {
       debugPrint('Error reading value from clipboard $error');
     });
   }
 
   DropOperation _onDropOver(DropOverEvent event) {
-    setState(() {
-      _isDragOver = true;
-    });
+    setState(() => _isDragOver = true);
     return event.session.allowedOperations.firstOrNull ?? DropOperation.none;
   }
 
   void _onDropLeave(DropEvent event) {
-    setState(() {
-      _isDragOver = false;
-    });
+    setState(() => _isDragOver = false);
   }
 }
