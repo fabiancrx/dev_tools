@@ -1,7 +1,7 @@
 import "dart:io";
 
 import "package:dash_tools/l10n/l10n.dart";
-import "package:dash_tools/tools/tools.dart";
+import "package:dash_tools/tools/registry.dart";
 import "package:dash_tools/widgets/app_logo.dart";
 import "package:dash_tools/widgets/clear_text.dart";
 import "package:flutter/material.dart";
@@ -52,7 +52,7 @@ class _SearchFieldState extends State<SearchField> {
 }
 
 class AdaptiveNavigationPane extends StatefulWidget {
-  final List<Tool> tools;
+  final List<ToolDescriptor> tools;
 
   const AdaptiveNavigationPane({super.key, required this.tools});
 
@@ -109,17 +109,17 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
       },
       initialIndex: selectedIndex,
       itemBuilder: (context, index, selected) => YaruNavigationRailItem(
-        tooltip: wideWindowSize ? context.l10n.toolDescription(tools[index].id) : context.l10n.toolName(tools[index].id),
-        icon: tools[index].icon ?? const Icon(Icons.compare_arrows),
-        label: Text(context.l10n.toolName(tools[index].id)),
+        tooltip: wideWindowSize ? context.l10n.toolDescription(widget.tools[index].id) : context.l10n.toolName(widget.tools[index].id),
+        icon: Icon(widget.tools[index].icon),
+        label: Text(context.l10n.toolName(widget.tools[index].id)),
         style: itemStyle,
       ),
       pageBuilder: (context, index) => YaruDetailPage(
         appBar: YaruWindowTitleBar(
             title: ConstrainedBox(
                 constraints: const BoxConstraints(maxHeight: 46, maxWidth: 420),
-                child: SearchField(hint: context.l10n.toolName(tools[index].id)))),
-        body: tools[index].screen,
+                child: SearchField(hint: context.l10n.toolName(widget.tools[index].id)))),
+        body: widget.tools[index].builder(context),
       ),
     );
   }

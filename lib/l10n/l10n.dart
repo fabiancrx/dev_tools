@@ -9,24 +9,24 @@ extension AppLocalizationsX on BuildContext {
 
 extension AppLocalizationsToolsX on AppLocalizations {
   String toolName(String id) => switch (id) {
-        'base64' => toolBase64Name,
-        'jsonf' => toolJsonFormatterName,
-        'base64image' => toolBase64ImageName,
-        'number' => toolNumberConverterName,
-        'hextext' => toolHexToAsciiName,
-        'jsone' => toolJsonEscapeName,
-        'jwt' => toolJwtDebuggerName,
+        'base64_text' => toolBase64Name,
+        'json_formatter' => toolJsonFormatterName,
+        'base64_image' => toolBase64ImageName,
+        'number_base' => toolNumberConverterName,
+        'hex_ascii' => toolHexToAsciiName,
+        'json_escape' => toolJsonEscapeName,
+        'jwt_debugger' => toolJwtDebuggerName,
         _ => id,
       };
 
   String toolDescription(String id) => switch (id) {
-        'base64' => toolBase64Description,
-        'jsonf' => toolJsonFormatterDescription,
-        'base64image' => toolBase64ImageDescription,
-        'number' => toolNumberConverterDescription,
-        'hextext' => toolHexToAsciiDescription,
-        'jsone' => toolJsonEscapeDescription,
-        'jwt' => toolJwtDebuggerDescription,
+        'base64_text' => toolBase64Description,
+        'json_formatter' => toolJsonFormatterDescription,
+        'base64_image' => toolBase64ImageDescription,
+        'number_base' => toolNumberConverterDescription,
+        'hex_ascii' => toolHexToAsciiDescription,
+        'json_escape' => toolJsonEscapeDescription,
+        'jwt_debugger' => toolJwtDebuggerDescription,
         _ => id,
       };
 }
