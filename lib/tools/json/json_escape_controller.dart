@@ -10,6 +10,7 @@ class JsonEscapeController extends ChangeNotifier {
 
   JsonEscapeController() {
     _populate();
+    _convert();
     inputController.addListener(_convert);
   }
 
@@ -39,7 +40,7 @@ class JsonEscapeController extends ChangeNotifier {
   String _escape(String input) {
     var result = _encoder.convert(input);
     if (result.length > 2 && result[0] == '"' && result[result.length - 1] == '"') {
-      result = result.substring(1, result.length - 2);
+      result = result.substring(1, result.length - 1);
     }
     return result;
   }
