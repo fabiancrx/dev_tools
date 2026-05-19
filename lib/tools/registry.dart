@@ -23,6 +23,18 @@ import 'package:flutter/material.dart';
 
 enum ToolCategory { encoders, formatters, converters, generators, inspectors, network, reference }
 
+extension ToolCategoryX on ToolCategory {
+  String get displayName => switch (this) {
+        ToolCategory.encoders => 'Encoders',
+        ToolCategory.formatters => 'Formatters',
+        ToolCategory.converters => 'Converters',
+        ToolCategory.generators => 'Generators',
+        ToolCategory.inspectors => 'Inspectors',
+        ToolCategory.network => 'Network',
+        ToolCategory.reference => 'Reference',
+      };
+}
+
 class ToolDescriptor {
   final String id;
   final String Function(BuildContext) name;

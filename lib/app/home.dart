@@ -1,5 +1,6 @@
 import "dart:io";
 
+import "package:dash_tools/app/command_palette.dart";
 import "package:dash_tools/app/reorder_screen.dart";
 import "package:dash_tools/common/clipboard_recognizer.dart";
 import "package:dash_tools/common/tool_order.dart";
@@ -7,6 +8,7 @@ import "package:dash_tools/l10n/l10n.dart";
 import "package:dash_tools/tools/registry.dart";
 import "package:dash_tools/widgets/clear_text.dart";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:yaru/widgets.dart";
 
 class SearchField extends StatefulWidget {
@@ -74,12 +76,40 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
   void initState() {
     super.initState();
     widget.clipboardRecognizer.addListener(_onClipboardMatch);
+    HardwareKeyboard.instance.addHandler(_handleKey);
   }
 
   @override
   void dispose() {
     widget.clipboardRecognizer.removeListener(_onClipboardMatch);
+    HardwareKeyboard.instance.removeHandler(_handleKey);
     super.dispose();
+  }
+
+  bool _handleKey(KeyEvent event) {
+    if (event is! KeyDownEvent) return false;
+    final isK = event.logicalKey == LogicalKeyboardKey.keyK;
+    final modifier = HardwareKeyboard.instance.isControlPressed ||
+        HardwareKeyboard.instance.isMetaPressed;
+    if (isK && modifier) {
+      _showPalette();
+      return true;
+    }
+    return false;
+  }
+
+  void _showPalette() {
+    showDialog<void>(
+      context: context,
+      builder: (_) => CommandPalette(
+        allTools: toolRegistry,
+        hiddenIds: widget.toolOrder.hiddenIds,
+        onSelect: (id) {
+          Navigator.of(context).pop();
+          _navigateTo(id);
+        },
+      ),
+    );
   }
 
   void _onClipboardMatch() {
@@ -103,8 +133,12 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
     });
   }
 
-  void _navigateTo(String toolId) {
-    final idx = widget.toolOrder.tools.indexWhere((t) => t.id == toolId);
+  Future<void> _navigateTo(String toolId) async {
+    if (widget.toolOrder.isHidden(toolId)) {
+      await widget.toolOrder.unhide(toolId);
+    }
+    if (!mounted) return;
+    final idx = widget.toolOrder.visibleTools.indexWhere((t) => t.id == toolId);
     if (idx >= 0) setState(() => selectedIndex = idx);
   }
 
@@ -124,8 +158,8 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
     return ListenableBuilder(
       listenable: widget.toolOrder,
       builder: (context, _) {
-        final tools = widget.toolOrder.tools;
-        final clampedIndex = selectedIndex.clamp(0, tools.length - 1);
+        final tools = widget.toolOrder.visibleTools;
+        final clampedIndex = selectedIndex.clamp(0, (tools.length - 1).clamp(0, double.maxFinite.toInt()));
 
         return YaruNavigationPage(
           trailing: Padding(
