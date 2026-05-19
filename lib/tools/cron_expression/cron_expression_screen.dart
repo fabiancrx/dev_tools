@@ -1,7 +1,10 @@
+import 'package:dash_tools/common/tool_input_cache.dart';
 import 'package:dash_tools/tools/cron_expression/cron_expression_controller.dart';
 import 'package:dash_tools/widgets/clear_text.dart';
 import 'package:dash_tools/widgets/tool_scaffold.dart';
 import 'package:flutter/material.dart';
+
+const _kCacheKey = 'cron_expression';
 
 class CronExpressionScreen extends StatefulWidget {
   const CronExpressionScreen({super.key});
@@ -18,7 +21,15 @@ class _CronExpressionScreenState extends State<CronExpressionScreen> {
   @override
   void initState() {
     super.initState();
-    _inputTec.addListener(() => _controller.setInput(_inputTec.text));
+    _inputTec.addListener(_onInput);
+    ToolInputCache.load(_kCacheKey).then((v) {
+      if (mounted && v != null && v.isNotEmpty) _inputTec.text = v;
+    });
+  }
+
+  void _onInput() {
+    _controller.setInput(_inputTec.text);
+    ToolInputCache.save(_kCacheKey, _inputTec.text);
   }
 
   @override
@@ -32,6 +43,7 @@ class _CronExpressionScreenState extends State<CronExpressionScreen> {
   @override
   Widget build(BuildContext context) {
     return ToolScaffold(
+      onRun: _controller.run,
       actions: [
         Expanded(
           child: TextField(

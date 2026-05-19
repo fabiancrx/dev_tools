@@ -1,3 +1,4 @@
+import 'package:dash_tools/common/tool_input_cache.dart';
 import 'package:dash_tools/l10n/l10n.dart';
 import 'package:dash_tools/tools/clipboard_service.dart';
 import 'package:dash_tools/tools/hash_generator/hash_generator.dart';
@@ -6,6 +7,9 @@ import 'package:dash_tools/widgets/copy_button.dart';
 import 'package:dash_tools/widgets/tool_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru/widgets.dart';
+
+const _kCacheInput = 'hash_generator_input';
+const _kCacheHmac = 'hash_generator_hmac';
 
 class HashGeneratorScreen extends StatefulWidget {
   const HashGeneratorScreen({super.key});
@@ -22,8 +26,24 @@ class _HashGeneratorScreenState extends State<HashGeneratorScreen> {
   @override
   void initState() {
     super.initState();
-    _inputTec.addListener(() => _controller.setInput(_inputTec.text));
-    _hmacTec.addListener(() => _controller.setHmacKey(_hmacTec.text));
+    _inputTec.addListener(_onInput);
+    _hmacTec.addListener(_onHmac);
+    ToolInputCache.load(_kCacheInput).then((v) {
+      if (mounted && v != null && v.isNotEmpty) _inputTec.text = v;
+    });
+    ToolInputCache.load(_kCacheHmac).then((v) {
+      if (mounted && v != null && v.isNotEmpty) _hmacTec.text = v;
+    });
+  }
+
+  void _onInput() {
+    _controller.setInput(_inputTec.text);
+    ToolInputCache.save(_kCacheInput, _inputTec.text);
+  }
+
+  void _onHmac() {
+    _controller.setHmacKey(_hmacTec.text);
+    ToolInputCache.save(_kCacheHmac, _hmacTec.text);
   }
 
   @override
@@ -38,6 +58,7 @@ class _HashGeneratorScreenState extends State<HashGeneratorScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return ToolScaffold(
+      onRun: _controller.run,
       actions: [
         ListenableBuilder(
           listenable: _controller,

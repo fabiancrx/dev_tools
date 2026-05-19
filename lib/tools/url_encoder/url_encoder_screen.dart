@@ -1,3 +1,4 @@
+import 'package:dash_tools/common/tool_input_cache.dart';
 import 'package:dash_tools/l10n/l10n.dart';
 import 'package:dash_tools/tools/clipboard_service.dart';
 import 'package:dash_tools/tools/url_encoder/url_encoder.dart';
@@ -6,6 +7,8 @@ import 'package:dash_tools/widgets/copy_button.dart';
 import 'package:dash_tools/widgets/tool_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru/widgets.dart';
+
+const _kCacheKey = 'url_encoder';
 
 class UrlEncoderScreen extends StatefulWidget {
   const UrlEncoderScreen({super.key});
@@ -22,12 +25,20 @@ class _UrlEncoderScreenState extends State<UrlEncoderScreen> {
   @override
   void initState() {
     super.initState();
-    _inputTec.addListener(() => _controller.setInput(_inputTec.text));
+    _inputTec.addListener(_onInput);
     _controller.addListener(() {
       if (_outputTec.text != _controller.output) {
         _outputTec.text = _controller.output;
       }
     });
+    ToolInputCache.load(_kCacheKey).then((v) {
+      if (mounted && v != null && v.isNotEmpty) _inputTec.text = v;
+    });
+  }
+
+  void _onInput() {
+    _controller.setInput(_inputTec.text);
+    ToolInputCache.save(_kCacheKey, _inputTec.text);
   }
 
   @override
@@ -42,6 +53,7 @@ class _UrlEncoderScreenState extends State<UrlEncoderScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return ToolScaffold(
+      onRun: _controller.run,
       actions: [
         ListenableBuilder(
           listenable: _controller,

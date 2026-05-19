@@ -1,3 +1,5 @@
+import 'package:dash_tools/common/app_settings.dart';
+import 'package:dash_tools/common/tool_input_cache.dart';
 import 'package:dash_tools/l10n/l10n.dart';
 import 'package:dash_tools/tools/clipboard_service.dart';
 import 'package:dash_tools/tools/json/json_escape_controller.dart';
@@ -7,6 +9,8 @@ import 'package:dash_tools/widgets/vendored/split.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widget_previews.dart';
 import 'package:yaru/yaru.dart';
+
+const _kCacheKey = 'json_escape';
 
 class JsonConverterScreen extends StatefulWidget {
   @Preview(name: 'JSON Escape', group: 'Tools', size: Size(900, 700))
@@ -24,8 +28,16 @@ class _JsonConverterScreenState extends State<JsonConverterScreen> {
   @override
   void initState() {
     super.initState();
-    _inputTec.addListener(() => _controller.setInput(_inputTec.text));
+    _inputTec.addListener(_onInput);
     _controller.addListener(() => _outputTec.text = _controller.output);
+    ToolInputCache.load(_kCacheKey).then((v) {
+      if (mounted && v != null && v.isNotEmpty) _inputTec.text = v;
+    });
+  }
+
+  void _onInput() {
+    _controller.setInput(_inputTec.text);
+    ToolInputCache.save(_kCacheKey, _inputTec.text);
   }
 
   @override
@@ -51,7 +63,7 @@ class _JsonConverterScreenState extends State<JsonConverterScreen> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 ListenableBuilder(
-                  listenable: _controller,
+                  listenable: Listenable.merge([_controller, AppSettings.instance]),
                   builder: (_, _) {
                     return FlexActionBar(
                       children: [
@@ -65,6 +77,14 @@ class _JsonConverterScreenState extends State<JsonConverterScreen> {
                         CopyButton(copyCallback: () {
                           pasteContentToClipboard(_controller.output);
                         }),
+                        if (!AppSettings.instance.autoRun) ...[
+                          const SizedBox(width: 8),
+                          FilledButton.icon(
+                            onPressed: _controller.run,
+                            icon: const Icon(Icons.play_arrow, size: 16),
+                            label: const Text('Run'),
+                          ),
+                        ],
                       ],
                     );
                   },

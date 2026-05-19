@@ -1,9 +1,12 @@
+import 'package:dash_tools/common/tool_input_cache.dart';
 import 'package:dash_tools/l10n/l10n.dart';
 import 'package:dash_tools/tools/clipboard_service.dart';
 import 'package:dash_tools/tools/query_string/query_string_controller.dart';
 import 'package:dash_tools/widgets/copy_button.dart';
 import 'package:dash_tools/widgets/tool_scaffold.dart';
 import 'package:flutter/material.dart';
+
+const _kCacheKey = 'query_string';
 
 class QueryStringScreen extends StatefulWidget {
   const QueryStringScreen({super.key});
@@ -20,12 +23,20 @@ class _QueryStringScreenState extends State<QueryStringScreen> {
   @override
   void initState() {
     super.initState();
-    _inputTec.addListener(() => _controller.setInput(_inputTec.text));
+    _inputTec.addListener(_onInput);
     _controller.addListener(() {
       if (_outputTec.text != _controller.output) {
         _outputTec.text = _controller.output;
       }
     });
+    ToolInputCache.load(_kCacheKey).then((v) {
+      if (mounted && v != null && v.isNotEmpty) _inputTec.text = v;
+    });
+  }
+
+  void _onInput() {
+    _controller.setInput(_inputTec.text);
+    ToolInputCache.save(_kCacheKey, _inputTec.text);
   }
 
   @override
@@ -40,6 +51,7 @@ class _QueryStringScreenState extends State<QueryStringScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return ToolScaffold(
+      onRun: _controller.run,
       actions: [
         const Spacer(),
         CopyButton(copyCallback: () => pasteContentToClipboard(_controller.output)),

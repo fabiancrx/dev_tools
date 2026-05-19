@@ -1,9 +1,12 @@
+import 'package:dash_tools/common/tool_input_cache.dart';
 import 'package:dash_tools/tools/case_converter/case_converter.dart';
 import 'package:dash_tools/tools/case_converter/case_converter_controller.dart';
 import 'package:dash_tools/tools/clipboard_service.dart';
 import 'package:dash_tools/widgets/clear_text.dart';
 import 'package:dash_tools/widgets/copy_button.dart';
 import 'package:flutter/material.dart';
+
+const _kCacheKey = 'case_converter';
 
 class CaseConverterScreen extends StatefulWidget {
   const CaseConverterScreen({super.key});
@@ -20,7 +23,15 @@ class _CaseConverterScreenState extends State<CaseConverterScreen> {
   @override
   void initState() {
     super.initState();
-    _inputTec.addListener(() => _controller.setInput(_inputTec.text));
+    _inputTec.addListener(_onInput);
+    ToolInputCache.load(_kCacheKey).then((v) {
+      if (mounted && v != null && v.isNotEmpty) _inputTec.text = v;
+    });
+  }
+
+  void _onInput() {
+    _controller.setInput(_inputTec.text);
+    ToolInputCache.save(_kCacheKey, _inputTec.text);
   }
 
   @override

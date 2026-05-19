@@ -1,3 +1,4 @@
+import 'package:dash_tools/common/app_settings.dart';
 import 'package:flutter/foundation.dart';
 
 import 'url_encoder.dart';
@@ -15,7 +16,7 @@ class UrlEncoderController extends ChangeNotifier {
 
   void setInput(String value) {
     _input = value;
-    _update();
+    if (AppSettings.instance.autoRun) _update();
   }
 
   void setMode(UrlEncodeMode value) {
@@ -27,6 +28,8 @@ class UrlEncoderController extends ChangeNotifier {
     _type = value;
     _update();
   }
+
+  void run() => _update();
 
   void _update() {
     _output = switch (_mode) {

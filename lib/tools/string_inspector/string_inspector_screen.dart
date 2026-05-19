@@ -1,7 +1,10 @@
+import 'package:dash_tools/common/tool_input_cache.dart';
 import 'package:dash_tools/tools/string_inspector/string_inspector.dart';
 import 'package:dash_tools/tools/string_inspector/string_inspector_controller.dart';
 import 'package:dash_tools/widgets/clear_text.dart';
 import 'package:flutter/material.dart';
+
+const _kCacheKey = 'string_inspector';
 
 class StringInspectorScreen extends StatefulWidget {
   const StringInspectorScreen({super.key});
@@ -18,7 +21,15 @@ class _StringInspectorScreenState extends State<StringInspectorScreen> {
   @override
   void initState() {
     super.initState();
-    _inputTec.addListener(() => _controller.setInput(_inputTec.text));
+    _inputTec.addListener(_onInput);
+    ToolInputCache.load(_kCacheKey).then((v) {
+      if (mounted && v != null && v.isNotEmpty) _inputTec.text = v;
+    });
+  }
+
+  void _onInput() {
+    _controller.setInput(_inputTec.text);
+    ToolInputCache.save(_kCacheKey, _inputTec.text);
   }
 
   @override

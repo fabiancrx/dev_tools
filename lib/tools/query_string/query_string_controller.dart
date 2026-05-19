@@ -1,3 +1,4 @@
+import 'package:dash_tools/common/app_settings.dart';
 import 'package:flutter/foundation.dart';
 
 import 'query_string.dart';
@@ -11,7 +12,13 @@ class QueryStringController extends ChangeNotifier {
 
   void setInput(String value) {
     _input = value;
-    _output = queryStringToJson(value);
+    if (AppSettings.instance.autoRun) _update();
+  }
+
+  void run() => _update();
+
+  void _update() {
+    _output = queryStringToJson(_input);
     notifyListeners();
   }
 }

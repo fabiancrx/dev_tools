@@ -1,3 +1,4 @@
+import 'package:dash_tools/common/app_settings.dart';
 import 'package:flutter/foundation.dart';
 
 import 'cron_expression.dart' as cron;
@@ -21,6 +22,12 @@ class CronExpressionController extends ChangeNotifier {
 
   void setInput(String value) {
     _input = value;
+    if (AppSettings.instance.autoRun) _update();
+  }
+
+  void run() => _update();
+
+  void _update() {
     _compute();
     notifyListeners();
   }

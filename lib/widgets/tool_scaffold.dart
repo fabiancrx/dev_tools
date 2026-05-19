@@ -1,21 +1,24 @@
+import 'package:dash_tools/common/app_settings.dart';
 import 'package:dash_tools/widgets/flex_action_bar.dart';
 import 'package:dash_tools/widgets/vendored/split.dart';
 import 'package:flutter/material.dart';
 
 /// Two-pane input/output layout shared by most converter tools.
-///
-/// Top half: [FlexActionBar] with [actions], then [input] (fills remaining space).
-/// Bottom half: [output] (fills the pane).
 class ToolScaffold extends StatelessWidget {
   final List<Widget> actions;
   final Widget input;
   final Widget output;
+
+  /// Called when the user presses the Run button (visible when autoRun is off).
+  /// Pass `null` to opt out of the Run button entirely.
+  final VoidCallback? onRun;
 
   const ToolScaffold({
     super.key,
     required this.actions,
     required this.input,
     required this.output,
+    this.onRun,
   });
 
   @override
@@ -31,7 +34,25 @@ class ToolScaffold extends StatelessWidget {
             Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                FlexActionBar(children: actions),
+                ListenableBuilder(
+                  listenable: AppSettings.instance,
+                  builder: (context, _) {
+                    final showRun = !AppSettings.instance.autoRun && onRun != null;
+                    return FlexActionBar(
+                      children: [
+                        ...actions,
+                        if (showRun) ...[
+                          const SizedBox(width: 8),
+                          FilledButton.icon(
+                            onPressed: onRun,
+                            icon: const Icon(Icons.play_arrow, size: 16),
+                            label: const Text('Run'),
+                          ),
+                        ],
+                      ],
+                    );
+                  },
+                ),
                 Expanded(child: input),
               ],
             ),

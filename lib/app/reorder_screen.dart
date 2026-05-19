@@ -1,3 +1,4 @@
+import 'package:dash_tools/common/app_settings.dart';
 import 'package:dash_tools/common/tool_order.dart';
 import 'package:dash_tools/tools/registry.dart';
 import 'package:dash_tools/widgets/app_logo.dart';
@@ -28,10 +29,24 @@ class ReorderScreen extends StatelessWidget {
             _ShowHideTab(notifier: notifier),
           ],
         ),
-        bottomNavigationBar: ListTile(
-          leading: const Icon(Icons.info_outline),
-          title: const Text('Licenses'),
-          onTap: () => showLicensePage(
+        bottomNavigationBar: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListenableBuilder(
+              listenable: AppSettings.instance,
+              builder: (context, _) => SwitchListTile(
+                secondary: const Icon(Icons.bolt_outlined),
+                title: const Text('Process as you type'),
+                subtitle: const Text('Disable for expensive tools to use Run button instead'),
+                value: AppSettings.instance.autoRun,
+                onChanged: AppSettings.instance.setAutoRun,
+              ),
+            ),
+            const Divider(height: 1),
+            ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: const Text('Licenses'),
+              onTap: () => showLicensePage(
             context: context,
             applicationIcon: const Padding(
               padding: EdgeInsets.all(8),
@@ -39,6 +54,8 @@ class ReorderScreen extends StatelessWidget {
             ),
             applicationVersion: '0.0.2+2',
           ),
+        ),
+          ],
         ),
       ),
     );

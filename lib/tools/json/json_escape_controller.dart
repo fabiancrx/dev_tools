@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dash_tools/common/app_settings.dart';
 import 'package:flutter/foundation.dart';
 
 enum JsonEncodeMode { escape, unescape }
@@ -15,7 +16,6 @@ class JsonEscapeController extends ChangeNotifier {
 
   String _input = '';
   String _output = '';
-
   JsonEncodeMode _mode = JsonEncodeMode.escape;
 
   String get input => _input;
@@ -24,12 +24,17 @@ class JsonEscapeController extends ChangeNotifier {
 
   void setInput(String value) {
     _input = value;
-    _output = _computeOutput(value);
-    notifyListeners();
+    if (AppSettings.instance.autoRun) _update();
   }
 
   void setMode(JsonEncodeMode mode) {
     _mode = mode;
+    _update();
+  }
+
+  void run() => _update();
+
+  void _update() {
     _output = _computeOutput(_input);
     notifyListeners();
   }

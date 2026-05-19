@@ -1,3 +1,4 @@
+import 'package:dash_tools/common/app_settings.dart';
 import 'package:flutter/foundation.dart';
 
 import 'hash_generator.dart';
@@ -15,18 +16,20 @@ class HashGeneratorController extends ChangeNotifier {
 
   void setInput(String value) {
     _input = value;
-    _update();
+    if (AppSettings.instance.autoRun) _update();
   }
 
   void setHmacKey(String value) {
     _hmacKey = value;
-    _update();
+    if (AppSettings.instance.autoRun) _update();
   }
 
   void setAlgorithm(HashAlgorithm value) {
     _algorithm = value;
     _update();
   }
+
+  void run() => _update();
 
   void _update() {
     _result = computeHash(

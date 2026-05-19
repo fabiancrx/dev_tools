@@ -1,9 +1,12 @@
+import 'package:dash_tools/common/tool_input_cache.dart';
 import 'package:dash_tools/tools/clipboard_service.dart';
 import 'package:dash_tools/tools/qr_code/qr_code_controller.dart';
 import 'package:dash_tools/widgets/clear_text.dart';
 import 'package:dash_tools/widgets/flex_action_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+
+const _kCacheKey = 'qr_code';
 
 class QrCodeScreen extends StatefulWidget {
   const QrCodeScreen({super.key});
@@ -20,7 +23,15 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
   @override
   void initState() {
     super.initState();
-    _inputTec.addListener(() => _controller.setInput(_inputTec.text));
+    _inputTec.addListener(_onInput);
+    ToolInputCache.load(_kCacheKey).then((v) {
+      if (mounted && v != null && v.isNotEmpty) _inputTec.text = v;
+    });
+  }
+
+  void _onInput() {
+    _controller.setInput(_inputTec.text);
+    ToolInputCache.save(_kCacheKey, _inputTec.text);
   }
 
   @override
