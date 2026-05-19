@@ -54,7 +54,6 @@ final List<ToolDescriptor> toolRegistry = [
     icon: Icons.compare_arrows,
     builder: (ctx) => const Base64ConverterScreen(),
     aliases: ['b64', 'encode', 'decode'],
-    // TODO detector: matches ^[A-Za-z0-9+/=]+$ and length % 4 == 0
     detector: const _Base64TextDetector(),
   ),
   ToolDescriptor(
@@ -96,7 +95,6 @@ final List<ToolDescriptor> toolRegistry = [
     icon: Icons.compare_arrows,
     builder: (ctx) => const HexToTextConverterScreen(),
     aliases: ['hex', 'ascii', 'text'],
-    // TODO detector: matches ^[0-9a-fA-F\s]+$ and even hex-digit count
     detector: const _HexAsciiDetector(),
   ),
   ToolDescriptor(

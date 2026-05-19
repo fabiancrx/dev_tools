@@ -90,7 +90,7 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
                   padding: EdgeInsets.all(8.0),
                   child: AppLogo(),
                 ),
-                applicationVersion: '0.0.1');
+                applicationVersion: '0.0.2+2');
 
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => const YaruDetailPage(
