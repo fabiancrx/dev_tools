@@ -1,8 +1,10 @@
 import "dart:io";
 
 import "package:dash_tools/app/reorder_screen.dart";
+import "package:dash_tools/common/clipboard_recognizer.dart";
 import "package:dash_tools/common/tool_order.dart";
 import "package:dash_tools/l10n/l10n.dart";
+import "package:dash_tools/tools/registry.dart";
 import "package:dash_tools/widgets/clear_text.dart";
 import "package:flutter/material.dart";
 import "package:yaru/widgets.dart";
@@ -53,8 +55,13 @@ class _SearchFieldState extends State<SearchField> {
 
 class AdaptiveNavigationPane extends StatefulWidget {
   final ToolOrderNotifier toolOrder;
+  final ClipboardRecognizer clipboardRecognizer;
 
-  const AdaptiveNavigationPane({super.key, required this.toolOrder});
+  const AdaptiveNavigationPane({
+    super.key,
+    required this.toolOrder,
+    required this.clipboardRecognizer,
+  });
 
   @override
   State<AdaptiveNavigationPane> createState() => _AdaptiveNavigationPaneState();
@@ -64,10 +71,48 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
   int selectedIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+    widget.clipboardRecognizer.addListener(_onClipboardMatch);
+  }
+
+  @override
+  void dispose() {
+    widget.clipboardRecognizer.removeListener(_onClipboardMatch);
+    super.dispose();
+  }
+
+  void _onClipboardMatch() {
+    final match = widget.clipboardRecognizer.match;
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.clearMaterialBanners();
+    if (match == null) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showMaterialBanner(
+        _ClipboardBanner(
+          match: match,
+          onOpen: () {
+            widget.clipboardRecognizer.dismiss();
+            _navigateTo(match.id);
+          },
+          onDismiss: widget.clipboardRecognizer.dismiss,
+        ),
+      );
+    });
+  }
+
+  void _navigateTo(String toolId) {
+    final idx = widget.toolOrder.tools.indexWhere((t) => t.id == toolId);
+    if (idx >= 0) setState(() => selectedIndex = idx);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    var normalWindowSize = width > 800 && width < 1200;
-    var wideWindowSize = width > 1200;
+    final normalWindowSize = width > 800 && width < 1200;
+    final wideWindowSize = width > 1200;
     final itemStyle = normalWindowSize
         ? YaruNavigationRailStyle.labelled
         : wideWindowSize
@@ -80,7 +125,6 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
       listenable: widget.toolOrder,
       builder: (context, _) {
         final tools = widget.toolOrder.tools;
-        // Clamp selectedIndex in case tools list changed
         final clampedIndex = selectedIndex.clamp(0, tools.length - 1);
 
         return YaruNavigationPage(
@@ -100,11 +144,7 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
           ),
           leading: SizedBox(height: Platform.isMacOS ? 44 : 24),
           length: tools.length,
-          onSelected: (value) {
-            setState(() {
-              selectedIndex = value;
-            });
-          },
+          onSelected: (value) => setState(() => selectedIndex = value),
           initialIndex: clampedIndex,
           itemBuilder: (context, index, selected) => YaruNavigationRailItem(
             tooltip: wideWindowSize
@@ -127,3 +167,26 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
   }
 }
 
+class _ClipboardBanner extends MaterialBanner {
+  _ClipboardBanner({
+    required ToolDescriptor match,
+    required VoidCallback onOpen,
+    required VoidCallback onDismiss,
+  }) : super(
+          content: Row(
+            children: [
+              Icon(match.icon, size: 18),
+              const SizedBox(width: 8),
+              Builder(
+                builder: (context) => Text(
+                  'Clipboard looks like ${match.name(context)}',
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: onOpen, child: const Text('Open')),
+            TextButton(onPressed: onDismiss, child: const Text('Dismiss')),
+          ],
+        );
+}
