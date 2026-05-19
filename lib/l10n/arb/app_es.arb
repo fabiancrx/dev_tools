@@ -83,5 +83,35 @@
     "toolJsonEscapeName": "Escapado/desescapado JSON",
     "toolJsonEscapeDescription": "Escapa o desescapa una cadena JSON",
     "toolJwtDebuggerName": "Depurador JWT",
-    "toolJwtDebuggerDescription": "Depurador de carga útil y encabezado de Token Web JSON"
+    "toolJwtDebuggerDescription": "Depurador de carga útil y encabezado de Token Web JSON",
+
+    "toolUrlEncoderName": "Codificador/Decodificador URL",
+    "toolUrlEncoderDescription": "Codifica o decodifica componentes de URL",
+
+    "toolUnixTimestampName": "Marca de tiempo Unix",
+    "toolUnixTimestampDescription": "Convierte entre marcas de tiempo Unix y fechas ISO 8601",
+
+    "toolQueryStringName": "Analizador de cadena de consulta",
+    "toolQueryStringDescription": "Analiza cadenas de consulta URL en JSON",
+
+    "toolStringInspectorName": "Inspector de cadenas",
+    "toolStringInspectorDescription": "Analiza cadenas: caracteres, bytes, palabras, líneas",
+
+    "toolUuidGeneratorName": "Generador de UUID",
+    "toolUuidGeneratorDescription": "Genera UUIDs (v1, v4, v7)",
+
+    "toolHashGeneratorName": "Generador de Hash",
+    "toolHashGeneratorDescription": "Genera hashes MD5, SHA-1, SHA-256, SHA-512 y HMAC",
+
+    "toolCaseConverterName": "Convertidor de Case",
+    "toolCaseConverterDescription": "Convierte texto entre camelCase, snake_case, kebab-case y más",
+
+    "toolHttpStatusName": "Códigos de estado HTTP",
+    "toolHttpStatusDescription": "Referencia de códigos de estado HTTP y sus significados",
+
+    "toolCronExpressionName": "Expresión Cron",
+    "toolCronExpressionDescription": "Analiza expresiones cron y previsualiza las próximas ejecuciones",
+
+    "toolQrCodeName": "Generador de código QR",
+    "toolQrCodeDescription": "Genera códigos QR desde cualquier texto o URL"
 }

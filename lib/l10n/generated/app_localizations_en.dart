@@ -205,4 +205,70 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get toolJwtDebuggerDescription =>
       'JSON Web Token payload and header debugger';
+
+  @override
+  String get toolUrlEncoderName => 'URL Encoder/Decoder';
+
+  @override
+  String get toolUrlEncoderDescription => 'Encode or decode URL components';
+
+  @override
+  String get toolUnixTimestampName => 'Unix Timestamp';
+
+  @override
+  String get toolUnixTimestampDescription =>
+      'Convert between Unix timestamps and ISO 8601 dates';
+
+  @override
+  String get toolQueryStringName => 'Query String Parser';
+
+  @override
+  String get toolQueryStringDescription => 'Parse URL query strings into JSON';
+
+  @override
+  String get toolStringInspectorName => 'String Inspector';
+
+  @override
+  String get toolStringInspectorDescription =>
+      'Analyze strings: characters, bytes, words, lines';
+
+  @override
+  String get toolUuidGeneratorName => 'UUID Generator';
+
+  @override
+  String get toolUuidGeneratorDescription => 'Generate UUIDs (v1, v4, v7)';
+
+  @override
+  String get toolHashGeneratorName => 'Hash Generator';
+
+  @override
+  String get toolHashGeneratorDescription =>
+      'Generate MD5, SHA-1, SHA-256, SHA-512 and HMAC hashes';
+
+  @override
+  String get toolCaseConverterName => 'Case Converter';
+
+  @override
+  String get toolCaseConverterDescription =>
+      'Convert text between camelCase, snake_case, kebab-case and more';
+
+  @override
+  String get toolHttpStatusName => 'HTTP Status Codes';
+
+  @override
+  String get toolHttpStatusDescription =>
+      'Reference for HTTP status codes and their meanings';
+
+  @override
+  String get toolCronExpressionName => 'Cron Expression';
+
+  @override
+  String get toolCronExpressionDescription =>
+      'Parse cron expressions and preview next run times';
+
+  @override
+  String get toolQrCodeName => 'QR Code Generator';
+
+  @override
+  String get toolQrCodeDescription => 'Generate QR codes from any text or URL';
 }

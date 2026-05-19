@@ -457,6 +457,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'JSON Web Token payload and header debugger'**
   String get toolJwtDebuggerDescription;
+
+  /// URL encoder tool name
+  ///
+  /// In en, this message translates to:
+  /// **'URL Encoder/Decoder'**
+  String get toolUrlEncoderName;
+
+  /// URL encoder tool description
+  ///
+  /// In en, this message translates to:
+  /// **'Encode or decode URL components'**
+  String get toolUrlEncoderDescription;
+
+  /// Unix timestamp tool name
+  ///
+  /// In en, this message translates to:
+  /// **'Unix Timestamp'**
+  String get toolUnixTimestampName;
+
+  /// Unix timestamp tool description
+  ///
+  /// In en, this message translates to:
+  /// **'Convert between Unix timestamps and ISO 8601 dates'**
+  String get toolUnixTimestampDescription;
+
+  /// Query string parser tool name
+  ///
+  /// In en, this message translates to:
+  /// **'Query String Parser'**
+  String get toolQueryStringName;
+
+  /// Query string parser tool description
+  ///
+  /// In en, this message translates to:
+  /// **'Parse URL query strings into JSON'**
+  String get toolQueryStringDescription;
+
+  /// String inspector tool name
+  ///
+  /// In en, this message translates to:
+  /// **'String Inspector'**
+  String get toolStringInspectorName;
+
+  /// String inspector tool description
+  ///
+  /// In en, this message translates to:
+  /// **'Analyze strings: characters, bytes, words, lines'**
+  String get toolStringInspectorDescription;
+
+  /// UUID generator tool name
+  ///
+  /// In en, this message translates to:
+  /// **'UUID Generator'**
+  String get toolUuidGeneratorName;
+
+  /// UUID generator tool description
+  ///
+  /// In en, this message translates to:
+  /// **'Generate UUIDs (v1, v4, v7)'**
+  String get toolUuidGeneratorDescription;
+
+  /// Hash generator tool name
+  ///
+  /// In en, this message translates to:
+  /// **'Hash Generator'**
+  String get toolHashGeneratorName;
+
+  /// Hash generator tool description
+  ///
+  /// In en, this message translates to:
+  /// **'Generate MD5, SHA-1, SHA-256, SHA-512 and HMAC hashes'**
+  String get toolHashGeneratorDescription;
+
+  /// Case converter tool name
+  ///
+  /// In en, this message translates to:
+  /// **'Case Converter'**
+  String get toolCaseConverterName;
+
+  /// Case converter tool description
+  ///
+  /// In en, this message translates to:
+  /// **'Convert text between camelCase, snake_case, kebab-case and more'**
+  String get toolCaseConverterDescription;
+
+  /// HTTP status codes tool name
+  ///
+  /// In en, this message translates to:
+  /// **'HTTP Status Codes'**
+  String get toolHttpStatusName;
+
+  /// HTTP status codes tool description
+  ///
+  /// In en, this message translates to:
+  /// **'Reference for HTTP status codes and their meanings'**
+  String get toolHttpStatusDescription;
+
+  /// Cron expression tool name
+  ///
+  /// In en, this message translates to:
+  /// **'Cron Expression'**
+  String get toolCronExpressionName;
+
+  /// Cron expression tool description
+  ///
+  /// In en, this message translates to:
+  /// **'Parse cron expressions and preview next run times'**
+  String get toolCronExpressionDescription;
+
+  /// QR code generator tool name
+  ///
+  /// In en, this message translates to:
+  /// **'QR Code Generator'**
+  String get toolQrCodeName;
+
+  /// QR code generator tool description
+  ///
+  /// In en, this message translates to:
+  /// **'Generate QR codes from any text or URL'**
+  String get toolQrCodeDescription;
 }
 
 class _AppLocalizationsDelegate

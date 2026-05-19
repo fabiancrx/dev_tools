@@ -208,4 +208,73 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get toolJwtDebuggerDescription =>
       'Depurador de carga útil y encabezado de Token Web JSON';
+
+  @override
+  String get toolUrlEncoderName => 'Codificador/Decodificador URL';
+
+  @override
+  String get toolUrlEncoderDescription =>
+      'Codifica o decodifica componentes de URL';
+
+  @override
+  String get toolUnixTimestampName => 'Marca de tiempo Unix';
+
+  @override
+  String get toolUnixTimestampDescription =>
+      'Convierte entre marcas de tiempo Unix y fechas ISO 8601';
+
+  @override
+  String get toolQueryStringName => 'Analizador de cadena de consulta';
+
+  @override
+  String get toolQueryStringDescription =>
+      'Analiza cadenas de consulta URL en JSON';
+
+  @override
+  String get toolStringInspectorName => 'Inspector de cadenas';
+
+  @override
+  String get toolStringInspectorDescription =>
+      'Analiza cadenas: caracteres, bytes, palabras, líneas';
+
+  @override
+  String get toolUuidGeneratorName => 'Generador de UUID';
+
+  @override
+  String get toolUuidGeneratorDescription => 'Genera UUIDs (v1, v4, v7)';
+
+  @override
+  String get toolHashGeneratorName => 'Generador de Hash';
+
+  @override
+  String get toolHashGeneratorDescription =>
+      'Genera hashes MD5, SHA-1, SHA-256, SHA-512 y HMAC';
+
+  @override
+  String get toolCaseConverterName => 'Convertidor de Case';
+
+  @override
+  String get toolCaseConverterDescription =>
+      'Convierte texto entre camelCase, snake_case, kebab-case y más';
+
+  @override
+  String get toolHttpStatusName => 'Códigos de estado HTTP';
+
+  @override
+  String get toolHttpStatusDescription =>
+      'Referencia de códigos de estado HTTP y sus significados';
+
+  @override
+  String get toolCronExpressionName => 'Expresión Cron';
+
+  @override
+  String get toolCronExpressionDescription =>
+      'Analiza expresiones cron y previsualiza las próximas ejecuciones';
+
+  @override
+  String get toolQrCodeName => 'Generador de código QR';
+
+  @override
+  String get toolQrCodeDescription =>
+      'Genera códigos QR desde cualquier texto o URL';
 }

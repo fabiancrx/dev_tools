@@ -195,5 +195,65 @@
     "@toolJwtDebuggerName": { "description": "JWT debugger tool name" },
 
     "toolJwtDebuggerDescription": "JSON Web Token payload and header debugger",
-    "@toolJwtDebuggerDescription": { "description": "JWT debugger tool description" }
+    "@toolJwtDebuggerDescription": { "description": "JWT debugger tool description" },
+
+    "toolUrlEncoderName": "URL Encoder/Decoder",
+    "@toolUrlEncoderName": { "description": "URL encoder tool name" },
+
+    "toolUrlEncoderDescription": "Encode or decode URL components",
+    "@toolUrlEncoderDescription": { "description": "URL encoder tool description" },
+
+    "toolUnixTimestampName": "Unix Timestamp",
+    "@toolUnixTimestampName": { "description": "Unix timestamp tool name" },
+
+    "toolUnixTimestampDescription": "Convert between Unix timestamps and ISO 8601 dates",
+    "@toolUnixTimestampDescription": { "description": "Unix timestamp tool description" },
+
+    "toolQueryStringName": "Query String Parser",
+    "@toolQueryStringName": { "description": "Query string parser tool name" },
+
+    "toolQueryStringDescription": "Parse URL query strings into JSON",
+    "@toolQueryStringDescription": { "description": "Query string parser tool description" },
+
+    "toolStringInspectorName": "String Inspector",
+    "@toolStringInspectorName": { "description": "String inspector tool name" },
+
+    "toolStringInspectorDescription": "Analyze strings: characters, bytes, words, lines",
+    "@toolStringInspectorDescription": { "description": "String inspector tool description" },
+
+    "toolUuidGeneratorName": "UUID Generator",
+    "@toolUuidGeneratorName": { "description": "UUID generator tool name" },
+
+    "toolUuidGeneratorDescription": "Generate UUIDs (v1, v4, v7)",
+    "@toolUuidGeneratorDescription": { "description": "UUID generator tool description" },
+
+    "toolHashGeneratorName": "Hash Generator",
+    "@toolHashGeneratorName": { "description": "Hash generator tool name" },
+
+    "toolHashGeneratorDescription": "Generate MD5, SHA-1, SHA-256, SHA-512 and HMAC hashes",
+    "@toolHashGeneratorDescription": { "description": "Hash generator tool description" },
+
+    "toolCaseConverterName": "Case Converter",
+    "@toolCaseConverterName": { "description": "Case converter tool name" },
+
+    "toolCaseConverterDescription": "Convert text between camelCase, snake_case, kebab-case and more",
+    "@toolCaseConverterDescription": { "description": "Case converter tool description" },
+
+    "toolHttpStatusName": "HTTP Status Codes",
+    "@toolHttpStatusName": { "description": "HTTP status codes tool name" },
+
+    "toolHttpStatusDescription": "Reference for HTTP status codes and their meanings",
+    "@toolHttpStatusDescription": { "description": "HTTP status codes tool description" },
+
+    "toolCronExpressionName": "Cron Expression",
+    "@toolCronExpressionName": { "description": "Cron expression tool name" },
+
+    "toolCronExpressionDescription": "Parse cron expressions and preview next run times",
+    "@toolCronExpressionDescription": { "description": "Cron expression tool description" },
+
+    "toolQrCodeName": "QR Code Generator",
+    "@toolQrCodeName": { "description": "QR code generator tool name" },
+
+    "toolQrCodeDescription": "Generate QR codes from any text or URL",
+    "@toolQrCodeDescription": { "description": "QR code generator tool description" }
 }
