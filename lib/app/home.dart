@@ -1,8 +1,8 @@
 import "dart:io";
 
+import "package:dash_tools/app/reorder_screen.dart";
+import "package:dash_tools/common/tool_order.dart";
 import "package:dash_tools/l10n/l10n.dart";
-import "package:dash_tools/tools/registry.dart";
-import "package:dash_tools/widgets/app_logo.dart";
 import "package:dash_tools/widgets/clear_text.dart";
 import "package:flutter/material.dart";
 import "package:yaru/widgets.dart";
@@ -52,9 +52,9 @@ class _SearchFieldState extends State<SearchField> {
 }
 
 class AdaptiveNavigationPane extends StatefulWidget {
-  final List<ToolDescriptor> tools;
+  final ToolOrderNotifier toolOrder;
 
-  const AdaptiveNavigationPane({super.key, required this.tools});
+  const AdaptiveNavigationPane({super.key, required this.toolOrder});
 
   @override
   State<AdaptiveNavigationPane> createState() => _AdaptiveNavigationPaneState();
@@ -66,7 +66,6 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    // todo move to breakpoints extension
     var normalWindowSize = width > 800 && width < 1200;
     var wideWindowSize = width > 1200;
     final itemStyle = normalWindowSize
@@ -76,51 +75,55 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
             : YaruNavigationRailStyle.compact;
 
     final paneWidth = itemStyle == YaruNavigationRailStyle.compact ? 70.0 : null;
-    return YaruNavigationPage(
-      trailing: Padding(
-        padding: const EdgeInsets.only(bottom: 10),
-        child: YaruNavigationRailItem(
-          icon: const Icon(Icons.settings),
-          label: Text(context.l10n.settings),
-          width: paneWidth,
-          style: itemStyle,
-          onTap: () {
-            const licensePage = LicensePage(
-                applicationIcon: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: AppLogo(),
-                ),
-                applicationVersion: '0.0.2+2');
 
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (_) => const YaruDetailPage(
-                      appBar: YaruWindowTitleBar(title: Text(AppLogo.name)),
-                      body: licensePage,
-                    )));
+    return ListenableBuilder(
+      listenable: widget.toolOrder,
+      builder: (context, _) {
+        final tools = widget.toolOrder.tools;
+        // Clamp selectedIndex in case tools list changed
+        final clampedIndex = selectedIndex.clamp(0, tools.length - 1);
+
+        return YaruNavigationPage(
+          trailing: Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: YaruNavigationRailItem(
+              icon: const Icon(Icons.settings),
+              label: Text(context.l10n.settings),
+              width: paneWidth,
+              style: itemStyle,
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => ReorderScreen(notifier: widget.toolOrder),
+                ));
+              },
+            ),
+          ),
+          leading: SizedBox(height: Platform.isMacOS ? 44 : 24),
+          length: tools.length,
+          onSelected: (value) {
+            setState(() {
+              selectedIndex = value;
+            });
           },
-        ),
-      ),
-      leading: SizedBox(height: Platform.isMacOS ? 44 : 24),
-      length: widget.tools.length,
-      onSelected: (value) {
-        setState(() {
-          selectedIndex = value;
-        });
+          initialIndex: clampedIndex,
+          itemBuilder: (context, index, selected) => YaruNavigationRailItem(
+            tooltip: wideWindowSize
+                ? context.l10n.toolDescription(tools[index].id)
+                : context.l10n.toolName(tools[index].id),
+            icon: Icon(tools[index].icon),
+            label: Text(context.l10n.toolName(tools[index].id)),
+            style: itemStyle,
+          ),
+          pageBuilder: (context, index) => YaruDetailPage(
+            appBar: YaruWindowTitleBar(
+                title: ConstrainedBox(
+                    constraints: const BoxConstraints(maxHeight: 46, maxWidth: 420),
+                    child: SearchField(hint: context.l10n.toolName(tools[index].id)))),
+            body: tools[index].builder(context),
+          ),
+        );
       },
-      initialIndex: selectedIndex,
-      itemBuilder: (context, index, selected) => YaruNavigationRailItem(
-        tooltip: wideWindowSize ? context.l10n.toolDescription(widget.tools[index].id) : context.l10n.toolName(widget.tools[index].id),
-        icon: Icon(widget.tools[index].icon),
-        label: Text(context.l10n.toolName(widget.tools[index].id)),
-        style: itemStyle,
-      ),
-      pageBuilder: (context, index) => YaruDetailPage(
-        appBar: YaruWindowTitleBar(
-            title: ConstrainedBox(
-                constraints: const BoxConstraints(maxHeight: 46, maxWidth: 420),
-                child: SearchField(hint: context.l10n.toolName(widget.tools[index].id)))),
-        body: widget.tools[index].builder(context),
-      ),
     );
   }
 }
+
