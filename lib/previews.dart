@@ -19,7 +19,7 @@ final class MultiBrightnessPreview extends MultiPreview {
     return super.transform().map((preview) {
       final builder = preview.toBuilder()
         ..group = group
-        ..name = '$name · ${preview.brightness!.name}';
+        ..name = '$name · ${(preview.brightness ?? Brightness.light).name}';
       return builder.build();
     }).toList();
   }

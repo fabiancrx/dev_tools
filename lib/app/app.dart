@@ -54,14 +54,15 @@ class _AppState extends State<App> with WindowListener {
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: AppLocalizations.supportedLocales,
-        home: _toolOrder == null
-            ? const SizedBox.shrink()
-            : DropdownButtonHideUnderline(
-                child: AdaptiveNavigationPane(
-                  toolOrder: _toolOrder!,
-                  clipboardRecognizer: _clipboardRecognizer,
-                ),
+        home: switch (_toolOrder) {
+          null => const SizedBox.shrink(),
+          final order => DropdownButtonHideUnderline(
+              child: AdaptiveNavigationPane(
+                toolOrder: order,
+                clipboardRecognizer: _clipboardRecognizer,
               ),
+            ),
+        },
       ),
     );
   }

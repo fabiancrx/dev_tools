@@ -31,8 +31,9 @@ class UnixTimestampController extends ChangeNotifier {
       return;
     }
     _error = '';
-    _conversion = fromSeconds(seconds);
-    _datetimeText = _conversion!.iso8601Utc;
+    final conversion = fromSeconds(seconds);
+    _conversion = conversion;
+    _datetimeText = conversion.iso8601Utc;
     notifyListeners();
   }
 

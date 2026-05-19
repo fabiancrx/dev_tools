@@ -89,7 +89,9 @@ class Base64ImageController extends ChangeNotifier {
   Future<void> loadImage() async {
     final result = await FilePicker.pickFiles();
     if (result != null) {
-      final data = await File(result.files.single.path!).readAsBytes();
+      final path = result.files.single.path;
+      if (path == null) return;
+      final data = await File(path).readAsBytes();
       updateImage(data);
     }
   }

@@ -120,7 +120,7 @@ class _ShowHideTab extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 8),
           children: [
             for (final cat in ToolCategory.values)
-              if (byCategory[cat]!.isNotEmpty) ...[
+              if ((byCategory[cat] ?? []).isNotEmpty) ...[
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
                   child: Text(
@@ -130,7 +130,7 @@ class _ShowHideTab extends StatelessWidget {
                         ),
                   ),
                 ),
-                for (final tool in byCategory[cat]!)
+                for (final tool in byCategory[cat] ?? [])
                   SwitchListTile(
                     secondary: Icon(tool.icon),
                     title: Text(tool.name(context)),

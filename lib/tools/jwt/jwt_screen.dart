@@ -106,12 +106,12 @@ class _JwtScreenState extends State<JwtScreen> {
                               expirationDate.isBefore(DateTime.now())
                                   ? Text(
                                       l10n.expiredOn(formatDateTime(expirationDate)),
-                                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                             color: Theme.of(context).primaryColor,
                                           ),
                                     )
                                   : DefaultTextStyle(
-                                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                      style: (Theme.of(context).textTheme.bodyLarge ?? const TextStyle()).copyWith(
                                             color: Theme.of(context).colorScheme.success,
                                           ),
                                       child: TimeRemaining(

@@ -293,7 +293,8 @@ class _DropZoneState extends State<_DropZone> {
   }
 
   Future<void> _onPerformDrop(PerformDropEvent event) async {
-    final reader = event.session.items.first.dataReader!;
+    final reader = event.session.items.first.dataReader;
+    if (reader == null) return;
     reader.getFile(null, (DataReaderFile file) async {
       widget.onImageDrop(await file.readAll());
     }, onError: (error) {
