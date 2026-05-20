@@ -15,8 +15,9 @@ class ReorderScreen extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: YaruDetailPage(
-        appBar: const YaruWindowTitleBar(
-          title: TabBar(
+        appBar: YaruWindowTitleBar(
+          leading: BackButton(onPressed: () => Navigator.of(context).pop()),
+          title: const TabBar(
             tabs: [
               Tab(text: 'Organize'),
               Tab(text: 'Show / Hide'),
