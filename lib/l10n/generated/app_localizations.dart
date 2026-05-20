@@ -290,6 +290,120 @@ abstract class AppLocalizations {
   /// **'Audience claim\nIdentifies the recipients that the JWT is intended for. Each principal intended to process the JWT MUST identify itself with a value in the audience claim.'**
   String get jwtClaimAud;
 
+  /// JWT decode tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Decode'**
+  String get jwtDecode;
+
+  /// JWT encode tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Encode'**
+  String get jwtEncode;
+
+  /// Status badge when token is structurally valid
+  ///
+  /// In en, this message translates to:
+  /// **'Valid JWT'**
+  String get jwtValid;
+
+  /// Status badge when token is malformed
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid token'**
+  String get jwtInvalid;
+
+  /// Status badge when signature check passes
+  ///
+  /// In en, this message translates to:
+  /// **'Signature verified'**
+  String get jwtSignatureVerified;
+
+  /// Status badge when signature check fails
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid signature'**
+  String get jwtSignatureInvalid;
+
+  /// Secret key input field label
+  ///
+  /// In en, this message translates to:
+  /// **'Secret'**
+  String get jwtSecret;
+
+  /// Checkbox label for base64-encoded secret
+  ///
+  /// In en, this message translates to:
+  /// **'Base64 encoded'**
+  String get jwtSecretBase64;
+
+  /// Signature verification section title
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Signature'**
+  String get jwtVerifySignature;
+
+  /// Algorithm dropdown label in encode tab
+  ///
+  /// In en, this message translates to:
+  /// **'Algorithm'**
+  String get jwtAlgorithm;
+
+  /// Generated token section title in encode tab
+  ///
+  /// In en, this message translates to:
+  /// **'Generated Token'**
+  String get jwtGeneratedToken;
+
+  /// Payload editor label in encode tab
+  ///
+  /// In en, this message translates to:
+  /// **'Payload'**
+  String get jwtEncodePayload;
+
+  /// Header editor label in encode tab
+  ///
+  /// In en, this message translates to:
+  /// **'Header'**
+  String get jwtEncodeHeader;
+
+  /// Button that copies the decoded token into the encoder tab
+  ///
+  /// In en, this message translates to:
+  /// **'Edit in Encoder'**
+  String get jwtEditInEncoder;
+
+  /// JWT nbf claim label
+  ///
+  /// In en, this message translates to:
+  /// **'Not valid before: {date}'**
+  String jwtNotValidBefore(String date);
+
+  /// Warning text when nbf is in the future
+  ///
+  /// In en, this message translates to:
+  /// **'Token not yet valid'**
+  String get jwtNotYetValid;
+
+  /// Warning banner for alg:none tokens
+  ///
+  /// In en, this message translates to:
+  /// **'This token uses no signature (alg: none) and cannot be trusted.'**
+  String get jwtInsecureAlgorithmWarning;
+
+  /// Tooltip for the claims breakdown toggle button
+  ///
+  /// In en, this message translates to:
+  /// **'Claims breakdown'**
+  String get jwtClaimsBreakdown;
+
+  /// Tooltip for the show raw JSON toggle button
+  ///
+  /// In en, this message translates to:
+  /// **'Show JSON'**
+  String get jwtShowJson;
+
   /// Hexadecimal number system label
   ///
   /// In en, this message translates to:

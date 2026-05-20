@@ -120,6 +120,66 @@ class AppLocalizationsEs extends AppLocalizations {
       'Claim de audiencia\nIdentifica los destinatarios para los que está destinado el JWT. Cada principal que pretenda procesar el JWT DEBE identificarse con un valor en el claim de audiencia.';
 
   @override
+  String get jwtDecode => 'Decode';
+
+  @override
+  String get jwtEncode => 'Encode';
+
+  @override
+  String get jwtValid => 'Valid JWT';
+
+  @override
+  String get jwtInvalid => 'Invalid token';
+
+  @override
+  String get jwtSignatureVerified => 'Signature verified';
+
+  @override
+  String get jwtSignatureInvalid => 'Invalid signature';
+
+  @override
+  String get jwtSecret => 'Secret';
+
+  @override
+  String get jwtSecretBase64 => 'Base64 encoded';
+
+  @override
+  String get jwtVerifySignature => 'Verify Signature';
+
+  @override
+  String get jwtAlgorithm => 'Algorithm';
+
+  @override
+  String get jwtGeneratedToken => 'Generated Token';
+
+  @override
+  String get jwtEncodePayload => 'Payload';
+
+  @override
+  String get jwtEncodeHeader => 'Header';
+
+  @override
+  String get jwtEditInEncoder => 'Edit in Encoder';
+
+  @override
+  String jwtNotValidBefore(String date) {
+    return 'Not valid before: $date';
+  }
+
+  @override
+  String get jwtNotYetValid => 'Token not yet valid';
+
+  @override
+  String get jwtInsecureAlgorithmWarning =>
+      'This token uses no signature (alg: none) and cannot be trusted.';
+
+  @override
+  String get jwtClaimsBreakdown => 'Claims breakdown';
+
+  @override
+  String get jwtShowJson => 'Show JSON';
+
+  @override
   String get hex => 'Hexadecimal';
 
   @override

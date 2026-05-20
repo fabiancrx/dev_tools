@@ -113,6 +113,68 @@
     "jwtClaimAud": "Audience claim\nIdentifies the recipients that the JWT is intended for. Each principal intended to process the JWT MUST identify itself with a value in the audience claim.",
     "@jwtClaimAud": { "description": "JWT aud claim tooltip description" },
 
+    "jwtDecode": "Decode",
+    "@jwtDecode": { "description": "JWT decode tab label" },
+
+    "jwtEncode": "Encode",
+    "@jwtEncode": { "description": "JWT encode tab label" },
+
+    "jwtValid": "Valid JWT",
+    "@jwtValid": { "description": "Status badge when token is structurally valid" },
+
+    "jwtInvalid": "Invalid token",
+    "@jwtInvalid": { "description": "Status badge when token is malformed" },
+
+    "jwtSignatureVerified": "Signature verified",
+    "@jwtSignatureVerified": { "description": "Status badge when signature check passes" },
+
+    "jwtSignatureInvalid": "Invalid signature",
+    "@jwtSignatureInvalid": { "description": "Status badge when signature check fails" },
+
+    "jwtSecret": "Secret",
+    "@jwtSecret": { "description": "Secret key input field label" },
+
+    "jwtSecretBase64": "Base64 encoded",
+    "@jwtSecretBase64": { "description": "Checkbox label for base64-encoded secret" },
+
+    "jwtVerifySignature": "Verify Signature",
+    "@jwtVerifySignature": { "description": "Signature verification section title" },
+
+    "jwtAlgorithm": "Algorithm",
+    "@jwtAlgorithm": { "description": "Algorithm dropdown label in encode tab" },
+
+    "jwtGeneratedToken": "Generated Token",
+    "@jwtGeneratedToken": { "description": "Generated token section title in encode tab" },
+
+    "jwtEncodePayload": "Payload",
+    "@jwtEncodePayload": { "description": "Payload editor label in encode tab" },
+
+    "jwtEncodeHeader": "Header",
+    "@jwtEncodeHeader": { "description": "Header editor label in encode tab" },
+
+    "jwtEditInEncoder": "Edit in Encoder",
+    "@jwtEditInEncoder": { "description": "Button that copies the decoded token into the encoder tab" },
+
+    "jwtNotValidBefore": "Not valid before: {date}",
+    "@jwtNotValidBefore": {
+        "description": "JWT nbf claim label",
+        "placeholders": {
+            "date": { "type": "String", "description": "The formatted not-before date" }
+        }
+    },
+
+    "jwtNotYetValid": "Token not yet valid",
+    "@jwtNotYetValid": { "description": "Warning text when nbf is in the future" },
+
+    "jwtInsecureAlgorithmWarning": "This token uses no signature (alg: none) and cannot be trusted.",
+    "@jwtInsecureAlgorithmWarning": { "description": "Warning banner for alg:none tokens" },
+
+    "jwtClaimsBreakdown": "Claims breakdown",
+    "@jwtClaimsBreakdown": { "description": "Tooltip for the claims breakdown toggle button" },
+
+    "jwtShowJson": "Show JSON",
+    "@jwtShowJson": { "description": "Tooltip for the show raw JSON toggle button" },
+
     "hex": "Hex",
     "@hex": { "description": "Hexadecimal number system label" },
 
