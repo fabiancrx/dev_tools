@@ -44,9 +44,11 @@ class _CronExpressionScreenState extends State<CronExpressionScreen> {
   Widget build(BuildContext context) {
     return ToolScaffold(
       onRun: _controller.run,
-      actions: [
-        Expanded(
-          child: TextField(
+      actions: const [],
+      input: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          TextField(
             controller: _inputTec,
             focusNode: _inputFocus,
             style: const TextStyle(fontFamily: 'monospace', fontSize: 16),
@@ -57,29 +59,29 @@ class _CronExpressionScreenState extends State<CronExpressionScreen> {
               suffixIcon: ClearTextIcon(controller: _inputTec, focusNode: _inputFocus),
             ),
           ),
-        ),
-      ],
-      input: ListenableBuilder(
-        listenable: _controller,
-        builder: (_, _) {
-          if (_controller.error.isNotEmpty) {
-            return Padding(
-              padding: const EdgeInsets.all(8),
-              child: Text(
-                _controller.error,
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
-              ),
-            );
-          }
-          if (_controller.description.isEmpty) return const SizedBox.shrink();
-          return Padding(
-            padding: const EdgeInsets.all(8),
-            child: Text(
-              _controller.description,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          );
-        },
+          ListenableBuilder(
+            listenable: _controller,
+            builder: (_, _) {
+              if (_controller.error.isNotEmpty) {
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                  child: Text(
+                    _controller.error,
+                    style: TextStyle(color: Theme.of(context).colorScheme.error),
+                  ),
+                );
+              }
+              if (_controller.description.isEmpty) return const SizedBox.shrink();
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                child: Text(
+                  _controller.description,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              );
+            },
+          ),
+        ],
       ),
       output: ListenableBuilder(
         listenable: _controller,

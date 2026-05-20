@@ -38,6 +38,7 @@ class ToolScaffold extends StatelessWidget {
                   listenable: AppSettings.instance,
                   builder: (context, _) {
                     final showRun = !AppSettings.instance.autoRun && onRun != null;
+                    if (actions.isEmpty && !showRun) return const SizedBox.shrink();
                     return FlexActionBar(
                       children: [
                         ...actions,
