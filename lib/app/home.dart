@@ -9,6 +9,7 @@ import "package:dash_tools/tools/registry.dart";
 import "package:dash_tools/widgets/clear_text.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter_svg/flutter_svg.dart";
 import "package:yaru/widgets.dart";
 
 class SearchField extends StatefulWidget {
@@ -71,6 +72,7 @@ class AdaptiveNavigationPane extends StatefulWidget {
 
 class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
   int selectedIndex = 0;
+  bool _forceCollapsed = false;
 
   @override
   void initState() {
@@ -147,11 +149,13 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
     final width = MediaQuery.of(context).size.width;
     final normalWindowSize = width > 800 && width < 1200;
     final wideWindowSize = width > 1200;
-    final itemStyle = normalWindowSize
-        ? YaruNavigationRailStyle.labelled
-        : wideWindowSize
-            ? YaruNavigationRailStyle.labelledExtended
-            : YaruNavigationRailStyle.compact;
+    final itemStyle = _forceCollapsed
+        ? YaruNavigationRailStyle.compact
+        : normalWindowSize
+            ? YaruNavigationRailStyle.labelled
+            : wideWindowSize
+                ? YaruNavigationRailStyle.labelledExtended
+                : YaruNavigationRailStyle.compact;
 
     final paneWidth = itemStyle == YaruNavigationRailStyle.compact ? 70.0 : null;
 
@@ -176,7 +180,7 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
               },
             ),
           ),
-          leading: SizedBox(height: Platform.isMacOS ? 44 : 24),
+          leading: SizedBox(height: Platform.isMacOS ? 44 : 0),
           length: tools.length,
           onSelected: (value) => setState(() => selectedIndex = value),
           initialIndex: clampedIndex,
@@ -190,6 +194,21 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
           ),
           pageBuilder: (context, index) => YaruDetailPage(
             appBar: YaruWindowTitleBar(
+                leading: IconButton(
+                  tooltip: _forceCollapsed ? 'Expand sidebar' : 'Collapse sidebar',
+                  icon: SvgPicture.asset(
+                    _forceCollapsed
+                        ? 'assets/icons/sidebar-right-svgrepo-com.svg'
+                        : 'assets/icons/sidebar-left-svgrepo-com.svg',
+                    width: 20,
+                    height: 20,
+                    colorFilter: ColorFilter.mode(
+                      IconTheme.of(context).color ?? Theme.of(context).iconTheme.color ?? Colors.white,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                  onPressed: () => setState(() => _forceCollapsed = !_forceCollapsed),
+                ),
                 title: ConstrainedBox(
                     constraints: const BoxConstraints(maxHeight: 46, maxWidth: 420),
                     child: SearchField(hint: context.l10n.toolName(tools[index].id)))),

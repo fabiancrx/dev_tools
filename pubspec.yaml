@@ -36,6 +36,7 @@ dependencies:
   code_forge: ^9.10.0
   re_highlight: ^0.0.3
   shared_preferences: ^2.5.5
+  flutter_svg: ^2.0.10
 
 dependency_overrides:
   intl: ^0.20.2
@@ -49,3 +50,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  assets:
+    - assets/icons/
