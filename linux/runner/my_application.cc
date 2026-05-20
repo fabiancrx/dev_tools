@@ -63,15 +63,16 @@ static void my_application_activate(GApplication* application) {
   // Background defaults to black, override it here if necessary, e.g. #00000000 for transparent.
   gdk_rgba_parse(&background_color, "#000000");
   fl_view_set_background_color(view, &background_color);
-  gtk_widget_show(GTK_WIDGET(view));
   gtk_container_add(GTK_CONTAINER(window), GTK_WIDGET(view));
 
-  // Show the window when Flutter renders.
-  // Requires the view to be realized so we can start rendering.
+  // Show the window when Flutter renders its first frame.
   g_signal_connect_swapped(view, "first-frame", G_CALLBACK(first_frame_cb), self);
-  gtk_widget_realize(GTK_WIDGET(view));
 
+  // Plugins must be registered before the view is shown/realized so that
+  // handy_window can set up the rounded-corner mixin in time.
   fl_register_plugins(FL_PLUGIN_REGISTRY(view));
+
+  gtk_widget_realize(GTK_WIDGET(view));
 
   gtk_widget_grab_focus(GTK_WIDGET(view));
 }
