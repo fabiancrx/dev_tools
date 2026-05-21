@@ -55,9 +55,9 @@ class _JsonConverterScreenState extends State<JsonConverterScreen> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SplitWrap(
-          axis: Axis.vertical,
+          axis: Axis.horizontal,
           initialFractions: const [0.5, 0.5],
-          minSizes: const [278, 80],
+          minSizes: const [200, 200],
           children: [
             Column(
               mainAxisSize: MainAxisSize.max,
