@@ -263,3 +263,75 @@ DateTime? _extractNumericDate(dynamic entry) => switch (entry) {
       final String s => DateTime.tryParse(s),
       _ => null,
     };
+
+class JwtKnownField {
+  final String short;
+  final String tooltip;
+
+  const JwtKnownField(this.short, this.tooltip);
+
+  static JwtKnownField? fromKey(String key) => _fields[key];
+
+  static const _fields = <String, JwtKnownField>{
+    // Header parameters — RFC 7515
+    'alg': JwtKnownField(
+      'Algorithm',
+      'RFC 7515 §4.1.1 — Cryptographic algorithm used to secure the JWS. Must be present and understood by the recipient.',
+    ),
+    'typ': JwtKnownField(
+      'Token type',
+      'RFC 7515 §4.1.9 — Media type of the complete JWS; used by applications to disambiguate among different kinds of objects.',
+    ),
+    'kid': JwtKnownField(
+      'Key ID',
+      'RFC 7515 §4.1.4 — Hints which key was used to secure the JWS; allows originators to signal key rotation to recipients.',
+    ),
+    'cty': JwtKnownField(
+      'Content type',
+      'RFC 7515 §4.1.10 — Media type of the secured payload content; set to "JWT" when nesting signed or encrypted tokens.',
+    ),
+    'x5t': JwtKnownField(
+      'X.509 SHA-1 thumbprint',
+      'RFC 7515 §4.1.7 — Base64url-encoded SHA-1 thumbprint of the DER encoding of the X.509 signing certificate.',
+    ),
+    'x5t#S256': JwtKnownField(
+      'X.509 SHA-256 thumbprint',
+      'RFC 7515 §4.1.8 — Base64url-encoded SHA-256 thumbprint of the DER encoding of the X.509 signing certificate.',
+    ),
+    // OAuth 2.0 — RFC 6749
+    'scope': JwtKnownField(
+      'OAuth 2.0 scope',
+      'RFC 6749 §3.3 — Space-delimited, case-sensitive strings defining the range of access requested or granted.',
+    ),
+    // OIDC Core claims
+    'azp': JwtKnownField(
+      'Authorized party',
+      'OIDC Core §2 — Client ID of the party the ID Token was issued to. Required when the audience differs from the authorized party.',
+    ),
+    'nonce': JwtKnownField(
+      'Nonce',
+      'OIDC Core §2 — Associates a client session with an ID Token to mitigate replay attacks; passed unmodified from the authentication request.',
+    ),
+    'at_hash': JwtKnownField(
+      'Access token hash',
+      'OIDC Core §3.1.3.6 — Base64url encoding of the left-most half of the access token hash. Hash algorithm matches the alg header parameter.',
+    ),
+    'c_hash': JwtKnownField(
+      'Code hash',
+      'OIDC Core §3.3.2.11 — Base64url encoding of the left-most half of the authorization code hash. Hash algorithm matches the alg header parameter.',
+    ),
+    // Common OIDC / custom claims (no normative RFC definition)
+    'name': JwtKnownField(
+      'Name',
+      'Common OIDC/custom claim — the subject\'s full display name as provided by the issuer.',
+    ),
+    'email': JwtKnownField(
+      'Email',
+      'Common OIDC/custom claim — the subject\'s email address as provided by the issuer.',
+    ),
+    'roles': JwtKnownField(
+      'Roles',
+      'Custom claim — application-defined role assignments. Not defined by any RFC; semantics are issuer-specific.',
+    ),
+  };
+}

@@ -940,8 +940,10 @@ class _BreakdownEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     final key = entry.key as String;
     final claim = JwtRegisteredClaims.fromKey(key);
+    final knownField = JwtKnownField.fromKey(key);
     final displayValue = claim != null ? claim.process(entry) : entry.value.toString();
-    final shortDesc = claim?.shortDescription ?? _headerClaimShortDescription(key);
+    final shortDesc = claim?.shortDescription ?? knownField?.short ?? 'Custom claim';
+    final tooltipMsg = claim != null ? claim.description(context.l10n) : knownField?.tooltip;
     final cs = Theme.of(context).colorScheme;
 
     return Padding(
@@ -949,29 +951,29 @@ class _BreakdownEntry extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Key
+          // Label: full name + JSON key below
           SizedBox(
-            width: 52,
-            child: SelectableText(
-              key,
-              style: TextStyle(
-                fontFamily: 'monospace',
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-                color: claim != null ? cs.primary : null,
-              ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          // Short description
-          SizedBox(
-            width: 120,
-            child: Text(
-              shortDesc,
-              style: TextStyle(
-                fontSize: 11,
-                color: cs.onSurface.withValues(alpha: 0.55),
-              ),
+            width: 160,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  shortDesc,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: (claim != null || knownField != null) ? cs.primary : null,
+                  ),
+                ),
+                Text(
+                  key,
+                  style: TextStyle(
+                    fontFamily: 'monospace',
+                    fontSize: 11,
+                    color: cs.onSurface.withValues(alpha: 0.45),
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(width: 8),
@@ -982,25 +984,16 @@ class _BreakdownEntry extends StatelessWidget {
               style: const TextStyle(fontFamily: 'monospace', fontSize: 13),
             ),
           ),
-          // Info tooltip for registered claims
-          if (claim != null)
+          // Info tooltip for known fields
+          if (tooltipMsg != null)
             Tooltip(
-              message: claim.description(context.l10n),
+              message: tooltipMsg,
               child: const Icon(Icons.info_outline, size: 14),
             ),
         ],
       ),
     );
   }
-
-  String _headerClaimShortDescription(String key) => switch (key) {
-        'alg' => 'Algorithm',
-        'typ' => 'Token type',
-        'kid' => 'Key ID',
-        'cty' => 'Content type',
-        'x5t' => 'X.509 thumbprint',
-        _ => 'Custom claim',
-      };
 }
 
 // ── l10n extensions ───────────────────────────────────────────────────────────
