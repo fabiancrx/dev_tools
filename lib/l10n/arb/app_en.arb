@@ -326,5 +326,29 @@
     "@jsonQueryClear": { "description": "Tooltip for the button that clears the JSONPath query and restores the full JSON" },
 
     "jsonQueryInvalid": "Invalid expression",
-    "@jsonQueryInvalid": { "description": "Error text shown when the JSONPath expression is syntactically invalid" }
+    "@jsonQueryInvalid": { "description": "Error text shown when the JSONPath expression is syntactically invalid" },
+
+    "jsonYamlModeJsonToYaml": "JSON → YAML",
+    "@jsonYamlModeJsonToYaml": { "description": "JSON to YAML conversion mode label" },
+
+    "jsonYamlModeYamlToJson": "YAML → JSON",
+    "@jsonYamlModeYamlToJson": { "description": "YAML to JSON conversion mode label" },
+
+    "toolXmlFormatterName": "XML Formatter",
+    "@toolXmlFormatterName": { "description": "XML formatter tool name" },
+
+    "toolXmlFormatterDescription": "Prettify, minify or validate XML",
+    "@toolXmlFormatterDescription": { "description": "XML formatter tool description" },
+
+    "toolYamlFormatterName": "YAML Formatter",
+    "@toolYamlFormatterName": { "description": "YAML formatter tool name" },
+
+    "toolYamlFormatterDescription": "Format and validate YAML",
+    "@toolYamlFormatterDescription": { "description": "YAML formatter tool description" },
+
+    "toolJsonYamlConverterName": "JSON ↔ YAML",
+    "@toolJsonYamlConverterName": { "description": "JSON/YAML converter tool name" },
+
+    "toolJsonYamlConverterDescription": "Convert between JSON and YAML",
+    "@toolJsonYamlConverterDescription": { "description": "JSON/YAML converter tool description" }
 }

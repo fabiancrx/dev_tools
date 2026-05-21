@@ -13,8 +13,11 @@ import 'package:dash_tools/tools/json/json_escape_screen.dart';
 import 'package:dash_tools/tools/json/json_formatter_screen.dart';
 import 'package:dash_tools/tools/jwt/jwt_screen.dart';
 import 'package:dash_tools/tools/number_converter/number_converter.dart';
+import 'package:dash_tools/tools/json_yaml/json_yaml_converter_screen.dart';
 import 'package:dash_tools/tools/qr_code/qr_code_screen.dart';
 import 'package:dash_tools/tools/query_string/query_string_screen.dart';
+import 'package:dash_tools/tools/xml/xml_formatter_screen.dart';
+import 'package:dash_tools/tools/yaml/yaml_formatter_screen.dart';
 import 'package:dash_tools/tools/string_inspector/string_inspector_screen.dart';
 import 'package:dash_tools/tools/unix_timestamp/unix_timestamp_screen.dart';
 import 'package:dash_tools/tools/url_encoder/url_encoder_screen.dart';
@@ -230,6 +233,36 @@ final List<ToolDescriptor> toolRegistry = [
     aliases: ['qr', 'barcode', 'scan'],
     detector: null,
   ),
+  ToolDescriptor(
+    id: 'xml_formatter',
+    name: (ctx) => ctx.l10n.toolName('xml_formatter'),
+    description: (ctx) => ctx.l10n.toolDescription('xml_formatter'),
+    category: ToolCategory.formatters,
+    icon: Icons.code,
+    builder: (_) => const XmlFormatterScreen(),
+    aliases: ['xml', 'prettify', 'format', 'minify'],
+    detector: const _XmlDetector(),
+  ),
+  ToolDescriptor(
+    id: 'yaml_formatter',
+    name: (ctx) => ctx.l10n.toolName('yaml_formatter'),
+    description: (ctx) => ctx.l10n.toolDescription('yaml_formatter'),
+    category: ToolCategory.formatters,
+    icon: Icons.article_outlined,
+    builder: (_) => const YamlFormatterScreen(),
+    aliases: ['yaml', 'yml', 'format'],
+    detector: const _YamlDetector(),
+  ),
+  ToolDescriptor(
+    id: 'json_yaml_converter',
+    name: (ctx) => ctx.l10n.toolName('json_yaml_converter'),
+    description: (ctx) => ctx.l10n.toolDescription('json_yaml_converter'),
+    category: ToolCategory.converters,
+    icon: Icons.swap_horiz,
+    builder: (_) => const JsonYamlConverterScreen(),
+    aliases: ['json', 'yaml', 'convert', 'json to yaml', 'yaml to json'],
+    detector: null,
+  ),
 ];
 
 // ---------------------------------------------------------------------------
@@ -369,5 +402,32 @@ class _CronDetector implements ClipboardDetector {
     if (parts.length != 5) return false;
     return RegExp(r'^[\d*/,\-]+$').hasMatch(parts[0]) &&
         RegExp(r'^[\d*/,\-]+$').hasMatch(parts[1]);
+  }
+}
+
+class _XmlDetector implements ClipboardDetector {
+  const _XmlDetector();
+
+  @override
+  int get priority => 7;
+
+  @override
+  bool canHandle(String input) {
+    final trimmed = input.trim();
+    return trimmed.startsWith('<?xml') || (trimmed.startsWith('<') && trimmed.endsWith('>'));
+  }
+}
+
+class _YamlDetector implements ClipboardDetector {
+  const _YamlDetector();
+
+  @override
+  int get priority => 4;
+
+  @override
+  bool canHandle(String input) {
+    final trimmed = input.trim();
+    if (trimmed.isEmpty || trimmed.startsWith('{') || trimmed.startsWith('[')) return false;
+    return RegExp(r'^[a-zA-Z_][a-zA-Z0-9_]*\s*:', multiLine: true).hasMatch(trimmed);
   }
 }

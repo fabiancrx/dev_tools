@@ -346,4 +346,28 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get jsonQueryInvalid => 'Expresión inválida';
+
+  @override
+  String get jsonYamlModeJsonToYaml => 'JSON → YAML';
+
+  @override
+  String get jsonYamlModeYamlToJson => 'YAML → JSON';
+
+  @override
+  String get toolXmlFormatterName => 'Formateador XML';
+
+  @override
+  String get toolXmlFormatterDescription => 'Embellece, minifica o valida XML';
+
+  @override
+  String get toolYamlFormatterName => 'Formateador YAML';
+
+  @override
+  String get toolYamlFormatterDescription => 'Formatea y valida YAML';
+
+  @override
+  String get toolJsonYamlConverterName => 'JSON ↔ YAML';
+
+  @override
+  String get toolJsonYamlConverterDescription => 'Convierte entre JSON y YAML';
 }

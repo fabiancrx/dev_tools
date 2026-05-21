@@ -709,6 +709,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Invalid expression'**
   String get jsonQueryInvalid;
+
+  /// JSON to YAML conversion mode label
+  ///
+  /// In en, this message translates to:
+  /// **'JSON → YAML'**
+  String get jsonYamlModeJsonToYaml;
+
+  /// YAML to JSON conversion mode label
+  ///
+  /// In en, this message translates to:
+  /// **'YAML → JSON'**
+  String get jsonYamlModeYamlToJson;
+
+  /// XML formatter tool name
+  ///
+  /// In en, this message translates to:
+  /// **'XML Formatter'**
+  String get toolXmlFormatterName;
+
+  /// XML formatter tool description
+  ///
+  /// In en, this message translates to:
+  /// **'Prettify, minify or validate XML'**
+  String get toolXmlFormatterDescription;
+
+  /// YAML formatter tool name
+  ///
+  /// In en, this message translates to:
+  /// **'YAML Formatter'**
+  String get toolYamlFormatterName;
+
+  /// YAML formatter tool description
+  ///
+  /// In en, this message translates to:
+  /// **'Format and validate YAML'**
+  String get toolYamlFormatterDescription;
+
+  /// JSON/YAML converter tool name
+  ///
+  /// In en, this message translates to:
+  /// **'JSON ↔ YAML'**
+  String get toolJsonYamlConverterName;
+
+  /// JSON/YAML converter tool description
+  ///
+  /// In en, this message translates to:
+  /// **'Convert between JSON and YAML'**
+  String get toolJsonYamlConverterDescription;
 }
 
 class _AppLocalizationsDelegate

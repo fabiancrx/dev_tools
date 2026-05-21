@@ -26,6 +26,9 @@ extension AppLocalizationsToolsX on AppLocalizations {
         'http_status' => toolHttpStatusName,
         'cron_expression' => toolCronExpressionName,
         'qr_code' => toolQrCodeName,
+        'xml_formatter' => toolXmlFormatterName,
+        'yaml_formatter' => toolYamlFormatterName,
+        'json_yaml_converter' => toolJsonYamlConverterName,
         _ => id,
       };
 
@@ -47,6 +50,9 @@ extension AppLocalizationsToolsX on AppLocalizations {
         'http_status' => toolHttpStatusDescription,
         'cron_expression' => toolCronExpressionDescription,
         'qr_code' => toolQrCodeDescription,
+        'xml_formatter' => toolXmlFormatterDescription,
+        'yaml_formatter' => toolYamlFormatterDescription,
+        'json_yaml_converter' => toolJsonYamlConverterDescription,
         _ => id,
       };
 }

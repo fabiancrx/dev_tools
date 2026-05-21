@@ -117,5 +117,17 @@
 
     "jsonQueryHint": "Consulta JSONPath  (ej. $.store.book[*].title)",
     "jsonQueryClear": "Limpiar consulta",
-    "jsonQueryInvalid": "Expresión inválida"
+    "jsonQueryInvalid": "Expresión inválida",
+
+    "jsonYamlModeJsonToYaml": "JSON → YAML",
+    "jsonYamlModeYamlToJson": "YAML → JSON",
+
+    "toolXmlFormatterName": "Formateador XML",
+    "toolXmlFormatterDescription": "Embellece, minifica o valida XML",
+
+    "toolYamlFormatterName": "Formateador YAML",
+    "toolYamlFormatterDescription": "Formatea y valida YAML",
+
+    "toolJsonYamlConverterName": "JSON ↔ YAML",
+    "toolJsonYamlConverterDescription": "Convierte entre JSON y YAML"
 }
