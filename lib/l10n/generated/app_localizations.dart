@@ -691,6 +691,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Generate QR codes from any text or URL'**
   String get toolQrCodeDescription;
+
+  /// Placeholder text for the JSONPath query field in the JSON formatter
+  ///
+  /// In en, this message translates to:
+  /// **'JSONPath query  (e.g. \$.store.book[*].title)'**
+  String get jsonQueryHint;
+
+  /// Tooltip for the button that clears the JSONPath query and restores the full JSON
+  ///
+  /// In en, this message translates to:
+  /// **'Clear query'**
+  String get jsonQueryClear;
+
+  /// Error text shown when the JSONPath expression is syntactically invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid expression'**
+  String get jsonQueryInvalid;
 }
 
 class _AppLocalizationsDelegate

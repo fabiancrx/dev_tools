@@ -337,4 +337,13 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get toolQrCodeDescription =>
       'Genera códigos QR desde cualquier texto o URL';
+
+  @override
+  String get jsonQueryHint => 'Consulta JSONPath  (ej. \$.store.book[*].title)';
+
+  @override
+  String get jsonQueryClear => 'Limpiar consulta';
+
+  @override
+  String get jsonQueryInvalid => 'Expresión inválida';
 }

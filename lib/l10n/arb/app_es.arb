@@ -113,5 +113,9 @@
     "toolCronExpressionDescription": "Analiza expresiones cron y previsualiza las próximas ejecuciones",
 
     "toolQrCodeName": "Generador de código QR",
-    "toolQrCodeDescription": "Genera códigos QR desde cualquier texto o URL"
+    "toolQrCodeDescription": "Genera códigos QR desde cualquier texto o URL",
+
+    "jsonQueryHint": "Consulta JSONPath  (ej. $.store.book[*].title)",
+    "jsonQueryClear": "Limpiar consulta",
+    "jsonQueryInvalid": "Expresión inválida"
 }

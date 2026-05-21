@@ -317,5 +317,14 @@
     "@toolQrCodeName": { "description": "QR code generator tool name" },
 
     "toolQrCodeDescription": "Generate QR codes from any text or URL",
-    "@toolQrCodeDescription": { "description": "QR code generator tool description" }
+    "@toolQrCodeDescription": { "description": "QR code generator tool description" },
+
+    "jsonQueryHint": "JSONPath query  (e.g. $.store.book[*].title)",
+    "@jsonQueryHint": { "description": "Placeholder text for the JSONPath query field in the JSON formatter" },
+
+    "jsonQueryClear": "Clear query",
+    "@jsonQueryClear": { "description": "Tooltip for the button that clears the JSONPath query and restores the full JSON" },
+
+    "jsonQueryInvalid": "Invalid expression",
+    "@jsonQueryInvalid": { "description": "Error text shown when the JSONPath expression is syntactically invalid" }
 }

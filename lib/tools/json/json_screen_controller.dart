@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:json_path/json_path.dart';
 
 final jsonControllerProvider = NotifierProvider(JsonPageController.new);
 
@@ -32,6 +33,15 @@ class JsonPageController extends Notifier<JsonPageState> {
   String processSync(String raw) {
     final json = _decoder.convert(raw);
     return JsonEncoder.withIndent(state.mode.indent).convert(json);
+  }
+
+  /// Runs [expression] against [rawJson] and returns the matched values as
+  /// formatted JSON. Throws on invalid JSON or invalid expression.
+  String queryJson(String rawJson, String expression) {
+    final decoded = jsonDecode(rawJson);
+    final results = JsonPath(expression).read(decoded).map((m) => m.value).toList();
+    final encoder = JsonEncoder.withIndent(state.mode.indent);
+    return results.length == 1 ? encoder.convert(results.first) : encoder.convert(results);
   }
 
   /// Change the processing mode

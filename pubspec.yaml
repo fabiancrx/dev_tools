@@ -37,6 +37,7 @@ dependencies:
   re_highlight: ^0.0.3
   shared_preferences: ^2.5.5
   flutter_svg: ^2.0.10
+  json_path: ^0.9.0
 
 dependency_overrides:
   intl: ^0.20.2

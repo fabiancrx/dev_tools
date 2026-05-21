@@ -25,6 +25,9 @@ class JsonFormatterScreen extends ConsumerStatefulWidget {
 
 class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
   late final CodeForgeController outputController = CodeForgeController();
+  final TextEditingController _queryController = TextEditingController();
+  String? _savedJson;
+  bool _queryError = false;
 
   @override
   void initState() {
@@ -35,7 +38,32 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
   @override
   void dispose() {
     outputController.dispose();
+    _queryController.dispose();
     super.dispose();
+  }
+
+  void _onQueryChanged(String expr) {
+    if (expr.trim().isEmpty) {
+      _clearQuery();
+      return;
+    }
+    _savedJson ??= outputController.text;
+    try {
+      final result = ref.read(jsonControllerProvider.notifier).queryJson(_savedJson!, expr);
+      outputController.text = result;
+      if (_queryError) setState(() => _queryError = false);
+    } catch (_) {
+      if (!_queryError) setState(() => _queryError = true);
+    }
+  }
+
+  void _clearQuery() {
+    if (_savedJson != null) {
+      outputController.text = _savedJson!;
+      _savedJson = null;
+    }
+    _queryController.clear();
+    if (_queryError) setState(() => _queryError = false);
   }
 
   void _populate() {
@@ -130,6 +158,26 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
                 finderBuilder: (context, controller) => CodeFindPanelView(controller: controller),
               ),
             ),
+          ),
+          const SizedBox(height: 6),
+          TextField(
+            controller: _queryController,
+            decoration: InputDecoration(
+              hintText: l10n.jsonQueryHint,
+              errorText: _queryError ? l10n.jsonQueryInvalid : null,
+              isDense: true,
+              prefixIcon: const Icon(Icons.filter_alt_outlined, size: 18),
+              suffixIcon: _savedJson != null
+                  ? IconButton(
+                      icon: const Icon(Icons.close, size: 18),
+                      tooltip: l10n.jsonQueryClear,
+                      onPressed: _clearQuery,
+                    )
+                  : null,
+              border: const OutlineInputBorder(),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            ),
+            onChanged: _onQueryChanged,
           ),
         ],
       ),
