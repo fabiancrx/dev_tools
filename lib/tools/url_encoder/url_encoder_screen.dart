@@ -80,7 +80,8 @@ class _UrlEncoderScreenState extends State<UrlEncoderScreen> {
             ],
           ),
         ),
-        const Spacer(),
+      ],
+      outputActions: [
         CopyButton(copyCallback: () => pasteContentToClipboard(_controller.output)),
       ],
       input: TextField(

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 /// Two-pane input/output layout shared by most converter tools.
 class ToolScaffold extends StatelessWidget {
   final List<Widget> actions;
+  final List<Widget> outputActions;
   final Widget input;
   final Widget output;
 
@@ -18,6 +19,7 @@ class ToolScaffold extends StatelessWidget {
     required this.actions,
     required this.input,
     required this.output,
+    this.outputActions = const [],
     this.onRun,
   });
 
@@ -60,6 +62,8 @@ class ToolScaffold extends StatelessWidget {
             Column(
               mainAxisSize: MainAxisSize.max,
               children: [
+                if (outputActions.isNotEmpty)
+                  FlexActionBar(children: outputActions),
                 Expanded(child: output),
               ],
             ),

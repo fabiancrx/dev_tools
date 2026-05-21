@@ -73,10 +73,6 @@ class _JsonConverterScreenState extends State<JsonConverterScreen> {
                               onChanged: (_) => _controller.setMode(e),
                               title: Text(e.localizedName(l10n)),
                             )),
-                        const Spacer(),
-                        CopyButton(copyCallback: () {
-                          pasteContentToClipboard(_controller.output);
-                        }),
                         if (!AppSettings.instance.autoRun) ...[
                           const SizedBox(width: 8),
                           FilledButton.icon(
@@ -104,6 +100,11 @@ class _JsonConverterScreenState extends State<JsonConverterScreen> {
             Column(
               mainAxisSize: MainAxisSize.max,
               children: [
+                FlexActionBar(
+                  children: [
+                    CopyButton(copyCallback: () => pasteContentToClipboard(_controller.output)),
+                  ],
+                ),
                 Expanded(
                   child: TextField(
                     controller: _outputTec,

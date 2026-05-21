@@ -68,7 +68,8 @@ class _Base64ConverterScreenState extends State<Base64ConverterScreen> {
             ],
           ),
         ),
-        const Spacer(),
+      ],
+      outputActions: [
         CopyButton(copyCallback: () => pasteContentToClipboard(_controller.output)),
       ],
       input: TextField(

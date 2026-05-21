@@ -54,7 +54,8 @@ class _HexToTextConverterScreenState extends State<HexToTextConverterScreen> {
                 .toList(),
           ),
         ),
-        const Spacer(),
+      ],
+      outputActions: [
         CopyButton(copyCallback: () => pasteContentToClipboard(_controller.output)),
       ],
       input: TextField(

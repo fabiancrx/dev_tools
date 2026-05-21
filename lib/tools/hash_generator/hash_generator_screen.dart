@@ -84,7 +84,8 @@ class _HashGeneratorScreenState extends State<HashGeneratorScreen> {
             ),
           ),
         ),
-        const Spacer(),
+      ],
+      outputActions: [
         CopyButton(copyCallback: () => pasteContentToClipboard(_controller.result.hex)),
       ],
       input: TextField(

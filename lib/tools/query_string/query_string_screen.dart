@@ -52,8 +52,8 @@ class _QueryStringScreenState extends State<QueryStringScreen> {
     final l10n = context.l10n;
     return ToolScaffold(
       onRun: _controller.run,
-      actions: [
-        const Spacer(),
+      actions: const [],
+      outputActions: [
         CopyButton(copyCallback: () => pasteContentToClipboard(_controller.output)),
       ],
       input: TextField(
