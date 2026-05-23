@@ -2,6 +2,40 @@ import 'package:dash_tools/common/breakpoints.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru/yaru.dart';
 
+/// A clickable, palette-launching search prompt for the title bar.
+/// Renders like a search field, but tapping/focusing invokes [onTap]
+/// (typically the ⌘K command palette).
+class PaletteSearchPrompt extends StatelessWidget {
+  final String hint;
+  final VoidCallback onTap;
+
+  const PaletteSearchPrompt({super.key, required this.hint, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(top: 4, bottom: 5),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(6),
+        child: InputDecorator(
+          decoration: InputDecoration(
+            prefixIcon: const Icon(Icons.search, size: 18),
+            hintText: hint,
+            isDense: true,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+            suffix: Text(
+              '⌘K',
+              style: TextStyle(fontSize: 11, color: scheme.onSurfaceVariant),
+            ),
+          ),
+          child: const SizedBox.shrink(),
+        ),
+      ),
+    );
+  }
+}
 
 class AdaptiveNavigation extends StatelessWidget {
   /// Weather to display a [NavigationBar] when the viewport is small. If false A full screen navigation drawer is shown

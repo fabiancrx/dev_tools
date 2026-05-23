@@ -2,59 +2,16 @@ import "dart:io";
 
 import "package:dash_tools/app/command_palette.dart";
 import "package:dash_tools/app/reorder_screen.dart";
+import "package:dash_tools/app/tray.dart";
 import "package:dash_tools/common/clipboard_recognizer.dart";
 import "package:dash_tools/common/tool_order.dart";
 import "package:dash_tools/l10n/l10n.dart";
 import "package:dash_tools/tools/registry.dart";
-import "package:dash_tools/widgets/clear_text.dart";
+import "package:dash_tools/widgets/adaptive_navigation.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:yaru/widgets.dart";
-
-class SearchField extends StatefulWidget {
-  final String hint;
-
-  const SearchField({super.key, required this.hint});
-
-  @override
-  State<SearchField> createState() => _SearchFieldState();
-}
-
-class _SearchFieldState extends State<SearchField> {
-  late final searchController = TextEditingController();
-  late final searchFocus = FocusNode();
-
-  @override
-  void dispose() {
-    super.dispose();
-    searchController.dispose();
-    searchFocus.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return IgnorePointer(
-      ignoring: true,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 4, bottom: 5),
-        child: ListenableBuilder(
-            listenable: searchFocus,
-            builder: (context, child) {
-              return TextField(
-                  controller: searchController,
-                  textAlign: searchFocus.hasFocus ? TextAlign.start : TextAlign.center,
-                  focusNode: searchFocus,
-                  decoration: InputDecoration(
-                      prefixIcon: searchFocus.hasFocus ? const Icon(Icons.search) : const SizedBox.shrink(),
-                      hintText: searchFocus.hasFocus ? context.l10n.search : widget.hint,
-                      hintStyle: const TextStyle(),
-                      suffixIcon: ClearTextIcon(controller: searchController, focusNode: searchFocus)));
-            }),
-      ),
-    );
-  }
-}
 
 class AdaptiveNavigationPane extends StatefulWidget {
   final ToolOrderNotifier toolOrder;
@@ -79,21 +36,36 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
     super.initState();
     widget.clipboardRecognizer.addListener(_onClipboardMatch);
     HardwareKeyboard.instance.addHandler(_handleKey);
+    if (isTraySupported) {
+      TrayService.instance.lastActionStatus.addListener(_onTrayStatus);
+    }
   }
 
   @override
   void dispose() {
     widget.clipboardRecognizer.removeListener(_onClipboardMatch);
     HardwareKeyboard.instance.removeHandler(_handleKey);
+    if (isTraySupported) {
+      TrayService.instance.lastActionStatus.removeListener(_onTrayStatus);
+    }
     super.dispose();
+  }
+
+  void _onTrayStatus() {
+    final msg = TrayService.instance.lastActionStatus.value;
+    if (msg == null || !mounted) return;
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(SnackBar(content: Text(msg), duration: const Duration(seconds: 3)));
   }
 
   bool _handleKey(KeyEvent event) {
     if (event is! KeyDownEvent) return false;
-    final isK = event.logicalKey == LogicalKeyboardKey.keyK;
     final modifier = HardwareKeyboard.instance.isControlPressed ||
         HardwareKeyboard.instance.isMetaPressed;
-    if (isK && modifier) {
+    if (!modifier) return false;
+    final key = event.logicalKey;
+    if (key == LogicalKeyboardKey.keyK || key == LogicalKeyboardKey.slash) {
       _showPalette();
       return true;
     }
@@ -211,7 +183,10 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
                 ),
                 title: ConstrainedBox(
                     constraints: const BoxConstraints(maxHeight: 46, maxWidth: 420),
-                    child: SearchField(hint: context.l10n.toolName(tools[index].id)))),
+                    child: PaletteSearchPrompt(
+                      hint: context.l10n.toolName(tools[index].id),
+                      onTap: _showPalette,
+                    ))),
             body: tools[index].builder(context),
           ),
         );
