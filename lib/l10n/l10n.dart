@@ -31,6 +31,9 @@ extension AppLocalizationsToolsX on AppLocalizations {
         'json_yaml_converter' => toolJsonYamlConverterName,
         'mime_lookup' => toolMimeLookupName,
         'mac_address' => toolMacAddressName,
+        'html_entity' => toolHtmlEntityName,
+        'regex_tester' => toolRegexTesterName,
+        'wifi_qr' => toolWifiQrName,
         _ => id,
       };
 
@@ -57,6 +60,9 @@ extension AppLocalizationsToolsX on AppLocalizations {
         'json_yaml_converter' => toolJsonYamlConverterDescription,
         'mime_lookup' => toolMimeLookupDescription,
         'mac_address' => toolMacAddressDescription,
+        'html_entity' => toolHtmlEntityDescription,
+        'regex_tester' => toolRegexTesterDescription,
+        'wifi_qr' => toolWifiQrDescription,
         _ => id,
       };
 }

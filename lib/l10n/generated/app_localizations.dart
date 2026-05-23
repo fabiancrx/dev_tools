@@ -781,6 +781,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Look up OUI vendor or generate a random MAC address'**
   String get toolMacAddressDescription;
+
+  /// HTML entity encoder/decoder tool name
+  ///
+  /// In en, this message translates to:
+  /// **'HTML Entity Encode/Decode'**
+  String get toolHtmlEntityName;
+
+  /// HTML entity encoder/decoder tool description
+  ///
+  /// In en, this message translates to:
+  /// **'Encode or decode HTML entities'**
+  String get toolHtmlEntityDescription;
+
+  /// Regex tester tool name
+  ///
+  /// In en, this message translates to:
+  /// **'Regex Tester'**
+  String get toolRegexTesterName;
+
+  /// Regex tester tool description
+  ///
+  /// In en, this message translates to:
+  /// **'Test regular expressions with live match highlighting'**
+  String get toolRegexTesterDescription;
+
+  /// WiFi QR code generator tool name
+  ///
+  /// In en, this message translates to:
+  /// **'WiFi QR Code'**
+  String get toolWifiQrName;
+
+  /// WiFi QR code generator tool description
+  ///
+  /// In en, this message translates to:
+  /// **'Generate a QR code to share WiFi credentials'**
+  String get toolWifiQrDescription;
 }
 
 class _AppLocalizationsDelegate

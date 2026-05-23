@@ -14,8 +14,11 @@ import 'package:dash_tools/tools/json/json_formatter_screen.dart';
 import 'package:dash_tools/tools/jwt/jwt_screen.dart';
 import 'package:dash_tools/tools/number_converter/number_converter.dart';
 import 'package:dash_tools/tools/json_yaml/json_yaml_converter_screen.dart';
+import 'package:dash_tools/tools/html_entity/html_entity_screen.dart';
 import 'package:dash_tools/tools/mac_address/mac_address_screen.dart';
 import 'package:dash_tools/tools/mime_lookup/mime_lookup_screen.dart';
+import 'package:dash_tools/tools/regex_tester/regex_tester_screen.dart';
+import 'package:dash_tools/tools/wifi_qr/wifi_qr_screen.dart';
 import 'package:dash_tools/tools/qr_code/qr_code_screen.dart';
 import 'package:dash_tools/tools/query_string/query_string_screen.dart';
 import 'package:dash_tools/tools/xml/xml_formatter_screen.dart';
@@ -285,6 +288,36 @@ final List<ToolDescriptor> toolRegistry = [
     aliases: ['mac', 'oui', 'vendor', 'ethernet', 'hardware address'],
     detector: null,
   ),
+  ToolDescriptor(
+    id: 'html_entity',
+    name: (ctx) => ctx.l10n.toolName('html_entity'),
+    description: (ctx) => ctx.l10n.toolDescription('html_entity'),
+    category: ToolCategory.encoders,
+    icon: Icons.code,
+    builder: (_) => const HtmlEntityScreen(),
+    aliases: ['html', 'entity', 'encode', 'decode', 'escape', '&amp;', '&lt;'],
+    detector: const _HtmlEntityDetector(),
+  ),
+  ToolDescriptor(
+    id: 'regex_tester',
+    name: (ctx) => ctx.l10n.toolName('regex_tester'),
+    description: (ctx) => ctx.l10n.toolDescription('regex_tester'),
+    category: ToolCategory.inspectors,
+    icon: Icons.search,
+    builder: (_) => const RegexTesterScreen(),
+    aliases: ['regex', 'regexp', 'pattern', 'match', 'test'],
+    detector: const _RegexDetector(),
+  ),
+  ToolDescriptor(
+    id: 'wifi_qr',
+    name: (ctx) => ctx.l10n.toolName('wifi_qr'),
+    description: (ctx) => ctx.l10n.toolDescription('wifi_qr'),
+    category: ToolCategory.generators,
+    icon: Icons.wifi,
+    builder: (_) => const WifiQrScreen(),
+    aliases: ['wifi', 'qr', 'wireless', 'network', 'wpa'],
+    detector: null,
+  ),
 ];
 
 // ---------------------------------------------------------------------------
@@ -451,5 +484,33 @@ class _YamlDetector implements ClipboardDetector {
     final trimmed = input.trim();
     if (trimmed.isEmpty || trimmed.startsWith('{') || trimmed.startsWith('[')) return false;
     return RegExp(r'^[a-zA-Z_][a-zA-Z0-9_]*\s*:', multiLine: true).hasMatch(trimmed);
+  }
+}
+
+class _HtmlEntityDetector implements ClipboardDetector {
+  const _HtmlEntityDetector();
+
+  @override
+  int get priority => 6;
+
+  @override
+  bool canHandle(String input) {
+    final trimmed = input.trim();
+    if (trimmed.isEmpty) return false;
+    return RegExp(r'&(?:#\d+|#x[0-9a-fA-F]+|[a-zA-Z][a-zA-Z0-9]*);').hasMatch(trimmed);
+  }
+}
+
+class _RegexDetector implements ClipboardDetector {
+  const _RegexDetector();
+
+  @override
+  int get priority => 3;
+
+  @override
+  bool canHandle(String input) {
+    final trimmed = input.trim();
+    // Looks like a regex literal: /pattern/flags
+    return RegExp(r'^/[^/]+/[gimsuy]*$').hasMatch(trimmed);
   }
 }

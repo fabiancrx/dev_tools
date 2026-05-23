@@ -135,5 +135,14 @@
     "toolMimeLookupDescription": "Busca tipos MIME por extensión de archivo",
 
     "toolMacAddressName": "Dirección MAC",
-    "toolMacAddressDescription": "Consulta el fabricante OUI o genera una dirección MAC aleatoria"
+    "toolMacAddressDescription": "Consulta el fabricante OUI o genera una dirección MAC aleatoria",
+
+    "toolHtmlEntityName": "Codificador/decodificador de entidades HTML",
+    "toolHtmlEntityDescription": "Codifica o decodifica entidades HTML",
+
+    "toolRegexTesterName": "Probador de Expresiones Regulares",
+    "toolRegexTesterDescription": "Prueba expresiones regulares con resaltado de coincidencias en tiempo real",
+
+    "toolWifiQrName": "Código QR WiFi",
+    "toolWifiQrDescription": "Genera un código QR para compartir credenciales WiFi"
 }

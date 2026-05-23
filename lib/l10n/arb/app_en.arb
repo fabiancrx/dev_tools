@@ -362,5 +362,23 @@
     "@toolMacAddressName": { "description": "MAC address tool name" },
 
     "toolMacAddressDescription": "Look up OUI vendor or generate a random MAC address",
-    "@toolMacAddressDescription": { "description": "MAC address tool description" }
+    "@toolMacAddressDescription": { "description": "MAC address tool description" },
+
+    "toolHtmlEntityName": "HTML Entity Encode/Decode",
+    "@toolHtmlEntityName": { "description": "HTML entity encoder/decoder tool name" },
+
+    "toolHtmlEntityDescription": "Encode or decode HTML entities",
+    "@toolHtmlEntityDescription": { "description": "HTML entity encoder/decoder tool description" },
+
+    "toolRegexTesterName": "Regex Tester",
+    "@toolRegexTesterName": { "description": "Regex tester tool name" },
+
+    "toolRegexTesterDescription": "Test regular expressions with live match highlighting",
+    "@toolRegexTesterDescription": { "description": "Regex tester tool description" },
+
+    "toolWifiQrName": "WiFi QR Code",
+    "@toolWifiQrName": { "description": "WiFi QR code generator tool name" },
+
+    "toolWifiQrDescription": "Generate a QR code to share WiFi credentials",
+    "@toolWifiQrDescription": { "description": "WiFi QR code generator tool description" }
 }

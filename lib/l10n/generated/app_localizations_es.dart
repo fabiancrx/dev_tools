@@ -384,4 +384,26 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get toolMacAddressDescription =>
       'Consulta el fabricante OUI o genera una dirección MAC aleatoria';
+
+  @override
+  String get toolHtmlEntityName =>
+      'Codificador/decodificador de entidades HTML';
+
+  @override
+  String get toolHtmlEntityDescription =>
+      'Codifica o decodifica entidades HTML';
+
+  @override
+  String get toolRegexTesterName => 'Probador de Expresiones Regulares';
+
+  @override
+  String get toolRegexTesterDescription =>
+      'Prueba expresiones regulares con resaltado de coincidencias en tiempo real';
+
+  @override
+  String get toolWifiQrName => 'Código QR WiFi';
+
+  @override
+  String get toolWifiQrDescription =>
+      'Genera un código QR para compartir credenciales WiFi';
 }
