@@ -43,8 +43,6 @@ class PaletteSearchPrompt extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 ShortcutChip(label: PlatformKeys.palette),
-                const SizedBox(width: 4),
-                ShortcutChip(label: PlatformKeys.paletteAlt),
               ],
             ),
           ),
