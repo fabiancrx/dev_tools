@@ -39,6 +39,7 @@ class _Base64ConverterScreenState extends State<Base64ConverterScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return ToolScaffold(
+      onFileDropped: (text) => _inputTec.text = text,
       actions: [
         ListenableBuilder(
           listenable: _controller,

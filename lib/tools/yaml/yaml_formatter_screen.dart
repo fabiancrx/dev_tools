@@ -4,6 +4,7 @@ import 'package:dash_tools/tools/clipboard_service.dart';
 import 'package:dash_tools/tools/yaml/yaml_formatter.dart';
 import 'package:dash_tools/tools/yaml/yaml_formatter_controller.dart';
 import 'package:dash_tools/widgets/copy_button.dart';
+import 'package:dash_tools/widgets/output_text_field.dart';
 import 'package:dash_tools/widgets/tool_scaffold.dart';
 import 'package:flutter/material.dart';
 
@@ -53,6 +54,7 @@ class _YamlFormatterScreenState extends State<YamlFormatterScreen> {
     final l10n = context.l10n;
     return ToolScaffold(
       onRun: _controller.run,
+      onFileDropped: (text) => _inputTec.text = text,
       actions: [
         OutlinedButton(
           onPressed: () => _inputTec.text = kSampleYaml,
@@ -84,14 +86,10 @@ class _YamlFormatterScreenState extends State<YamlFormatterScreen> {
           ],
         ),
       ),
-      output: TextField(
+      output: OutputTextField(
         controller: _outputTec,
-        readOnly: true,
-        textAlignVertical: TextAlignVertical.top,
-        decoration: InputDecoration(labelText: l10n.output, alignLabelWithHint: true),
-        expands: true,
-        maxLines: null,
-        minLines: null,
+        label: l10n.output,
+        saveExtension: 'yaml',
       ),
     );
   }

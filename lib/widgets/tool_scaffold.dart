@@ -1,4 +1,5 @@
 import 'package:dash_tools/common/app_settings.dart';
+import 'package:dash_tools/widgets/file_drop_zone.dart';
 import 'package:dash_tools/widgets/flex_action_bar.dart';
 import 'package:dash_tools/widgets/vendored/split.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,10 @@ class ToolScaffold extends StatelessWidget {
   /// Pass `null` to opt out of the Run button entirely.
   final VoidCallback? onRun;
 
+  /// When non-null, the input pane becomes a file drop target; dropped files
+  /// are read as UTF-8 and their contents passed to this callback.
+  final ValueChanged<String>? onFileDropped;
+
   const ToolScaffold({
     super.key,
     required this.actions,
@@ -21,6 +26,7 @@ class ToolScaffold extends StatelessWidget {
     required this.output,
     this.outputActions = const [],
     this.onRun,
+    this.onFileDropped,
   });
 
   @override
@@ -56,7 +62,11 @@ class ToolScaffold extends StatelessWidget {
                     );
                   },
                 ),
-                Expanded(child: input),
+                Expanded(
+                  child: onFileDropped != null
+                      ? FileDropZone(onText: onFileDropped!, child: input)
+                      : input,
+                ),
               ],
             ),
             Column(

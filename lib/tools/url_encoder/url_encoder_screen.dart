@@ -54,6 +54,7 @@ class _UrlEncoderScreenState extends State<UrlEncoderScreen> {
     final l10n = context.l10n;
     return ToolScaffold(
       onRun: _controller.run,
+      onFileDropped: (text) => _inputTec.text = text,
       actions: [
         ListenableBuilder(
           listenable: _controller,
