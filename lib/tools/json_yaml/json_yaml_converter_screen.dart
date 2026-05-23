@@ -4,6 +4,7 @@ import 'package:dash_tools/tools/clipboard_service.dart';
 import 'package:dash_tools/tools/json_yaml/json_yaml_converter.dart';
 import 'package:dash_tools/tools/json_yaml/json_yaml_converter_controller.dart';
 import 'package:dash_tools/widgets/copy_button.dart';
+import 'package:dash_tools/widgets/output_text_field.dart';
 import 'package:dash_tools/widgets/tool_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru/widgets.dart';
@@ -54,6 +55,7 @@ class _JsonYamlConverterScreenState extends State<JsonYamlConverterScreen> {
     final l10n = context.l10n;
     return ToolScaffold(
       onRun: _controller.run,
+      onFileDropped: (text) => _inputTec.text = text,
       actions: [
         ListenableBuilder(
           listenable: _controller,
@@ -95,14 +97,9 @@ class _JsonYamlConverterScreenState extends State<JsonYamlConverterScreen> {
           ],
         ),
       ),
-      output: TextField(
+      output: OutputTextField(
         controller: _outputTec,
-        readOnly: true,
-        textAlignVertical: TextAlignVertical.top,
-        decoration: InputDecoration(labelText: l10n.output, alignLabelWithHint: true),
-        expands: true,
-        maxLines: null,
-        minLines: null,
+        label: l10n.output,
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:dash_tools/tools/clipboard_service.dart';
 import 'package:dash_tools/tools/xml/xml_formatter.dart';
 import 'package:dash_tools/tools/xml/xml_formatter_controller.dart';
 import 'package:dash_tools/widgets/copy_button.dart';
+import 'package:dash_tools/widgets/output_text_field.dart';
 import 'package:dash_tools/widgets/tool_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru/widgets.dart';
@@ -54,6 +55,7 @@ class _XmlFormatterScreenState extends State<XmlFormatterScreen> {
     final l10n = context.l10n;
     return ToolScaffold(
       onRun: _controller.run,
+      onFileDropped: (text) => _inputTec.text = text,
       actions: [
         ListenableBuilder(
           listenable: _controller,
@@ -99,14 +101,10 @@ class _XmlFormatterScreenState extends State<XmlFormatterScreen> {
           ],
         ),
       ),
-      output: TextField(
+      output: OutputTextField(
         controller: _outputTec,
-        readOnly: true,
-        textAlignVertical: TextAlignVertical.top,
-        decoration: InputDecoration(labelText: l10n.output, alignLabelWithHint: true),
-        expands: true,
-        maxLines: null,
-        minLines: null,
+        label: l10n.output,
+        saveExtension: 'xml',
       ),
     );
   }
