@@ -41,7 +41,12 @@ endif()
 # of modifying this function.
 function(APPLY_STANDARD_SETTINGS TARGET)
   target_compile_features(${TARGET} PUBLIC cxx_std_14)
-  target_compile_options(${TARGET} PRIVATE -Wall -Werror)
+  # -Werror was here originally; removed because it propagates to third-party
+  # plugins (tray_manager, hotkey_manager) which trip on deprecation /
+  # uninitialized warnings outside our control. Apply -Werror only to the
+  # runner target in runner/CMakeLists.txt if you want strict checks on
+  # first-party C++ code.
+  target_compile_options(${TARGET} PRIVATE -Wall)
   target_compile_options(${TARGET} PRIVATE "$<$<NOT:$<CONFIG:Debug>>:-O3>")
   target_compile_definitions(${TARGET} PRIVATE "$<$<NOT:$<CONFIG:Debug>>:NDEBUG>")
 endfunction()
