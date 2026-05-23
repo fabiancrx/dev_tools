@@ -129,9 +129,16 @@ class _ToolsDialog extends StatelessWidget {
                       return ListTile(
                         key: ValueKey(tool.id),
                         dense: true,
-                        leading: Icon(
-                          visible ? Icons.check_box_rounded : Icons.check_box_outline_blank_rounded,
-                          color: visible ? scheme.primary : scheme.onSurfaceVariant,
+                        leading: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              visible ? Icons.check_box_rounded : Icons.check_box_outline_blank_rounded,
+                              color: visible ? scheme.primary : scheme.onSurfaceVariant,
+                            ),
+                            const SizedBox(width: 10),
+                            Icon(tool.icon, color: visible ? null : scheme.onSurfaceVariant),
+                          ],
                         ),
                         title: Text(tool.name(context)),
                         onTap: () => notifier.toggleHidden(tool.id),
