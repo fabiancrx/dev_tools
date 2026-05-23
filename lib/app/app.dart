@@ -1,4 +1,5 @@
 import "package:dash_tools/app/home.dart";
+import "package:dash_tools/common/app_settings.dart";
 import "package:dash_tools/common/app_theme.dart";
 import "package:dash_tools/common/clipboard_recognizer.dart";
 import "package:dash_tools/common/tool_order.dart";
@@ -42,29 +43,48 @@ class _AppState extends State<App> with WindowListener {
 
   @override
   Widget build(BuildContext context) {
-    return YaruTheme(
-      data: const YaruThemeData(variant: YaruVariant.orange),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: yaruLight.copyWith(extensions: const [AppTheme()]),
-        darkTheme: yaruDark.copyWith(extensions: const [AppTheme()]),
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: switch (_toolOrder) {
-          null => const SizedBox.shrink(),
-          final order => DropdownButtonHideUnderline(
-              child: AdaptiveNavigationPane(
-                toolOrder: order,
-                clipboardRecognizer: _clipboardRecognizer,
-              ),
-            ),
-        },
-      ),
+    return ListenableBuilder(
+      listenable: AppSettings.instance,
+      builder: (context, child) {
+        final variantName = AppSettings.instance.accentVariant;
+        final variant = variantName != null
+            ? YaruVariant.values.firstWhere(
+                (v) => v.name == variantName,
+                orElse: () => YaruVariant.orange,
+              )
+            : null; // null → auto-detect from OS (Linux GTK) or default orange
+        final compact = AppSettings.instance.compactMode;
+        return YaruTheme(
+          data: YaruThemeData(
+            variant: variant,
+            extensions: const [AppTheme()],
+            visualDensity: compact ? VisualDensity.compact : VisualDensity.adaptivePlatformDensity,
+          ),
+          builder: (context, yaru, _) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              theme: yaru.theme,
+              darkTheme: yaru.darkTheme,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: AppLocalizations.supportedLocales,
+              home: switch (_toolOrder) {
+                null => const SizedBox.shrink(),
+                final order => DropdownButtonHideUnderline(
+                    child: AdaptiveNavigationPane(
+                      toolOrder: order,
+                      clipboardRecognizer: _clipboardRecognizer,
+                    ),
+                  ),
+              },
+            );
+          },
+        );
+      },
     );
   }
 }
