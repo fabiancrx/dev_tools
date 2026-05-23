@@ -1,4 +1,7 @@
+import "dart:async";
+
 import "package:dash_tools/app/app.dart";
+import "package:dash_tools/app/tray.dart";
 import "package:dash_tools/common/app_settings.dart";
 import "package:flutter/foundation.dart";
 import "package:flutter/widgets.dart";
@@ -29,6 +32,11 @@ void main() async {
     });
 
     await YaruWindowTitleBar.ensureInitialized();
+
+    if (isTraySupported) {
+      // Fire-and-forget: tray/hotkey failures are non-fatal and logged inside.
+      unawaited(TrayService.instance.init());
+    }
   }
 
   runApp(const ProviderScope(child: App()));

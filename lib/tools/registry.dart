@@ -17,6 +17,7 @@ import 'package:dash_tools/tools/json_yaml/json_yaml_converter_screen.dart';
 import 'package:dash_tools/tools/html_entity/html_entity_screen.dart';
 import 'package:dash_tools/tools/mac_address/mac_address_screen.dart';
 import 'package:dash_tools/tools/mime_lookup/mime_lookup_screen.dart';
+import 'package:dash_tools/tools/quick_transforms.dart';
 import 'package:dash_tools/tools/regex_tester/regex_tester_screen.dart';
 import 'package:dash_tools/tools/wifi_qr/wifi_qr_screen.dart';
 import 'package:dash_tools/tools/qr_code/qr_code_screen.dart';
@@ -43,6 +44,11 @@ extension ToolCategoryX on ToolCategory {
       };
 }
 
+/// Returns the "obvious" transform of [input] for this tool — used by tray
+/// quick-actions and Instant Replace Clipboard. Should be pure, side-effect
+/// free, and never throw (return null on failure).
+typedef QuickTransform = String? Function(String input);
+
 class ToolDescriptor {
   final String id;
   final String Function(BuildContext) name;
@@ -53,6 +59,10 @@ class ToolDescriptor {
   final List<String> aliases;
   final ClipboardDetector? detector;
 
+  /// Optional one-shot transform for tray Quick Actions. If null, the tool
+  /// has no obvious "do the default thing" behavior (e.g. needs a config choice).
+  final QuickTransform? quickTransform;
+
   const ToolDescriptor({
     required this.id,
     required this.name,
@@ -62,6 +72,7 @@ class ToolDescriptor {
     required this.builder,
     this.aliases = const [],
     this.detector,
+    this.quickTransform,
   });
 }
 
@@ -75,6 +86,7 @@ final List<ToolDescriptor> toolRegistry = [
     builder: (ctx) => const Base64ConverterScreen(),
     aliases: ['b64', 'encode', 'decode'],
     detector: const _Base64TextDetector(),
+    quickTransform: base64Quick,
   ),
   ToolDescriptor(
     id: 'json_formatter',
@@ -85,6 +97,7 @@ final List<ToolDescriptor> toolRegistry = [
     builder: (ctx) => const JsonFormatterScreen(key: ValueKey('json_formatter')),
     aliases: ['json', 'prettify', 'minify', 'format'],
     detector: const _JsonDetector(priority: 6),
+    quickTransform: jsonFormatQuick,
   ),
   ToolDescriptor(
     id: 'base64_image',
@@ -116,6 +129,7 @@ final List<ToolDescriptor> toolRegistry = [
     builder: (ctx) => const HexToTextConverterScreen(),
     aliases: ['hex', 'ascii', 'text'],
     detector: const _HexAsciiDetector(),
+    quickTransform: hexAsciiQuick,
   ),
   ToolDescriptor(
     id: 'json_escape',
@@ -136,6 +150,7 @@ final List<ToolDescriptor> toolRegistry = [
     builder: (ctx) => const JwtScreen(),
     aliases: ['jwt', 'token', 'bearer'],
     detector: const _JwtDetector(),
+    quickTransform: jwtQuick,
   ),
   // Sprint 1 tools
   ToolDescriptor(
@@ -147,6 +162,7 @@ final List<ToolDescriptor> toolRegistry = [
     builder: (_) => const UrlEncoderScreen(),
     aliases: ['url', 'encode', 'decode', 'percent', 'uri'],
     detector: const _UrlEncodedDetector(),
+    quickTransform: urlQuick,
   ),
   ToolDescriptor(
     id: 'unix_timestamp',
@@ -297,6 +313,7 @@ final List<ToolDescriptor> toolRegistry = [
     builder: (_) => const HtmlEntityScreen(),
     aliases: ['html', 'entity', 'encode', 'decode', 'escape', '&amp;', '&lt;'],
     detector: const _HtmlEntityDetector(),
+    quickTransform: htmlEntityQuick,
   ),
   ToolDescriptor(
     id: 'regex_tester',

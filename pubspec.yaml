@@ -43,6 +43,10 @@ dependencies:
   json2yaml: ^3.0.1
   mime: ^2.0.0
   html_unescape: ^2.0.0
+  tray_manager: ^0.5.1
+  hotkey_manager: ^0.2.3
+  desktop_drop: ^0.6.1
+  cross_file: ^0.3.4+2
 
 dependency_overrides:
   intl: ^0.20.2
