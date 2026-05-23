@@ -4,7 +4,6 @@ import 'package:dash_tools/app/tray.dart';
 import 'package:dash_tools/common/app_settings.dart';
 import 'package:dash_tools/common/platform_keys.dart';
 import 'package:dash_tools/common/tool_order.dart';
-import 'package:dash_tools/tools/registry.dart';
 import 'package:dash_tools/widgets/adaptive_navigation.dart';
 import 'package:dash_tools/widgets/app_logo.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +19,6 @@ class ReorderScreen extends StatelessWidget {
     return YaruDetailPage(
       heroTag: null,
       appBar: YaruWindowTitleBar(
-        // On macOS the traffic lights occupy the top-left; push the back
-        // button to the right with a spacer, or place it in actions.
         leading: Platform.isMacOS
             ? const SizedBox(width: 72)
             : BackButton(onPressed: () => Navigator.of(context).pop()),
@@ -35,26 +32,18 @@ class ReorderScreen extends StatelessWidget {
         ],
         title: const Text('Settings'),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: ListView(
         children: [
           _AppearanceSection(),
           const Divider(height: 1),
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(child: _ShowHidePane(notifier: notifier)),
-                const VerticalDivider(width: 1, thickness: 1),
-                Expanded(child: _OrganizePane(notifier: notifier)),
-              ],
-            ),
+          ListTile(
+            leading: const Icon(Icons.reorder),
+            title: const Text('Customize tools'),
+            subtitle: const Text('Show, hide and reorder sidebar tools'),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 14),
+            onTap: () => _showToolsDialog(context, notifier),
           ),
-        ],
-      ),
-      bottomNavigationBar: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
+          const Divider(height: 1),
           ListenableBuilder(
             listenable: AppSettings.instance,
             builder: (context, _) => SwitchListTile(
@@ -81,6 +70,83 @@ class ReorderScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  static void _showToolsDialog(BuildContext context, ToolOrderNotifier notifier) {
+    showDialog<void>(
+      context: context,
+      builder: (_) => _ToolsDialog(notifier: notifier),
+    );
+  }
+}
+
+// ── Tools dialog ──────────────────────────────────────────────────────────────
+
+class _ToolsDialog extends StatelessWidget {
+  final ToolOrderNotifier notifier;
+  const _ToolsDialog({required this.notifier});
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Dialog(
+      child: SizedBox(
+        width: 380,
+        height: 520,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 12, 12),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text('Tools', style: Theme.of(context).textTheme.titleMedium),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+            Expanded(
+              child: ListenableBuilder(
+                listenable: notifier,
+                builder: (context, _) {
+                  final tools = notifier.tools;
+                  return ReorderableListView.builder(
+                    buildDefaultDragHandles: false,
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    itemCount: tools.length,
+                    onReorder: notifier.reorder,
+                    itemBuilder: (context, index) {
+                      final tool = tools[index];
+                      final visible = !notifier.isHidden(tool.id);
+                      return ListTile(
+                        key: ValueKey(tool.id),
+                        dense: true,
+                        leading: Icon(
+                          visible ? Icons.check_box_rounded : Icons.check_box_outline_blank_rounded,
+                          color: visible ? scheme.primary : scheme.onSurfaceVariant,
+                        ),
+                        title: Text(tool.name(context)),
+                        onTap: () => notifier.toggleHidden(tool.id),
+                        trailing: ReorderableDragStartListener(
+                          index: index,
+                          child: Icon(Icons.drag_handle, color: scheme.onSurfaceVariant),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -153,7 +219,6 @@ class _AppearanceSection extends StatelessWidget {
   }
 
   static String _variantLabel(String name) {
-    // 'prussianGreen' → 'Prussian Green', 'adwaitaBlue' → 'Adwaita Blue'
     final spaced = name.replaceAllMapped(RegExp(r'[A-Z]'), (m) => ' ${m.group(0)!}');
     return spaced.split(' ').where((s) => s.isNotEmpty).map((s) => s[0].toUpperCase() + s.substring(1)).join(' ');
   }
@@ -204,129 +269,9 @@ class _AccentSwatch extends StatelessWidget {
             ),
           ),
           alignment: Alignment.center,
-          child: selected
-              ? Icon(Icons.check, size: 14, color: Colors.white)
-              : null,
+          child: selected ? const Icon(Icons.check, size: 14, color: Colors.white) : null,
         ),
       ),
-    );
-  }
-}
-
-// ── Show / Hide pane ──────────────────────────────────────────────────────────
-
-class _ShowHidePane extends StatelessWidget {
-  final ToolOrderNotifier notifier;
-  const _ShowHidePane({required this.notifier});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final byCategory = <ToolCategory, List<ToolDescriptor>>{};
-    for (final cat in ToolCategory.values) {
-      byCategory[cat] = toolRegistry.where((t) => t.category == cat).toList();
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
-          child: Text(
-            'Visibility',
-            style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.primary),
-          ),
-        ),
-        const Divider(height: 1),
-        Expanded(
-          child: ListenableBuilder(
-            listenable: notifier,
-            builder: (context, _) {
-              return ListView(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                children: [
-                  for (final cat in ToolCategory.values)
-                    if ((byCategory[cat] ?? []).isNotEmpty) ...[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 10, 16, 2),
-                        child: Text(
-                          cat.displayName,
-                          style: theme.textTheme.labelMedium?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ),
-                      for (final tool in byCategory[cat] ?? [])
-                        SwitchListTile(
-                          secondary: Icon(tool.icon),
-                          title: Text(tool.name(context)),
-                          dense: true,
-                          value: !notifier.isHidden(tool.id),
-                          onChanged: (_) => notifier.toggleHidden(tool.id),
-                        ),
-                    ],
-                ],
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-// ── Organize (reorder) pane ───────────────────────────────────────────────────
-
-class _OrganizePane extends StatelessWidget {
-  final ToolOrderNotifier notifier;
-  const _OrganizePane({required this.notifier});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
-          child: Text(
-            'Order',
-            style: theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.primary),
-          ),
-        ),
-        const Divider(height: 1),
-        Expanded(
-          child: ListenableBuilder(
-            listenable: notifier,
-            builder: (context, _) {
-              final tools = notifier.tools;
-              return ReorderableListView.builder(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                itemCount: tools.length,
-                onReorder: notifier.reorder,
-                itemBuilder: (context, index) {
-                  final tool = tools[index];
-                  final hidden = notifier.isHidden(tool.id);
-                  return ListTile(
-                    key: ValueKey(tool.id),
-                    dense: true,
-                    leading: Icon(tool.icon, color: hidden ? theme.disabledColor : null),
-                    title: Text(
-                      tool.name(context),
-                      style: hidden ? TextStyle(color: theme.disabledColor) : null,
-                    ),
-                    subtitle: Text(
-                      tool.category.displayName,
-                      style: theme.textTheme.bodySmall,
-                    ),
-                    trailing: const Icon(Icons.drag_handle),
-                  );
-                },
-              );
-            },
-          ),
-        ),
-      ],
     );
   }
 }
