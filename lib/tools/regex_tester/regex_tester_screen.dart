@@ -1,3 +1,4 @@
+import 'package:dash_tools/common/app_theme.dart';
 import 'package:dash_tools/tools/regex_tester/regex_tester.dart';
 import 'package:dash_tools/tools/regex_tester/regex_tester_controller.dart';
 import 'package:flutter/material.dart';
@@ -102,7 +103,7 @@ class _PatternSection extends StatelessWidget {
                 suffixText: '/',
               ),
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: AppSpacing.gap),
             Wrap(
               spacing: 6,
               children: [
@@ -187,7 +188,7 @@ class _MatchList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 6),
+          padding: const EdgeInsets.only(bottom: AppSpacing.gap),
           child: Text(
             '$count match${count == 1 ? '' : 'es'}$suffix',
             style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant),

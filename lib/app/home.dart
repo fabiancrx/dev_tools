@@ -3,6 +3,7 @@ import "dart:io";
 import "package:dash_tools/app/command_palette.dart";
 import "package:dash_tools/app/reorder_screen.dart";
 import "package:dash_tools/app/tray.dart";
+import "package:dash_tools/common/app_theme.dart";
 import "package:dash_tools/common/clipboard_recognizer.dart";
 import "package:dash_tools/common/platform_keys.dart";
 import "package:dash_tools/common/tool_order.dart";
@@ -30,6 +31,7 @@ class AdaptiveNavigationPane extends StatefulWidget {
 
 class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
   int selectedIndex = 0;
+  bool _isMovingDown = true;
   bool _forceCollapsed = false;
 
   @override
@@ -136,7 +138,14 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
         final tools = widget.toolOrder.visibleTools;
         final clampedIndex = selectedIndex.clamp(0, (tools.length - 1).clamp(0, double.maxFinite.toInt()));
 
-        return YaruNavigationPage(
+        final navTransition = PageTransitionsTheme(builders: {
+          TargetPlatform.linux: DirectionalSlideBuilder(down: _isMovingDown),
+          TargetPlatform.macOS: DirectionalSlideBuilder(down: _isMovingDown),
+          TargetPlatform.windows: DirectionalSlideBuilder(down: _isMovingDown),
+        });
+        return YaruNavigationPageTheme(
+          data: YaruNavigationPageThemeData(pageTransitions: navTransition),
+          child: YaruNavigationPage(
           trailing: Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: YaruNavigationRailItem(
@@ -153,7 +162,10 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
           ),
           leading: SizedBox(height: Platform.isMacOS ? 44 : 0),
           length: tools.length,
-          onSelected: (value) => setState(() => selectedIndex = value),
+          onSelected: (value) => setState(() {
+                _isMovingDown = value > selectedIndex;
+                selectedIndex = value;
+              }),
           initialIndex: clampedIndex,
           itemBuilder: (context, index, selected) => YaruNavigationRailItem(
             tooltip: wideWindowSize
@@ -188,6 +200,7 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
                     ))),
             body: tools[index].builder(context),
           ),
+        ),
         );
       },
     );

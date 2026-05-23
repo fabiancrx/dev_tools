@@ -1,3 +1,4 @@
+import 'package:dash_tools/common/app_theme.dart';
 import 'package:dash_tools/tools/clipboard_service.dart';
 import 'package:dash_tools/tools/mac_address/mac_address.dart';
 import 'package:dash_tools/tools/mac_address/mac_address_controller.dart';
@@ -67,7 +68,7 @@ class _LookupTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.toolPadding),
       child: ListenableBuilder(
         listenable: controller,
         builder: (context, _) {
@@ -122,7 +123,7 @@ class _ResultCard extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.toolPadding),
         child: Row(
           children: [
             Icon(Icons.business, size: 40, color: scheme.primary),
@@ -135,7 +136,7 @@ class _ResultCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     'OUI: $_formattedPrefix',
-                    style: TextStyle(fontFamily: 'monospace', color: scheme.onSurfaceVariant),
+                    style: AppTheme.of(context).monoStyle.copyWith(color: scheme.onSurfaceVariant),
                   ),
                 ],
               ),
@@ -179,7 +180,7 @@ class _GenerateTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.toolPadding),
       child: ListenableBuilder(
         listenable: controller,
         builder: (context, _) {
@@ -190,7 +191,7 @@ class _GenerateTab extends StatelessWidget {
                 initialValue: controller.format,
                 decoration: const InputDecoration(labelText: 'Format'),
                 items: MacFormat.values
-                    .map((f) => DropdownMenuItem(value: f, child: Text(f.label, style: const TextStyle(fontFamily: 'monospace'))))
+                    .map((f) => DropdownMenuItem(value: f, child: Text(f.label, style: AppTheme.of(context).monoStyle)))
                     .toList(),
                 onChanged: (f) => f != null ? controller.setFormat(f) : null,
               ),
@@ -207,7 +208,7 @@ class _GenerateTab extends StatelessWidget {
                     Expanded(
                       child: SelectableText(
                         controller.generatedMac,
-                        style: const TextStyle(fontFamily: 'monospace', fontSize: 22, fontWeight: FontWeight.w600),
+                        style: AppTheme.of(context).monoStyle.copyWith(fontSize: 22, fontWeight: FontWeight.w600),
                       ),
                     ),
                     IconButton(

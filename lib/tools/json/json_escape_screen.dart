@@ -1,11 +1,9 @@
-import 'package:dash_tools/common/app_settings.dart';
 import 'package:dash_tools/common/tool_input_cache.dart';
 import 'package:dash_tools/l10n/l10n.dart';
 import 'package:dash_tools/tools/clipboard_service.dart';
 import 'package:dash_tools/tools/json/json_escape_controller.dart';
 import 'package:dash_tools/widgets/copy_button.dart';
-import 'package:dash_tools/widgets/flex_action_bar.dart';
-import 'package:dash_tools/widgets/vendored/split.dart';
+import 'package:dash_tools/widgets/tool_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widget_previews.dart';
 import 'package:yaru/yaru.dart';
@@ -51,74 +49,42 @@ class _JsonConverterScreenState extends State<JsonConverterScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SplitWrap(
-          axis: Axis.horizontal,
-          initialFractions: const [0.5, 0.5],
-          minSizes: const [200, 200],
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                ListenableBuilder(
-                  listenable: Listenable.merge([_controller, AppSettings.instance]),
-                  builder: (_, _) {
-                    return FlexActionBar(
-                      children: [
-                        ...JsonEncodeMode.values.map((e) => YaruRadioButton(
-                              value: e,
-                              groupValue: _controller.mode,
-                              onChanged: (_) => _controller.setMode(e),
-                              title: Text(e.localizedName(l10n)),
-                            )),
-                        if (!AppSettings.instance.autoRun) ...[
-                          const SizedBox(width: 8),
-                          FilledButton.icon(
-                            onPressed: _controller.run,
-                            icon: const Icon(Icons.play_arrow, size: 16),
-                            label: const Text('Run'),
-                          ),
-                        ],
-                      ],
-                    );
-                  },
-                ),
-                Expanded(
-                  child: TextField(
-                    controller: _inputTec,
-                    textAlignVertical: TextAlignVertical.top,
-                    decoration: InputDecoration(labelText: l10n.input, alignLabelWithHint: true),
-                    expands: true,
-                    maxLines: null,
-                    minLines: null,
-                  ),
-                ),
-              ],
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                FlexActionBar(
-                  children: [
-                    CopyButton(copyCallback: () => pasteContentToClipboard(_controller.output)),
-                  ],
-                ),
-                Expanded(
-                  child: TextField(
-                    controller: _outputTec,
-                    textAlignVertical: TextAlignVertical.top,
-                    decoration: InputDecoration(labelText: l10n.output, alignLabelWithHint: true),
-                    expands: true,
-                    maxLines: null,
-                    minLines: null,
-                  ),
-                ),
-              ],
-            ),
-          ],
+    return ToolScaffold(
+      onRun: _controller.run,
+      actions: [
+        ListenableBuilder(
+          listenable: _controller,
+          builder: (_, _) => Row(
+            mainAxisSize: MainAxisSize.min,
+            children: JsonEncodeMode.values
+                .map((e) => YaruRadioButton(
+                      value: e,
+                      groupValue: _controller.mode,
+                      onChanged: (_) => _controller.setMode(e),
+                      title: Text(e.localizedName(l10n)),
+                    ))
+                .toList(),
+          ),
         ),
+      ],
+      outputActions: [
+        CopyButton(copyCallback: () => pasteContentToClipboard(_controller.output)),
+      ],
+      input: TextField(
+        controller: _inputTec,
+        textAlignVertical: TextAlignVertical.top,
+        decoration: InputDecoration(labelText: l10n.input, alignLabelWithHint: true),
+        expands: true,
+        maxLines: null,
+        minLines: null,
+      ),
+      output: TextField(
+        controller: _outputTec,
+        textAlignVertical: TextAlignVertical.top,
+        decoration: InputDecoration(labelText: l10n.output, alignLabelWithHint: true),
+        expands: true,
+        maxLines: null,
+        minLines: null,
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:dash_tools/common/app_theme.dart';
 import 'package:dash_tools/common/tool_input_cache.dart';
 import 'package:dash_tools/tools/string_inspector/string_inspector.dart';
 import 'package:dash_tools/tools/string_inspector/string_inspector_controller.dart';
@@ -48,8 +49,8 @@ class _StringInspectorScreenState extends State<StringInspectorScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
-              height: 140,
+            Expanded(
+              flex: 1,
               child: TextField(
                 controller: _inputTec,
                 focusNode: _inputFocus,
@@ -64,8 +65,9 @@ class _StringInspectorScreenState extends State<StringInspectorScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.gap),
             Expanded(
+              flex: 2,
               child: ListenableBuilder(
                 listenable: _controller,
                 builder: (_, _) => _StatsGrid(stats: _controller.stats),

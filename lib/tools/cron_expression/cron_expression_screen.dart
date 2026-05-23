@@ -1,3 +1,4 @@
+import 'package:dash_tools/common/app_theme.dart';
 import 'package:dash_tools/common/tool_input_cache.dart';
 import 'package:dash_tools/tools/cron_expression/cron_expression_controller.dart';
 import 'package:dash_tools/widgets/clear_text.dart';
@@ -51,7 +52,7 @@ class _CronExpressionScreenState extends State<CronExpressionScreen> {
           TextField(
             controller: _inputTec,
             focusNode: _inputFocus,
-            style: const TextStyle(fontFamily: 'monospace', fontSize: 16),
+            style: AppTheme.of(context).monoStyle,
             decoration: InputDecoration(
               labelText: 'Cron expression',
               hintText: '*/5 * * * *',
@@ -106,7 +107,7 @@ class _CronExpressionScreenState extends State<CronExpressionScreen> {
                   const SizedBox.square(dimension: 8),
                   Text(
                     runs[index].toLocal().toString(),
-                    style: const TextStyle(fontFamily: 'monospace'),
+                    style: AppTheme.of(context).monoStyle,
                   ),
                 ],
               ),
