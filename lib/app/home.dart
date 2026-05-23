@@ -4,6 +4,7 @@ import "package:dash_tools/app/command_palette.dart";
 import "package:dash_tools/app/reorder_screen.dart";
 import "package:dash_tools/app/tray.dart";
 import "package:dash_tools/common/clipboard_recognizer.dart";
+import "package:dash_tools/common/platform_keys.dart";
 import "package:dash_tools/common/tool_order.dart";
 import "package:dash_tools/l10n/l10n.dart";
 import "package:dash_tools/tools/registry.dart";
@@ -61,9 +62,7 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
 
   bool _handleKey(KeyEvent event) {
     if (event is! KeyDownEvent) return false;
-    final modifier = HardwareKeyboard.instance.isControlPressed ||
-        HardwareKeyboard.instance.isMetaPressed;
-    if (!modifier) return false;
+    if (!PlatformKeys.isPrimaryModifierPressed(HardwareKeyboard.instance)) return false;
     final key = event.logicalKey;
     if (key == LogicalKeyboardKey.keyK || key == LogicalKeyboardKey.slash) {
       _showPalette();
@@ -184,7 +183,7 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
                 title: ConstrainedBox(
                     constraints: const BoxConstraints(maxHeight: 46, maxWidth: 420),
                     child: PaletteSearchPrompt(
-                      hint: context.l10n.toolName(tools[index].id),
+                      currentToolName: context.l10n.toolName(tools[index].id),
                       onTap: _showPalette,
                     ))),
             body: tools[index].builder(context),

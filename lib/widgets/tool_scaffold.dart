@@ -1,11 +1,13 @@
 import 'package:dash_tools/common/app_settings.dart';
+import 'package:dash_tools/common/platform_keys.dart';
 import 'package:dash_tools/widgets/file_drop_zone.dart';
 import 'package:dash_tools/widgets/flex_action_bar.dart';
 import 'package:dash_tools/widgets/vendored/split.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// Two-pane input/output layout shared by most converter tools.
-class ToolScaffold extends StatelessWidget {
+class ToolScaffold extends StatefulWidget {
   final List<Widget> actions;
   final List<Widget> outputActions;
   final Widget input;
@@ -30,6 +32,32 @@ class ToolScaffold extends StatelessWidget {
   });
 
   @override
+  State<ToolScaffold> createState() => _ToolScaffoldState();
+}
+
+class _ToolScaffoldState extends State<ToolScaffold> {
+  @override
+  void initState() {
+    super.initState();
+    HardwareKeyboard.instance.addHandler(_handleKey);
+  }
+
+  @override
+  void dispose() {
+    HardwareKeyboard.instance.removeHandler(_handleKey);
+    super.dispose();
+  }
+
+  bool _handleKey(KeyEvent event) {
+    if (event is! KeyDownEvent) return false;
+    if (event.logicalKey != LogicalKeyboardKey.enter) return false;
+    if (!PlatformKeys.isPrimaryModifierPressed(HardwareKeyboard.instance)) return false;
+    if (AppSettings.instance.autoRun || widget.onRun == null) return false;
+    widget.onRun!();
+    return true;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
@@ -45,17 +73,20 @@ class ToolScaffold extends StatelessWidget {
                 ListenableBuilder(
                   listenable: AppSettings.instance,
                   builder: (context, _) {
-                    final showRun = !AppSettings.instance.autoRun && onRun != null;
-                    if (actions.isEmpty && !showRun) return const SizedBox.shrink();
+                    final showRun = !AppSettings.instance.autoRun && widget.onRun != null;
+                    if (widget.actions.isEmpty && !showRun) return const SizedBox.shrink();
                     return FlexActionBar(
                       children: [
-                        ...actions,
+                        ...widget.actions,
                         if (showRun) ...[
                           const SizedBox(width: 8),
-                          FilledButton.icon(
-                            onPressed: onRun,
-                            icon: const Icon(Icons.play_arrow, size: 16),
-                            label: const Text('Run'),
+                          Tooltip(
+                            message: 'Run  ${PlatformKeys.run}',
+                            child: FilledButton.icon(
+                              onPressed: widget.onRun,
+                              icon: const Icon(Icons.play_arrow, size: 16),
+                              label: const Text('Run'),
+                            ),
                           ),
                         ],
                       ],
@@ -63,18 +94,18 @@ class ToolScaffold extends StatelessWidget {
                   },
                 ),
                 Expanded(
-                  child: onFileDropped != null
-                      ? FileDropZone(onText: onFileDropped!, child: input)
-                      : input,
+                  child: widget.onFileDropped != null
+                      ? FileDropZone(onText: widget.onFileDropped!, child: widget.input)
+                      : widget.input,
                 ),
               ],
             ),
             Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                if (outputActions.isNotEmpty)
-                  FlexActionBar(children: outputActions),
-                Expanded(child: output),
+                if (widget.outputActions.isNotEmpty)
+                  FlexActionBar(children: widget.outputActions),
+                Expanded(child: widget.output),
               ],
             ),
           ],

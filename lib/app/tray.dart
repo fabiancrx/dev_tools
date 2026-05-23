@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dash_tools/common/clipboard_recognizer.dart';
+import 'package:dash_tools/common/platform_keys.dart';
 import 'package:dash_tools/tools/clipboard_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -61,7 +62,7 @@ class TrayService with TrayListener {
 
   Future<void> _refreshMenu() async {
     await trayManager.setContextMenu(Menu(items: [
-      MenuItem(key: 'show', label: 'Show Dash Tools  (⌥⇧Space)'),
+      MenuItem(key: 'show', label: 'Show Dash Tools  (${PlatformKeys.toggleWindow})'),
       MenuItem(key: 'transform', label: 'Transform clipboard with best-match tool'),
       MenuItem.separator(),
       MenuItem(key: 'quit', label: 'Quit'),

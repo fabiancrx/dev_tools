@@ -1,6 +1,9 @@
+import 'package:dash_tools/app/tray.dart';
 import 'package:dash_tools/common/app_settings.dart';
+import 'package:dash_tools/common/platform_keys.dart';
 import 'package:dash_tools/common/tool_order.dart';
 import 'package:dash_tools/tools/registry.dart';
+import 'package:dash_tools/widgets/adaptive_navigation.dart';
 import 'package:dash_tools/widgets/app_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:yaru/widgets.dart';
@@ -44,6 +47,8 @@ class ReorderScreen extends StatelessWidget {
                 onChanged: AppSettings.instance.setAutoRun,
               ),
             ),
+            const Divider(height: 1),
+            const _ShortcutsSection(),
             const Divider(height: 1),
             ListTile(
               leading: const Icon(Icons.info_outline),
@@ -143,6 +148,39 @@ class _ShowHideTab extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+class _ShortcutsSection extends StatelessWidget {
+  const _ShortcutsSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return ExpansionTile(
+      leading: const Icon(Icons.keyboard_outlined),
+      title: const Text('Keyboard Shortcuts'),
+      children: [
+        _row(context, 'Open palette', [PlatformKeys.palette, PlatformKeys.paletteAlt]),
+        _row(context, 'Run tool', [PlatformKeys.run]),
+        if (isTraySupported) _row(context, 'Toggle window (global)', [PlatformKeys.toggleWindow]),
+        const SizedBox(height: 8),
+      ],
+    );
+  }
+
+  Widget _row(BuildContext context, String label, List<String> shortcuts) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(72, 6, 16, 6),
+      child: Row(
+        children: [
+          Expanded(child: Text(label, style: Theme.of(context).textTheme.bodyMedium)),
+          for (int i = 0; i < shortcuts.length; i++) ...[
+            if (i > 0) const SizedBox(width: 4),
+            ShortcutChip(label: shortcuts[i]),
+          ],
+        ],
+      ),
     );
   }
 }
