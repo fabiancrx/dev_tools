@@ -1,4 +1,5 @@
 import 'package:dash_tools/common/app_settings.dart';
+import 'package:dash_tools/common/app_theme.dart';
 import 'package:dash_tools/common/platform_keys.dart';
 import 'package:dash_tools/widgets/file_drop_zone.dart';
 import 'package:dash_tools/widgets/flex_action_bar.dart';
@@ -61,7 +62,7 @@ class _ToolScaffoldState extends State<ToolScaffold> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(AppSpacing.toolPadding),
         child: SplitWrap(
           axis: Axis.horizontal,
           initialFractions: const [0.5, 0.5],
@@ -79,7 +80,7 @@ class _ToolScaffoldState extends State<ToolScaffold> {
                       children: [
                         ...widget.actions,
                         if (showRun) ...[
-                          const SizedBox(width: 8),
+                          const SizedBox(width: AppSpacing.gap),
                           Tooltip(
                             message: 'Run  ${PlatformKeys.run}',
                             child: FilledButton.icon(

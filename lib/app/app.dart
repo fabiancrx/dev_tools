@@ -1,4 +1,5 @@
 import "package:dash_tools/app/home.dart";
+import "package:dash_tools/common/app_theme.dart";
 import "package:dash_tools/common/clipboard_recognizer.dart";
 import "package:dash_tools/common/tool_order.dart";
 import "package:dash_tools/l10n/generated/app_localizations.dart";
@@ -45,8 +46,8 @@ class _AppState extends State<App> with WindowListener {
       data: const YaruThemeData(variant: YaruVariant.orange),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: yaruLight,
-        darkTheme: yaruDark,
+        theme: yaruLight.copyWith(extensions: const [AppTheme()]),
+        darkTheme: yaruDark.copyWith(extensions: const [AppTheme()]),
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,

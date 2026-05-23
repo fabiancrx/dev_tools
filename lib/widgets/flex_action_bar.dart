@@ -1,3 +1,4 @@
+import 'package:dash_tools/common/app_theme.dart';
 import 'package:dash_tools/previews.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,7 @@ class FlexActionBar extends StatelessWidget {
     return ConstrainedBox(
       constraints: const BoxConstraints.tightFor(height: 48),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 2) + const EdgeInsets.only(bottom: 8),
+        padding: AppSpacing.actionBarInsets,
         child: Row(children: children),
       ),
     );
