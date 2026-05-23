@@ -44,7 +44,7 @@ class _FileDropZoneState extends State<FileDropZone> {
       if (length > widget.maxBytes) return;
       final raw = await File(file.path).readAsBytes();
       // Best-effort UTF-8 decode; if the file is binary this throws and we drop it.
-      final text = const Utf8Decoder(allowMalformed: false).convert(raw);
+      final text = const Utf8Decoder().convert(raw);
       widget.onText(text);
     } catch (e) {
       debugPrint('FileDropZone: read failed: $e');
