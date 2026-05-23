@@ -29,6 +29,8 @@ extension AppLocalizationsToolsX on AppLocalizations {
         'xml_formatter' => toolXmlFormatterName,
         'yaml_formatter' => toolYamlFormatterName,
         'json_yaml_converter' => toolJsonYamlConverterName,
+        'mime_lookup' => toolMimeLookupName,
+        'mac_address' => toolMacAddressName,
         _ => id,
       };
 
@@ -53,6 +55,8 @@ extension AppLocalizationsToolsX on AppLocalizations {
         'xml_formatter' => toolXmlFormatterDescription,
         'yaml_formatter' => toolYamlFormatterDescription,
         'json_yaml_converter' => toolJsonYamlConverterDescription,
+        'mime_lookup' => toolMimeLookupDescription,
+        'mac_address' => toolMacAddressDescription,
         _ => id,
       };
 }

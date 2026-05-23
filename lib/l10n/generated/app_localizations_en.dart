@@ -365,4 +365,18 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get toolJsonYamlConverterDescription =>
       'Convert between JSON and YAML';
+
+  @override
+  String get toolMimeLookupName => 'MIME Types';
+
+  @override
+  String get toolMimeLookupDescription =>
+      'Look up MIME types by file extension';
+
+  @override
+  String get toolMacAddressName => 'MAC Address';
+
+  @override
+  String get toolMacAddressDescription =>
+      'Look up OUI vendor or generate a random MAC address';
 }

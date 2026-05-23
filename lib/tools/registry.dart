@@ -14,6 +14,8 @@ import 'package:dash_tools/tools/json/json_formatter_screen.dart';
 import 'package:dash_tools/tools/jwt/jwt_screen.dart';
 import 'package:dash_tools/tools/number_converter/number_converter.dart';
 import 'package:dash_tools/tools/json_yaml/json_yaml_converter_screen.dart';
+import 'package:dash_tools/tools/mac_address/mac_address_screen.dart';
+import 'package:dash_tools/tools/mime_lookup/mime_lookup_screen.dart';
 import 'package:dash_tools/tools/qr_code/qr_code_screen.dart';
 import 'package:dash_tools/tools/query_string/query_string_screen.dart';
 import 'package:dash_tools/tools/xml/xml_formatter_screen.dart';
@@ -261,6 +263,26 @@ final List<ToolDescriptor> toolRegistry = [
     icon: Icons.swap_horiz,
     builder: (_) => const JsonYamlConverterScreen(),
     aliases: ['json', 'yaml', 'convert', 'json to yaml', 'yaml to json'],
+    detector: null,
+  ),
+  ToolDescriptor(
+    id: 'mime_lookup',
+    name: (ctx) => ctx.l10n.toolName('mime_lookup'),
+    description: (ctx) => ctx.l10n.toolDescription('mime_lookup'),
+    category: ToolCategory.reference,
+    icon: Icons.find_in_page_outlined,
+    builder: (_) => const MimeLookupScreen(),
+    aliases: ['mime', 'content-type', 'media type', 'file type', 'extension'],
+    detector: null,
+  ),
+  ToolDescriptor(
+    id: 'mac_address',
+    name: (ctx) => ctx.l10n.toolName('mac_address'),
+    description: (ctx) => ctx.l10n.toolDescription('mac_address'),
+    category: ToolCategory.network,
+    icon: Icons.device_hub_outlined,
+    builder: (_) => const MacAddressScreen(),
+    aliases: ['mac', 'oui', 'vendor', 'ethernet', 'hardware address'],
     detector: null,
   ),
 ];

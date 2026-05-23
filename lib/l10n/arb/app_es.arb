@@ -129,5 +129,11 @@
     "toolYamlFormatterDescription": "Formatea y valida YAML",
 
     "toolJsonYamlConverterName": "JSON ↔ YAML",
-    "toolJsonYamlConverterDescription": "Convierte entre JSON y YAML"
+    "toolJsonYamlConverterDescription": "Convierte entre JSON y YAML",
+
+    "toolMimeLookupName": "Tipos MIME",
+    "toolMimeLookupDescription": "Busca tipos MIME por extensión de archivo",
+
+    "toolMacAddressName": "Dirección MAC",
+    "toolMacAddressDescription": "Consulta el fabricante OUI o genera una dirección MAC aleatoria"
 }

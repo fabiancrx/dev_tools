@@ -757,6 +757,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Convert between JSON and YAML'**
   String get toolJsonYamlConverterDescription;
+
+  /// MIME type lookup tool name
+  ///
+  /// In en, this message translates to:
+  /// **'MIME Types'**
+  String get toolMimeLookupName;
+
+  /// MIME type lookup tool description
+  ///
+  /// In en, this message translates to:
+  /// **'Look up MIME types by file extension'**
+  String get toolMimeLookupDescription;
+
+  /// MAC address tool name
+  ///
+  /// In en, this message translates to:
+  /// **'MAC Address'**
+  String get toolMacAddressName;
+
+  /// MAC address tool description
+  ///
+  /// In en, this message translates to:
+  /// **'Look up OUI vendor or generate a random MAC address'**
+  String get toolMacAddressDescription;
 }
 
 class _AppLocalizationsDelegate

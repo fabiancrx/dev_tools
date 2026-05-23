@@ -350,5 +350,17 @@
     "@toolJsonYamlConverterName": { "description": "JSON/YAML converter tool name" },
 
     "toolJsonYamlConverterDescription": "Convert between JSON and YAML",
-    "@toolJsonYamlConverterDescription": { "description": "JSON/YAML converter tool description" }
+    "@toolJsonYamlConverterDescription": { "description": "JSON/YAML converter tool description" },
+
+    "toolMimeLookupName": "MIME Types",
+    "@toolMimeLookupName": { "description": "MIME type lookup tool name" },
+
+    "toolMimeLookupDescription": "Look up MIME types by file extension",
+    "@toolMimeLookupDescription": { "description": "MIME type lookup tool description" },
+
+    "toolMacAddressName": "MAC Address",
+    "@toolMacAddressName": { "description": "MAC address tool name" },
+
+    "toolMacAddressDescription": "Look up OUI vendor or generate a random MAC address",
+    "@toolMacAddressDescription": { "description": "MAC address tool description" }
 }
