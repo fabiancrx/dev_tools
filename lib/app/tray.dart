@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:io' show exit;
 
 import 'package:dash_tools/common/clipboard_recognizer.dart';
 import 'package:dash_tools/common/platform_keys.dart';
@@ -132,4 +132,6 @@ class TrayService with TrayListener {
 
 bool get isTraySupported =>
     !kIsWeb &&
-    (Platform.isLinux || Platform.isMacOS || Platform.isWindows);
+    (defaultTargetPlatform == TargetPlatform.linux ||
+        defaultTargetPlatform == TargetPlatform.macOS ||
+        defaultTargetPlatform == TargetPlatform.windows);

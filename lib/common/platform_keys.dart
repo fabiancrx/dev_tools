@@ -1,12 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 /// Human-readable shortcut labels that match the platform's native conventions.
 /// macOS shows symbol glyphs (⌘ ⌥ ⇧ ⌃); Linux and Windows spell modifiers out.
 class PlatformKeys {
-  static bool get isMac => !kIsWeb && Platform.isMacOS;
+  static bool get isMac => defaultTargetPlatform == TargetPlatform.macOS;
 
   /// Command palette shortcut (⌘K / Ctrl+K).
   static String get palette => isMac ? '⌘K' : 'Ctrl+K';

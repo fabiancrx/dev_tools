@@ -1,5 +1,4 @@
-import "dart:io";
-
+import "package:flutter/foundation.dart";
 import "package:dash_tools/app/command_palette.dart";
 import "package:dash_tools/app/reorder_screen.dart";
 import "package:dash_tools/app/tray.dart";
@@ -160,7 +159,7 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
               },
             ),
           ),
-          leading: SizedBox(height: Platform.isMacOS ? 44 : 0),
+          leading: SizedBox(height: defaultTargetPlatform == TargetPlatform.macOS ? 44 : 0),
           length: tools.length,
           onSelected: (value) => setState(() {
                 _isMovingDown = value > selectedIndex;

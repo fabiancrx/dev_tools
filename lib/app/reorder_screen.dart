@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:dash_tools/app/tray.dart';
 import 'package:dash_tools/common/app_settings.dart';
 import 'package:dash_tools/common/platform_keys.dart';
@@ -19,11 +18,11 @@ class ReorderScreen extends StatelessWidget {
     return YaruDetailPage(
       heroTag: null,
       appBar: YaruWindowTitleBar(
-        leading: Platform.isMacOS
+        leading: defaultTargetPlatform == TargetPlatform.macOS
             ? const SizedBox(width: 72)
             : BackButton(onPressed: () => Navigator.of(context).pop()),
         actions: [
-          if (Platform.isMacOS)
+          if (defaultTargetPlatform == TargetPlatform.macOS)
             IconButton(
               icon: const Icon(Icons.arrow_back),
               tooltip: 'Back',
