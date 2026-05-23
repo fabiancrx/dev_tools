@@ -19,7 +19,12 @@ class _RegexTesterScreenState extends State<RegexTesterScreen> {
   void initState() {
     super.initState();
     _patternTec.addListener(() => _controller.setPattern(_patternTec.text));
-    _inputTec.addListener(() => _controller.setInput(_inputTec.text));
+    // Guard: setRanges() also calls notifyListeners() on _inputTec; skip if
+    // text hasn't changed to avoid an infinite listener loop.
+    _inputTec.addListener(() {
+      if (_inputTec.text == _controller.input) return;
+      _controller.setInput(_inputTec.text);
+    });
     _controller.addListener(() {
       _inputTec.setRanges(
         _controller.result.matches.map((m) => (m.start, m.end)).toList(),

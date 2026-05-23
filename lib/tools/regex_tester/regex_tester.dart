@@ -53,7 +53,7 @@ RegexResult runRegex(
       );
     }).toList();
     return RegexResult(matches: matches, capped: capped);
-  } on FormatException catch (e) {
-    return RegexResult(matches: [], error: e.message);
+  } catch (e) {
+    return RegexResult(matches: [], error: e is FormatException ? e.message : e.toString());
   }
 }
