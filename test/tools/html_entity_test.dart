@@ -22,6 +22,27 @@ void main() {
     });
   });
 
+  group('encodeHtml — edge cases', () {
+    test('returns empty string for empty input', () {
+      expect(encodeHtml(''), '');
+    });
+
+    test('single quote is not escaped in attribute mode', () {
+      // HtmlEscapeMode.attribute escapes &, <, >, " but leaves single quotes
+      expect(encodeHtml("it's"), "it's");
+    });
+
+    test('encodeNonAscii encodes emoji by codepoint', () {
+      // 😀 is U+1F600 → &#x1f600;
+      final result = encodeHtml('😀', encodeNonAscii: true);
+      expect(result, '&#x1f600;');
+    });
+
+    test('encodeNonAscii: false leaves multi-byte chars intact', () {
+      expect(encodeHtml('café'), 'café');
+    });
+  });
+
   group('decodeHtml', () {
     test('decodes named entities', () {
       expect(decodeHtml('&lt;div&gt;'), '<div>');

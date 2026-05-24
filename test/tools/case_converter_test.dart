@@ -22,6 +22,29 @@ void main() {
     });
   });
 
+  group('CaseStyleX.convert — separator-aware inputs', () {
+    test('kebab-case input converts to camelCase', () {
+      expect(CaseStyle.camel.convert('hello-world'), 'helloWorld');
+    });
+
+    test('snake_case input converts to PascalCase', () {
+      expect(CaseStyle.pascal.convert('hello_world'), 'HelloWorld');
+    });
+
+    test('CONSTANT_CASE input converts to snake_case', () {
+      expect(CaseStyle.snake.convert('HELLO_WORLD'), 'hello_world');
+    });
+
+    test('single word input stays as single word', () {
+      expect(CaseStyle.camel.convert('hello'), 'hello');
+      expect(CaseStyle.pascal.convert('hello'), 'Hello');
+    });
+
+    test('already-correct camelCase input normalises', () {
+      expect(CaseStyle.snake.convert('helloWorld'), 'hello_world');
+    });
+  });
+
   group('convertAllCases', () {
     test('returns a result for every CaseStyle', () {
       final result = convertAllCases('hello world');

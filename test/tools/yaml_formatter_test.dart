@@ -33,6 +33,26 @@ void main() {
     test('throws on invalid YAML', () {
       expect(() => formatYaml(': invalid: yaml: :::'), throwsA(anything));
     });
+
+    test('preserves null values', () {
+      final result = formatYaml('key: null');
+      expect(result, contains('key:'));
+    });
+
+    test('preserves integer values', () {
+      final result = formatYaml('count: 42');
+      expect(result, contains('42'));
+    });
+
+    test('preserves float values', () {
+      final result = formatYaml('ratio: 3.14');
+      expect(result, contains('3.14'));
+    });
+
+    test('handles nested lists', () {
+      final result = formatYaml('matrix:\n  - [1, 2]\n  - [3, 4]');
+      expect(result, isNotEmpty);
+    });
   });
 
   group('YamlFormatterController', () {

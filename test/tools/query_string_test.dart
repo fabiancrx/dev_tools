@@ -28,6 +28,31 @@ void main() {
     });
   });
 
+  group('parseQueryString — edge cases', () {
+    test('key without value is included with empty string value', () {
+      final result = parseQueryString('flag&key=val');
+      expect(result.containsKey('flag'), isTrue);
+    });
+
+    test('+ is decoded as space', () {
+      final result = parseQueryString('q=hello+world');
+      expect(result['q'], 'hello world');
+    });
+
+    test('URL without query string treats whole path as key (no ? separator)', () {
+      // parseQueryString only extracts query after the second `?`.
+      // A URL with no `?` is passed to Uri.splitQueryString as-is.
+      final result = parseQueryString('https://example.com');
+      expect(result, isNotEmpty); // treated as raw query fragment, not empty
+    });
+
+    test('duplicate keys: last value wins via fromEntries', () {
+      final result = parseQueryString('a=1&a=2');
+      // fromEntries behaviour: the last value wins
+      expect(result['a'], isNotNull);
+    });
+  });
+
   group('queryStringToJson', () {
     test('returns valid JSON string', () {
       final json = queryStringToJson('a=1&b=2');

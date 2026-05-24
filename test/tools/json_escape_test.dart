@@ -27,8 +27,9 @@ void main() {
       expect(unescape(r'\\'), r'\');
     });
 
-    test(r'unescapes \uXXXX unicode escape', () {
+    test(r'unescapes \uXXXX 4-digit unicode escape', () {
       expect(unescape(r'A'), 'A');
+      expect(unescape(r'é'), 'é');
     });
 
     test(r'unescapes \u{XXXX} unicode escape', () {
@@ -37,6 +38,22 @@ void main() {
 
     test(r'unescapes \xXX hex escape', () {
       expect(unescape(r'\x41'), 'A');
+    });
+
+    test(r'unescapes \f form-feed', () {
+      expect(unescape(r'\f'), '\f');
+    });
+
+    test(r'unescapes \b backspace', () {
+      expect(unescape(r'\b'), '\b');
+    });
+
+    test(r'unescapes \v vertical tab', () {
+      expect(unescape(r'\v'), '\v');
+    });
+
+    test('handles multiple different escapes in sequence', () {
+      expect(unescape(r'\n\t\r'), '\n\t\r');
     });
 
     test('passes through unknown escape sequences as the literal character', () {

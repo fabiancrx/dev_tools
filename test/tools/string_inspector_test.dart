@@ -60,5 +60,24 @@ void main() {
     test('single paragraph with no blank lines', () {
       expect(inspectString('just one paragraph').paragraphCount, 1);
     });
+
+    test('tab counts as whitespace, not a word', () {
+      // 'hello\tworld' is 2 words
+      expect(inspectString('hello\tworld').wordCount, 2);
+    });
+
+    test('multiple consecutive spaces count as one separator', () {
+      expect(inspectString('a   b   c').wordCount, 3);
+    });
+
+    test('emoji counts as one character', () {
+      final s = inspectString('😀');
+      expect(s.charCount, 1);
+    });
+
+    test('emoji uses more bytes than char count', () {
+      final s = inspectString('😀');
+      expect(s.byteCountUtf8, greaterThan(s.charCount));
+    });
   });
 }

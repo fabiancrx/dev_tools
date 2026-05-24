@@ -35,6 +35,28 @@ void main() {
     test('throws on malformed XML', () {
       expect(() => formatXml('<root><unclosed>', XmlMode.twoSpaces), throwsA(anything));
     });
+
+    test('preserves CDATA section contents', () {
+      const xml = '<root><![CDATA[<not-a-tag> & raw]]></root>';
+      final result = formatXml(xml, XmlMode.twoSpaces);
+      expect(result, contains('CDATA'));
+      expect(result, contains('<not-a-tag>'));
+    });
+
+    test('handles self-closing tags', () {
+      const xml = '<root><empty/></root>';
+      final result = formatXml(xml, XmlMode.twoSpaces);
+      expect(result, contains('empty'));
+    });
+
+    test('round-trip: format then minify preserves structure', () {
+      const xml = '<root><child a="1">text</child></root>';
+      final formatted = formatXml(xml, XmlMode.twoSpaces);
+      final minified = formatXml(formatted, XmlMode.minify);
+      expect(minified, contains('<child'));
+      expect(minified, contains('a="1"'));
+      expect(minified, contains('text'));
+    });
   });
 
   group('XmlFormatterController', () {

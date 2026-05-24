@@ -56,6 +56,25 @@ void main() {
       expect(controller.output, asciiToHex('hello'));
     });
 
+    test('uppercase hex input is normalised before conversion', () {
+      controller.setInput('616263'.toUpperCase()); // '616263' → 'ABC' uppercase fails, but '61' → 'a'
+      // hex input is case-insensitive via int.parse with radix 16
+      expect(controller.output, 'abc');
+    });
+
+    test('odd-length hex input truncates last nibble', () {
+      // '6162' + extra nibble '6' → only '616' is truncated to 1 full byte '61'
+      controller.setInput('616'); // 3 chars → 1 full byte pair '61' = 'a'
+      expect(controller.output, 'a');
+    });
+
+    test('non-ASCII char in textToHex encodes correctly', () {
+      controller.setMode(HexTextConvertMode.textToHex);
+      // '©' is U+00A9 → codeUnit 169 → 'a9'
+      controller.setInput('©');
+      expect(controller.output, 'a9');
+    });
+
     test('notifies listeners on mode change', () {
       var notified = false;
       controller.addListener(() => notified = true);
