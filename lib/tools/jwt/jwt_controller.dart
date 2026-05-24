@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dash_tools/common/app_logger.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:flutter/foundation.dart';
 
@@ -130,7 +131,9 @@ class JwtController extends ChangeNotifier {
       _headerJson = const JsonEncoder.withIndent('  ').convert(_jwt!.header ?? {});
       _payloadJson = const JsonEncoder.withIndent('  ').convert(_jwt!.payload);
       _encode();
-    } catch (_) {}
+    } catch (e, st) {
+      log.e('Failed to copy JWT claims to encoder', error: e, stackTrace: st);
+    }
     notifyListeners();
   }
 
@@ -139,7 +142,9 @@ class JwtController extends ChangeNotifier {
       final map = jsonDecode(_headerJson) as Map<String, dynamic>;
       map['alg'] = _algorithm;
       _headerJson = const JsonEncoder.withIndent('  ').convert(map);
-    } catch (_) {}
+    } catch (e) {
+      log.w('Could not update alg in JWT header JSON', error: e);
+    }
   }
 
   void _encode() {
@@ -155,6 +160,7 @@ class JwtController extends ChangeNotifier {
       _encodedResult = jwt.sign(SecretKey(_secret), algorithm: JWTAlgorithm.fromName(_algorithm));
       _encodeError = '';
     } catch (e) {
+      log.w('JWT encode failed', error: e);
       _encodedResult = '';
       _encodeError = e.toString();
     }
@@ -221,6 +227,7 @@ class JwtController extends ChangeNotifier {
       _signatureValid = null;
       if (_secret.isNotEmpty) _verifySignature();
     } catch (e) {
+      log.w('JWT decode failed', error: e);
       _jwt = null;
       _error = e.toString();
       _expirationDate = null;

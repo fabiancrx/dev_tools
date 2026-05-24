@@ -1,3 +1,4 @@
+import 'package:dash_tools/common/app_logger.dart';
 import 'package:dash_tools/tools/wifi_qr/wifi_qr.dart';
 import 'package:flutter/material.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
@@ -56,7 +57,8 @@ class WifiQrController extends ChangeNotifier {
     try {
       final uri = buildWifiUri(ssid: _ssid, password: _password, auth: _auth, hidden: _hidden);
       _qrImage = QrImage(QrCode.fromData(data: uri, errorCorrectLevel: QrErrorCorrectLevel.M));
-    } catch (_) {
+    } catch (e, st) {
+      log.e('Wi-Fi QR generation failed', error: e, stackTrace: st);
       _qrImage = null;
     }
     notifyListeners();

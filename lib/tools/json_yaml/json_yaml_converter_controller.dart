@@ -1,3 +1,4 @@
+import 'package:dash_tools/common/app_logger.dart';
 import 'package:dash_tools/common/app_settings.dart';
 import 'package:flutter/foundation.dart';
 
@@ -40,6 +41,7 @@ class JsonYamlConverterController extends ChangeNotifier {
       };
       _error = '';
     } catch (e) {
+      log.w('JSON/YAML conversion failed', error: e);
       _output = '';
       _error = e.toString();
     }

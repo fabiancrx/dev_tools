@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dash_tools/common/app_logger.dart';
 import 'package:dash_tools/tools/base64/dart_logo.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -43,7 +44,8 @@ class Base64ImageController extends ChangeNotifier {
   Uint8List _decodeBase64(String text) {
     try {
       return base64Decode(text);
-    } catch (_) {
+    } catch (e, st) {
+      log.w('Base64 image decode failed', error: e, stackTrace: st);
       return Uint8List.fromList([]);
     }
   }

@@ -1,3 +1,4 @@
+import 'package:dash_tools/common/app_logger.dart';
 import 'package:dash_tools/common/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
@@ -129,7 +130,8 @@ class QrCodeController extends ChangeNotifier {
         errorCorrectLevel: _errorCorrectionLevel,
       );
       _qrImage = QrImage(qrCode);
-    } catch (_) {
+    } catch (e, st) {
+      log.e('QR code generation failed', error: e, stackTrace: st);
       _qrImage = null;
     }
   }

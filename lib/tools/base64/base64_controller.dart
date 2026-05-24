@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dash_tools/common/app_logger.dart';
 import 'package:flutter/foundation.dart';
 
 enum Base64ConverterMode { encode, decode }
@@ -65,7 +66,8 @@ class Base64Controller extends ChangeNotifier {
         Base64ConverterMode.encode => base64.encode(_codec.encode(input)),
         Base64ConverterMode.decode => _codec.decode(base64.decode(input)),
       };
-    } catch (_) {
+    } catch (e, st) {
+      log.w('Base64 conversion failed', error: e, stackTrace: st);
       return '';
     }
   }

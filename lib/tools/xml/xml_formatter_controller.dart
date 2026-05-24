@@ -1,3 +1,4 @@
+import 'package:dash_tools/common/app_logger.dart';
 import 'package:dash_tools/common/app_settings.dart';
 import 'package:flutter/foundation.dart';
 
@@ -37,6 +38,7 @@ class XmlFormatterController extends ChangeNotifier {
       _output = formatXml(_input, _mode);
       _error = '';
     } catch (e) {
+      log.w('XML formatting failed', error: e);
       _output = '';
       _error = e.toString();
     }

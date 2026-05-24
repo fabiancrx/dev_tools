@@ -1,3 +1,4 @@
+import 'package:dash_tools/common/app_logger.dart';
 import 'package:dash_tools/common/app_settings.dart';
 import 'package:flutter/foundation.dart';
 
@@ -30,6 +31,7 @@ class YamlFormatterController extends ChangeNotifier {
       _output = formatYaml(_input);
       _error = '';
     } catch (e) {
+      log.w('YAML formatting failed', error: e);
       _output = '';
       _error = e.toString();
     }

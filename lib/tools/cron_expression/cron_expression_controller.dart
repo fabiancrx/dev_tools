@@ -1,3 +1,4 @@
+import 'package:dash_tools/common/app_logger.dart';
 import 'package:dash_tools/common/app_settings.dart';
 import 'package:flutter/foundation.dart';
 
@@ -44,10 +45,12 @@ class CronExpressionController extends ChangeNotifier {
       _description = cron.describeExpression(_input);
       _error = '';
     } on cron.CronParseException catch (e) {
+      log.w('Invalid cron expression', error: e);
       _nextRuns = [];
       _description = '';
       _error = e.message;
-    } catch (e) {
+    } catch (e, st) {
+      log.e('Unexpected cron parse error', error: e, stackTrace: st);
       _nextRuns = [];
       _description = '';
       _error = 'Invalid expression';
