@@ -34,6 +34,8 @@ const List<HttpStatusCode> httpStatusCodes = [
   HttpStatusCode(302, 'Found', 'This response code means that the URI of the requested resource has been changed temporarily.'),
   HttpStatusCode(303, 'See Other', 'The server sent this response to direct the client to get the requested resource at another URI with a GET request.'),
   HttpStatusCode(304, 'Not Modified', 'This is used for caching purposes. It tells the client that the response has not been modified.'),
+  HttpStatusCode(305, 'Use Proxy', 'The requested resource must be accessed through the proxy given by the Location field. Deprecated due to security concerns.'),
+  HttpStatusCode(306, 'Unused', 'This response code is no longer used; it is reserved. It was used in a previous version of the HTTP/1.1 specification.'),
   HttpStatusCode(307, 'Temporary Redirect', 'The server sends this response to direct the client to get the requested resource at another URI with same method that was used in the prior request.'),
   HttpStatusCode(308, 'Permanent Redirect', 'This means that the resource is now permanently located at another URI, specified by the Location: HTTP Response header.'),
   // 4xx Client Errors
