@@ -89,21 +89,36 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
   void _onClipboardMatch() {
     final match = widget.clipboardRecognizer.match;
     final messenger = ScaffoldMessenger.of(context);
-    messenger.clearMaterialBanners();
+    messenger.clearSnackBars();
     if (match == null) return;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showMaterialBanner(
-        _ClipboardBanner(
-          match: match,
-          onOpen: () {
-            widget.clipboardRecognizer.dismiss();
-            _navigateTo(match.id);
-          },
-          onDismiss: widget.clipboardRecognizer.dismiss,
-        ),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Icon(match.icon, size: 18),
+                  const SizedBox(width: 8),
+                  Builder(
+                    builder: (ctx) => Text('Clipboard looks like ${match.name(ctx)}'),
+                  ),
+                ],
+              ),
+              action: SnackBarAction(
+                label: 'Open',
+                onPressed: () {
+                  widget.clipboardRecognizer.dismiss();
+                  _navigateTo(match.id);
+                },
+              ),
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration(seconds: 8),
+            ),
+          )
+          .closed
+          .then((_) => widget.clipboardRecognizer.dismiss());
     });
   }
 
@@ -206,26 +221,3 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
   }
 }
 
-class _ClipboardBanner extends MaterialBanner {
-  _ClipboardBanner({
-    required ToolDescriptor match,
-    required VoidCallback onOpen,
-    required VoidCallback onDismiss,
-  }) : super(
-          content: Row(
-            children: [
-              Icon(match.icon, size: 18),
-              const SizedBox(width: 8),
-              Builder(
-                builder: (context) => Text(
-                  'Clipboard looks like ${match.name(context)}',
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(onPressed: onOpen, child: const Text('Open')),
-            TextButton(onPressed: onDismiss, child: const Text('Dismiss')),
-          ],
-        );
-}
