@@ -14,6 +14,7 @@ class _RegexTesterScreenState extends State<RegexTesterScreen> {
   final _controller = RegexTesterController();
   final _patternTec = TextEditingController();
   final _inputTec = _HighlightController();
+  bool _showCheatsheet = false;
 
   @override
   void initState() {
@@ -45,34 +46,55 @@ class _RegexTesterScreenState extends State<RegexTesterScreen> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8),
-        child: Column(
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _PatternSection(controller: _controller, tec: _patternTec),
-            const SizedBox(height: 8),
             Expanded(
-              flex: 2,
-              child: TextField(
-                controller: _inputTec,
-                textAlignVertical: TextAlignVertical.top,
-                decoration: const InputDecoration(
-                  labelText: 'Test input',
-                  alignLabelWithHint: true,
-                ),
-                expands: true,
-                maxLines: null,
-                minLines: null,
-                style: const TextStyle(fontFamily: 'monospace'),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _PatternSection(
+                    controller: _controller,
+                    tec: _patternTec,
+                    cheatsheetActive: _showCheatsheet,
+                    onCheatsheet: () => setState(() => _showCheatsheet = !_showCheatsheet),
+                  ),
+                  const SizedBox(height: 8),
+                  Expanded(
+                    flex: 2,
+                    child: TextField(
+                      controller: _inputTec,
+                      textAlignVertical: TextAlignVertical.top,
+                      decoration: const InputDecoration(
+                        labelText: 'Test input',
+                        alignLabelWithHint: true,
+                      ),
+                      expands: true,
+                      maxLines: null,
+                      minLines: null,
+                      style: const TextStyle(fontFamily: 'monospace'),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Expanded(
+                    flex: 1,
+                    child: ListenableBuilder(
+                      listenable: _controller,
+                      builder: (context, _) => _MatchList(controller: _controller),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 8),
-            Expanded(
-              flex: 1,
-              child: ListenableBuilder(
-                listenable: _controller,
-                builder: (context, _) => _MatchList(controller: _controller),
+            if (_showCheatsheet) ...[
+              const SizedBox(width: 8),
+              const VerticalDivider(width: 1),
+              const SizedBox(width: 8),
+              const SizedBox(
+                width: 340,
+                child: _CheatsheetPanel(),
               ),
-            ),
+            ],
           ],
         ),
       ),
@@ -83,10 +105,17 @@ class _RegexTesterScreenState extends State<RegexTesterScreen> {
 // ── Pattern field + flags ─────────────────────────────────────────────────────
 
 class _PatternSection extends StatelessWidget {
-  const _PatternSection({required this.controller, required this.tec});
+  const _PatternSection({
+    required this.controller,
+    required this.tec,
+    required this.cheatsheetActive,
+    required this.onCheatsheet,
+  });
 
   final RegexTesterController controller;
   final TextEditingController tec;
+  final bool cheatsheetActive;
+  final VoidCallback onCheatsheet;
 
   @override
   Widget build(BuildContext context) {
@@ -109,28 +138,41 @@ class _PatternSection extends StatelessWidget {
               ),
             ),
             const SizedBox(height: AppSpacing.gap),
-            Wrap(
-              spacing: 6,
+            Row(
               children: [
-                _FlagChip(
-                  label: 'Case sensitive',
-                  selected: controller.caseSensitive,
-                  onSelected: controller.setCaseSensitive,
+                Expanded(
+                  child: Wrap(
+                    spacing: 6,
+                    children: [
+                      _FlagChip(
+                        label: 'Case sensitive',
+                        selected: controller.caseSensitive,
+                        onSelected: controller.setCaseSensitive,
+                      ),
+                      _FlagChip(
+                        label: 'Multiline',
+                        selected: controller.multiLine,
+                        onSelected: controller.setMultiLine,
+                      ),
+                      _FlagChip(
+                        label: 'Dot-all',
+                        selected: controller.dotAll,
+                        onSelected: controller.setDotAll,
+                      ),
+                      _FlagChip(
+                        label: 'Unicode',
+                        selected: controller.unicode,
+                        onSelected: controller.setUnicode,
+                      ),
+                    ],
+                  ),
                 ),
-                _FlagChip(
-                  label: 'Multiline',
-                  selected: controller.multiLine,
-                  onSelected: controller.setMultiLine,
-                ),
-                _FlagChip(
-                  label: 'Dot-all',
-                  selected: controller.dotAll,
-                  onSelected: controller.setDotAll,
-                ),
-                _FlagChip(
-                  label: 'Unicode',
-                  selected: controller.unicode,
-                  onSelected: controller.setUnicode,
+                IconButton(
+                  tooltip: cheatsheetActive ? 'Hide cheatsheet' : 'Regex cheatsheet',
+                  isSelected: cheatsheetActive,
+                  icon: const Icon(Icons.info_outline),
+                  selectedIcon: const Icon(Icons.info),
+                  onPressed: onCheatsheet,
                 ),
               ],
             ),
@@ -270,6 +312,141 @@ class _MatchTile extends StatelessWidget {
     );
   }
 }
+
+// ── Regex cheatsheet ──────────────────────────────────────────────────────────
+
+class _CheatsheetPanel extends StatelessWidget {
+  const _CheatsheetPanel();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      padding: const EdgeInsets.only(bottom: 16),
+      itemCount: _cheatsheetSections.length,
+      itemBuilder: (context, i) => _SectionTile(section: _cheatsheetSections[i]),
+    );
+  }
+}
+
+class _SectionTile extends StatelessWidget {
+  const _SectionTile({required this.section});
+
+  final _CheatsheetSection section;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final bodySmall = Theme.of(context).textTheme.bodySmall;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(4, 12, 4, 6),
+          child: Text(
+            section.title,
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(color: scheme.primary),
+          ),
+        ),
+        for (final (expr, desc) in section.entries)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  width: 108,
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: scheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    expr,
+                    style: TextStyle(fontFamily: 'monospace', fontSize: 12, color: scheme.onSurface),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(child: Text(desc, style: bodySmall)),
+              ],
+            ),
+          ),
+        const Divider(height: 20),
+      ],
+    );
+  }
+}
+
+class _CheatsheetSection {
+  const _CheatsheetSection(this.title, this.entries);
+  final String title;
+  final List<(String, String)> entries;
+}
+
+const _cheatsheetSections = [
+  _CheatsheetSection('Characters', [
+    ('.', 'Any character except newline'),
+    ('[A-Z]', 'Character range (A to Z)'),
+    ('[abc]', 'Character set (a, b, or c)'),
+    ('[^abc]', 'Negated set (not a, b, or c)'),
+    (r'\d', 'Digit  [0-9]'),
+    (r'\D', 'Non-digit'),
+    (r'\w', 'Word character  [A-Za-z0-9_]'),
+    (r'\W', 'Non-word character'),
+    (r'\s', 'Whitespace (space, tab, newline)'),
+    (r'\S', 'Non-whitespace'),
+  ]),
+  _CheatsheetSection('Quantifiers', [
+    ('a*', 'Zero or more (greedy)'),
+    ('a+', 'One or more (greedy)'),
+    ('a?', 'Zero or one (greedy)'),
+    ('a{2}', 'Exactly 2'),
+    ('a{2,}', 'At least 2'),
+    ('a{2,5}', 'Between 2 and 5'),
+    ('a*?', 'Zero or more (lazy)'),
+    ('a+?', 'One or more (lazy)'),
+    ('a??', 'Zero or one (lazy)'),
+  ]),
+  _CheatsheetSection('Anchors', [
+    ('^', 'Start of string (or line in multiline mode)'),
+    (r'$', 'End of string (or line in multiline mode)'),
+    (r'\b', 'Word boundary'),
+    (r'\B', 'Non-word boundary'),
+  ]),
+  _CheatsheetSection('Groups', [
+    ('(abc)', 'Capturing group'),
+    ('(?:abc)', 'Non-capturing group'),
+    ('(?<name>abc)', 'Named capturing group'),
+    (r'\1', 'Backreference to group 1'),
+    (r'\k<name>', 'Named backreference'),
+    ('a|b', 'Alternation (a or b)'),
+  ]),
+  _CheatsheetSection('Lookaround', [
+    ('(?=abc)', 'Positive lookahead'),
+    ('(?!abc)', 'Negative lookahead'),
+    ('(?<=abc)', 'Positive lookbehind'),
+    ('(?<!abc)', 'Negative lookbehind'),
+  ]),
+  _CheatsheetSection('Whitespace', [
+    (r'\t', 'Tab'),
+    (r'\n', 'Newline (LF)'),
+    (r'\r', 'Carriage return (CR)'),
+    (r'\f', 'Form feed'),
+    (r'\0', 'Null character'),
+  ]),
+  _CheatsheetSection('Escaping', [
+    (r'\.', 'Literal dot'),
+    (r'\*', 'Literal asterisk'),
+    (r'\+', 'Literal plus'),
+    (r'\?', 'Literal question mark'),
+    (r'\(', 'Literal parenthesis'),
+    (r'\[', 'Literal bracket'),
+    (r'\{', 'Literal brace'),
+    (r'\\', 'Literal backslash'),
+    (r'\^', 'Literal caret'),
+    (r'\$', 'Literal dollar sign'),
+    (r'\|', 'Literal pipe'),
+  ]),
+];
 
 // ── Highlight TextEditingController ──────────────────────────────────────────
 
