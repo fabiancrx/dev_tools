@@ -399,4 +399,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get toolWifiQrDescription =>
       'Generate a QR code to share WiFi credentials';
+
+  @override
+  String get toolDockerRunComposeName => 'Docker Run → Compose';
+
+  @override
+  String get toolDockerRunComposeDescription =>
+      'Convert a docker run command to a Docker Compose file';
 }

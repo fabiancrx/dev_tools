@@ -144,5 +144,8 @@
     "toolRegexTesterDescription": "Prueba expresiones regulares con resaltado de coincidencias en tiempo real",
 
     "toolWifiQrName": "Código QR WiFi",
-    "toolWifiQrDescription": "Genera un código QR para compartir credenciales WiFi"
+    "toolWifiQrDescription": "Genera un código QR para compartir credenciales WiFi",
+
+    "toolDockerRunComposeName": "Docker Run → Compose",
+    "toolDockerRunComposeDescription": "Convierte un comando docker run a un archivo Docker Compose"
 }

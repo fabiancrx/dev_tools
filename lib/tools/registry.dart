@@ -19,6 +19,7 @@ import 'package:dash_tools/tools/mac_address/mac_address_screen.dart';
 import 'package:dash_tools/tools/mime_lookup/mime_lookup_screen.dart';
 import 'package:dash_tools/tools/quick_transforms.dart';
 import 'package:dash_tools/tools/regex_tester/regex_tester_screen.dart';
+import 'package:dash_tools/tools/docker/docker_run_to_compose_screen.dart';
 import 'package:dash_tools/tools/wifi_qr/wifi_qr_screen.dart';
 import 'package:dash_tools/tools/qr_code/qr_code_screen.dart';
 import 'package:dash_tools/tools/query_string/query_string_screen.dart';
@@ -335,6 +336,16 @@ final List<ToolDescriptor> toolRegistry = [
     aliases: ['wifi', 'qr', 'wireless', 'network', 'wpa'],
     detector: null,
   ),
+  ToolDescriptor(
+    id: 'docker_run_compose',
+    name: (ctx) => ctx.l10n.toolName('docker_run_compose'),
+    description: (ctx) => ctx.l10n.toolDescription('docker_run_compose'),
+    category: ToolCategory.converters,
+    icon: Icons.dock_outlined,
+    builder: (_) => const DockerRunToComposeScreen(),
+    aliases: ['docker', 'compose', 'container', 'docker run', 'docker-compose'],
+    detector: const _DockerRunDetector(),
+  ),
 ];
 
 // ---------------------------------------------------------------------------
@@ -515,6 +526,19 @@ class _HtmlEntityDetector implements ClipboardDetector {
     final trimmed = input.trim();
     if (trimmed.isEmpty) return false;
     return RegExp(r'&(?:#\d+|#x[0-9a-fA-F]+|[a-zA-Z][a-zA-Z0-9]*);').hasMatch(trimmed);
+  }
+}
+
+class _DockerRunDetector implements ClipboardDetector {
+  const _DockerRunDetector();
+
+  @override
+  int get priority => 9;
+
+  @override
+  bool canHandle(String input) {
+    final trimmed = input.trim();
+    return trimmed.startsWith('docker run ') || trimmed.startsWith('docker container run ');
   }
 }
 

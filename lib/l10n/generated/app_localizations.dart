@@ -817,6 +817,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Generate a QR code to share WiFi credentials'**
   String get toolWifiQrDescription;
+
+  /// Docker run to Compose converter tool name
+  ///
+  /// In en, this message translates to:
+  /// **'Docker Run → Compose'**
+  String get toolDockerRunComposeName;
+
+  /// Docker run to Compose converter tool description
+  ///
+  /// In en, this message translates to:
+  /// **'Convert a docker run command to a Docker Compose file'**
+  String get toolDockerRunComposeDescription;
 }
 
 class _AppLocalizationsDelegate

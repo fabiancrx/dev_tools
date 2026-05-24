@@ -380,5 +380,11 @@
     "@toolWifiQrName": { "description": "WiFi QR code generator tool name" },
 
     "toolWifiQrDescription": "Generate a QR code to share WiFi credentials",
-    "@toolWifiQrDescription": { "description": "WiFi QR code generator tool description" }
+    "@toolWifiQrDescription": { "description": "WiFi QR code generator tool description" },
+
+    "toolDockerRunComposeName": "Docker Run → Compose",
+    "@toolDockerRunComposeName": { "description": "Docker run to Compose converter tool name" },
+
+    "toolDockerRunComposeDescription": "Convert a docker run command to a Docker Compose file",
+    "@toolDockerRunComposeDescription": { "description": "Docker run to Compose converter tool description" }
 }

@@ -34,6 +34,7 @@ extension AppLocalizationsToolsX on AppLocalizations {
         'html_entity' => toolHtmlEntityName,
         'regex_tester' => toolRegexTesterName,
         'wifi_qr' => toolWifiQrName,
+        'docker_run_compose' => toolDockerRunComposeName,
         _ => id,
       };
 
@@ -63,6 +64,7 @@ extension AppLocalizationsToolsX on AppLocalizations {
         'html_entity' => toolHtmlEntityDescription,
         'regex_tester' => toolRegexTesterDescription,
         'wifi_qr' => toolWifiQrDescription,
+        'docker_run_compose' => toolDockerRunComposeDescription,
         _ => id,
       };
 }
