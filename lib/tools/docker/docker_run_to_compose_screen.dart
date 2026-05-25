@@ -1,11 +1,16 @@
+import 'package:code_forge/code_forge.dart';
+import 'package:dash_tools/common/code_field.dart';
 import 'package:dash_tools/common/tool_input_cache.dart';
-import 'package:dash_tools/l10n/l10n.dart';
 import 'package:dash_tools/tools/clipboard_service.dart';
 import 'package:dash_tools/tools/docker/docker_run_to_compose.dart';
 import 'package:dash_tools/tools/docker/docker_run_to_compose_controller.dart';
 import 'package:dash_tools/widgets/copy_button.dart';
 import 'package:dash_tools/widgets/tool_scaffold.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_highlight/themes/androidstudio.dart';
+import 'package:flutter_highlight/themes/atom-one-light.dart';
+import 'package:re_highlight/languages/bash.dart';
+import 'package:re_highlight/languages/yaml.dart';
 
 const _kCacheKey = 'docker_run_compose';
 
@@ -18,46 +23,50 @@ class DockerRunToComposeScreen extends StatefulWidget {
 
 class _DockerRunToComposeScreenState extends State<DockerRunToComposeScreen> {
   final _controller = DockerRunToComposeController();
-  final _inputTec = TextEditingController();
-  final _outputTec = TextEditingController();
+  final _inputController = CodeForgeController();
+  final _outputController = CodeForgeController();
 
   @override
   void initState() {
     super.initState();
-    _inputTec.addListener(_onInput);
+    _inputController.addListener(_onInput);
     _controller.addListener(() {
-      if (_outputTec.text != _controller.output) {
-        _outputTec.text = _controller.output;
+      if (_outputController.text != _controller.output) {
+        _outputController.text = _controller.output;
       }
     });
     ToolInputCache.load(_kCacheKey).then((v) {
-      if (mounted && v != null && v.isNotEmpty) _inputTec.text = v;
+      if (mounted && v != null && v.isNotEmpty) _inputController.text = v;
     });
   }
 
   void _onInput() {
-    _controller.setInput(_inputTec.text);
-    ToolInputCache.save(_kCacheKey, _inputTec.text);
+    _controller.setInput(_inputController.text);
+    ToolInputCache.save(_kCacheKey, _inputController.text);
   }
 
   @override
   void dispose() {
-    _inputTec.dispose();
-    _outputTec.dispose();
+    _inputController.dispose();
+    _outputController.dispose();
     _controller.dispose();
     super.dispose();
   }
 
+  Map<String, TextStyle> get _theme => switch (Theme.of(context).brightness) {
+        Brightness.light => atomOneLightTheme,
+        Brightness.dark => androidstudioTheme,
+      };
+
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     return ToolScaffold(
       onRun: _controller.run,
       actions: [
         TextButton.icon(
           icon: const Icon(Icons.auto_awesome_outlined, size: 16),
           label: const Text('Sample'),
-          onPressed: () => _inputTec.text = dockerRunSample.trim(),
+          onPressed: () => _inputController.text = dockerRunSample.trim(),
         ),
       ],
       outputActions: [
@@ -68,29 +77,50 @@ class _DockerRunToComposeScreenState extends State<DockerRunToComposeScreen> {
       ],
       input: ListenableBuilder(
         listenable: _controller,
-        builder: (_, _) => TextField(
-          controller: _inputTec,
-          textAlignVertical: TextAlignVertical.top,
-          style: const TextStyle(fontFamily: 'monospace'),
-          decoration: InputDecoration(
-            labelText: 'docker run command',
-            alignLabelWithHint: true,
-            errorText: _controller.error.isEmpty ? null : _controller.error,
-          ),
-          expands: true,
-          maxLines: null,
-          minLines: null,
+        builder: (context, _) => Column(
+          children: [
+            Expanded(
+              child: Container(
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Theme.of(context).colorScheme.outline),
+                ),
+                child: CodeForge(
+                  editorTheme: _theme,
+                  language: langBash,
+                  controller: _inputController,
+                  lineWrap: false,
+                  enableGutter: true,
+                  enableFolding: true,
+                  finderBuilder: (context, controller) => CodeFindPanelView(controller: controller),
+                ),
+              ),
+            ),
+            if (_controller.error.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(_controller.error, style: TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 12)),
+              ),
+          ],
         ),
       ),
-      output: TextField(
-        controller: _outputTec,
-        readOnly: true,
-        textAlignVertical: TextAlignVertical.top,
-        style: const TextStyle(fontFamily: 'monospace'),
-        decoration: InputDecoration(labelText: l10n.output, alignLabelWithHint: true),
-        expands: true,
-        maxLines: null,
-        minLines: null,
+      output: Container(
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Theme.of(context).colorScheme.outline),
+        ),
+        child: CodeForge(
+          editorTheme: _theme,
+          language: langYaml,
+          controller: _outputController,
+          readOnly: true,
+          lineWrap: false,
+          enableGutter: true,
+          enableFolding: true,
+          finderBuilder: (context, controller) => CodeFindPanelView(controller: controller),
+        ),
       ),
     );
   }
