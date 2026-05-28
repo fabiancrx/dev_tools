@@ -15,6 +15,8 @@ import "package:flutter_svg/flutter_svg.dart";
 import "package:yaru/widgets.dart";
 
 class AdaptiveNavigationPane extends StatefulWidget {
+  static Key navItemKey(String toolId) => Key('nav_item_$toolId');
+
   final ToolOrderNotifier toolOrder;
   final ClipboardRecognizer clipboardRecognizer;
 
@@ -182,6 +184,7 @@ class _AdaptiveNavigationPaneState extends State<AdaptiveNavigationPane> {
               }),
           initialIndex: clampedIndex,
           itemBuilder: (context, index, selected) => YaruNavigationRailItem(
+            key: AdaptiveNavigationPane.navItemKey(tools[index].id),
             tooltip: wideWindowSize
                 ? context.l10n.toolDescription(tools[index].id)
                 : context.l10n.toolName(tools[index].id),

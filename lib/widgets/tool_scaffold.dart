@@ -9,6 +9,10 @@ import 'package:flutter/services.dart';
 
 /// Two-pane input/output layout shared by most converter tools.
 class ToolScaffold extends StatefulWidget {
+  static const inputKey = Key('tool_scaffold_input');
+  static const outputKey = Key('tool_scaffold_output');
+  static const runButtonKey = Key('tool_scaffold_run_button');
+
   final List<Widget> actions;
   final List<Widget> outputActions;
   final Widget input;
@@ -84,6 +88,7 @@ class _ToolScaffoldState extends State<ToolScaffold> {
                           Tooltip(
                             message: 'Run  ${PlatformKeys.run}',
                             child: FilledButton.icon(
+                              key: ToolScaffold.runButtonKey,
                               onPressed: widget.onRun,
                               icon: const Icon(Icons.play_arrow, size: 16),
                               label: const Text('Run'),
@@ -95,9 +100,12 @@ class _ToolScaffoldState extends State<ToolScaffold> {
                   },
                 ),
                 Expanded(
-                  child: widget.onFileDropped != null
-                      ? FileDropZone(onText: widget.onFileDropped!, child: widget.input)
-                      : widget.input,
+                  child: KeyedSubtree(
+                    key: ToolScaffold.inputKey,
+                    child: widget.onFileDropped != null
+                        ? FileDropZone(onText: widget.onFileDropped!, child: widget.input)
+                        : widget.input,
+                  ),
                 ),
               ],
             ),
@@ -106,7 +114,7 @@ class _ToolScaffoldState extends State<ToolScaffold> {
               children: [
                 if (widget.outputActions.isNotEmpty)
                   FlexActionBar(children: widget.outputActions),
-                Expanded(child: widget.output),
+                Expanded(child: KeyedSubtree(key: ToolScaffold.outputKey, child: widget.output)),
               ],
             ),
           ],
