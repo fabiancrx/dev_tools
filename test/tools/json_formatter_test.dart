@@ -55,7 +55,7 @@ void main() {
     });
   });
 
-  group('process', () {
+  group('process success', () {
     test('prettifies with two-space indent by default', () {
       final result = controller.process('{"a":1}');
       expect(result, isA<JsonFormatSuccess>());
@@ -69,21 +69,103 @@ void main() {
       expect((result as JsonFormatSuccess).output, '{"a":1}');
     });
 
-    test('returns error with line and column for invalid JSON', () {
-      final result = controller.process('not json');
-      expect(result, isA<JsonFormatError>());
-      final err = result as JsonFormatError;
-      expect(err.line, greaterThanOrEqualTo(1));
-      expect(err.col, greaterThanOrEqualTo(1));
+    test('prettifies with four-space indent', () {
+      controller.changeMode(JsonMode.fourSpaces);
+      final result = controller.process('{"a":1}');
+      expect((result as JsonFormatSuccess).output, '{\n    "a": 1\n}');
+    });
+
+    test('prettifies with tab indent', () {
+      controller.changeMode(JsonMode.tab);
+      final result = controller.process('{"a":1}');
+      expect((result as JsonFormatSuccess).output, '{\n\t"a": 1\n}');
+    });
+  });
+
+  group('process error — type', () {
+    test('empty string returns error', () {
+      expect(controller.process(''), isA<JsonFormatError>());
+    });
+
+    test('bare word returns error', () {
+      expect(controller.process('BAD'), isA<JsonFormatError>());
+    });
+
+    test('trailing comma returns error', () {
+      expect(controller.process('{"a": 1,}'), isA<JsonFormatError>());
+    });
+
+    test('unclosed object returns error', () {
+      expect(controller.process('{"a": 1'), isA<JsonFormatError>());
+    });
+
+    test('unclosed string returns error', () {
+      expect(controller.process('{"a": "unterminated'), isA<JsonFormatError>());
+    });
+
+    test('duplicate key is valid JSON (returns success)', () {
+      // Dart's JSON parser accepts duplicate keys — last value wins
+      expect(controller.process('{"a":1,"a":2}'), isA<JsonFormatSuccess>());
+    });
+
+    test('error message is non-empty', () {
+      final err = controller.process('BAD') as JsonFormatError;
       expect(err.message, isNotEmpty);
     });
 
-    test('reports correct line and column for mid-document error', () {
-      const input = '{\n  "a": 1,\n  "b": BAD\n}';
-      final result = controller.process(input);
-      expect(result, isA<JsonFormatError>());
-      final err = result as JsonFormatError;
-      expect(err.line, 3);
+    test('error result is independent of indent mode', () {
+      controller.changeMode(JsonMode.minify);
+      expect(controller.process('BAD'), isA<JsonFormatError>());
+      controller.changeMode(JsonMode.fourSpaces);
+      expect(controller.process('BAD'), isA<JsonFormatError>());
+    });
+  });
+
+  group('process error — position', () {
+    JsonFormatError err(String input) => controller.process(input) as JsonFormatError;
+
+    test('empty string: error at line 1 col 1', () {
+      final e = err('');
+      expect(e.line, 1);
+      expect(e.col, 1);
+    });
+
+    test('error at very first character: line 1', () {
+      // 'B' is not a valid JSON value start → offset 0
+      final e = err('BAD');
+      expect(e.line, 1);
+      expect(e.col, 1);
+    });
+
+    test('error mid first line: col advances past valid prefix', () {
+      // {"a": BAD} — 'B' comes after {"a":  (6 chars) → col 7
+      final e = err('{"a": BAD}');
+      expect(e.line, 1);
+      expect(e.col, greaterThan(1));
+    });
+
+    test('error on line 2', () {
+      // Second line has the bad token
+      final e = err('{\n  "a": BAD\n}');
+      expect(e.line, 2);
+    });
+
+    test('error on line 3 with correct column', () {
+      // Line 3 content: '  "b": BAD' — 'B' is the 8th character → col 8
+      final e = err('{\n  "a": 1,\n  "b": BAD\n}');
+      expect(e.line, 3);
+      expect(e.col, 8);
+    });
+
+    test('error line tracks deeper nesting', () {
+      const input = '{\n  "a": 1,\n  "b": 2,\n  "c": 3,\n  "d": BAD\n}';
+      expect(err(input).line, 5);
+    });
+
+    test('unclosed object: error position is valid (line >= 1, col >= 1)', () {
+      final e = err('{"a": 1');
+      expect(e.line, greaterThanOrEqualTo(1));
+      expect(e.col, greaterThanOrEqualTo(1));
     });
   });
 }
