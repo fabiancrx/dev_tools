@@ -3,6 +3,7 @@ import 'package:dash_tools/app/home.dart';
 import 'package:dash_tools/common/clipboard_recognizer.dart';
 import 'package:dash_tools/common/tool_order.dart';
 import 'package:dash_tools/l10n/generated/app_localizations.dart';
+import 'package:dash_tools/widgets/tool_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -71,5 +72,16 @@ class AppRobot {
   /// Asserts the nav rail item for [toolId] is present in the widget tree.
   Future<void> verifyToolVisible(String toolId) async {
     expect(find.byKey(AdaptiveNavigationPane.navItemKey(toolId)), findsOneWidget);
+  }
+
+  /// Asserts the ⌘K search prompt is rendered in the title bar.
+  void verifySearchBarVisible() {
+    expect(find.byIcon(Icons.search), findsWidgets);
+  }
+
+  /// Asserts the current tool screen is a standard ToolScaffold layout.
+  void verifyCurrentScreenHasScaffold() {
+    expect(find.byKey(ToolScaffold.inputKey), findsOneWidget);
+    expect(find.byKey(ToolScaffold.outputKey), findsOneWidget);
   }
 }

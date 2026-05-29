@@ -17,4 +17,9 @@ class UrlEncoderRobot {
     await tester.tap(find.text('Decode'));
     await tester.pumpAndSettle();
   }
+
+  void verifyModeButtonsVisible() {
+    expect(find.text('Encode'), findsWidgets);
+    expect(find.text('Decode'), findsWidgets);
+  }
 }
