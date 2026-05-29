@@ -15,7 +15,9 @@ class AppRobot {
   final WidgetTester tester;
 
   void _setUpView() {
-    tester.view.physicalSize = const Size(1280, 900);
+    // 1600px wide: labelledExtended nav rail (~250px) leaves ~675px per tool pane,
+    // enough for action bars that include mode selectors + Run button + copy.
+    tester.view.physicalSize = const Size(1600, 900);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
   }
@@ -72,6 +74,11 @@ class AppRobot {
   /// Asserts the nav rail item for [toolId] is present in the widget tree.
   Future<void> verifyToolVisible(String toolId) async {
     expect(find.byKey(AdaptiveNavigationPane.navItemKey(toolId)), findsOneWidget);
+  }
+
+  /// Asserts the nav rail item for [toolId] is absent (tool is hidden).
+  Future<void> verifyToolHidden(String toolId) async {
+    expect(find.byKey(AdaptiveNavigationPane.navItemKey(toolId)), findsNothing);
   }
 
   /// Asserts the ⌘K search prompt is rendered in the title bar.

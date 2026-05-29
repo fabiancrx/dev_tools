@@ -8,14 +8,15 @@ class UrlEncoderRobot {
 
   ToolScaffoldRobot get scaffold => ToolScaffoldRobot(tester);
 
+  // Fixed pump: pumpAndSettle hangs in the nav pane context (cursor tickers).
   Future<void> selectEncodeMode() async {
     await tester.tap(find.text('Encode'));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 100));
   }
 
   Future<void> selectDecodeMode() async {
     await tester.tap(find.text('Decode'));
-    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 100));
   }
 
   void verifyModeButtonsVisible() {
