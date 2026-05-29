@@ -26,6 +26,7 @@ class _XmlFormatterScreenState extends State<XmlFormatterScreen> {
   final _controller = XmlFormatterController();
   late final _inputController = CodeForgeController();
   late final _outputController = CodeForgeController();
+  final _queryController = TextEditingController();
 
   @override
   void initState() {
@@ -46,10 +47,16 @@ class _XmlFormatterScreenState extends State<XmlFormatterScreen> {
     ToolInputCache.save(_kCacheKey, _inputController.text);
   }
 
+  void _clearQuery() {
+    _queryController.clear();
+    _controller.setQuery('');
+  }
+
   @override
   void dispose() {
     _inputController.dispose();
     _outputController.dispose();
+    _queryController.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -110,30 +117,92 @@ class _XmlFormatterScreenState extends State<XmlFormatterScreen> {
                 ),
               ),
             ),
-            if (_controller.error.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Text(_controller.error, style: TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 12)),
-              ),
+            if (_controller.parseError case final e?) ...[
+              const SizedBox(height: 4),
+              _ParseErrorBanner(message: e.message, line: e.line, col: e.col),
+            ],
           ],
         ),
       ),
-      output: Container(
-        clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Theme.of(context).colorScheme.outline),
+      output: ListenableBuilder(
+        listenable: _controller,
+        builder: (context, _) => Column(
+          children: [
+            Expanded(
+              child: Container(
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Theme.of(context).colorScheme.outline),
+                ),
+                child: CodeForge(
+                  editorTheme: _theme,
+                  language: langXml,
+                  controller: _outputController,
+                  readOnly: true,
+                  lineWrap: false,
+                  enableGutter: true,
+                  enableFolding: true,
+                  finderBuilder: (context, controller) => CodeFindPanelView(controller: controller),
+                ),
+              ),
+            ),
+            const SizedBox(height: 6),
+            TextField(
+              controller: _queryController,
+              decoration: InputDecoration(
+                hintText: l10n.xmlQueryHint,
+                errorText: _controller.queryError ? l10n.xmlQueryInvalid : null,
+                isDense: true,
+                prefixIcon: const Icon(Icons.filter_alt_outlined, size: 18),
+                suffixIcon: _controller.hasActiveQuery
+                    ? IconButton(
+                        icon: const Icon(Icons.close, size: 18),
+                        tooltip: l10n.xmlQueryClear,
+                        onPressed: _clearQuery,
+                      )
+                    : null,
+                border: const OutlineInputBorder(),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              ),
+              onChanged: _controller.setQuery,
+            ),
+          ],
         ),
-        child: CodeForge(
-          editorTheme: _theme,
-          language: langXml,
-          controller: _outputController,
-          readOnly: true,
-          lineWrap: false,
-          enableGutter: true,
-          enableFolding: true,
-          finderBuilder: (context, controller) => CodeFindPanelView(controller: controller),
-        ),
+      ),
+    );
+  }
+}
+
+class _ParseErrorBanner extends StatelessWidget {
+  const _ParseErrorBanner({required this.message, required this.line, required this.col});
+
+  final String message;
+  final int line;
+  final int col;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: scheme.errorContainer,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.error_outline, size: 16, color: scheme.onErrorContainer),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              line > 0
+                  ? 'Parse error at line $line, column $col: $message'
+                  : 'Parse error: $message',
+              style: TextStyle(fontSize: 12, color: scheme.onErrorContainer, fontFamily: 'monospace'),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -280,6 +280,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Convert between Unix timestamps and ISO 8601 dates';
 
   @override
+  String get worldClocks => 'World clocks';
+
+  @override
   String get toolQueryStringName => 'Query String Parser';
 
   @override
@@ -331,6 +334,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get toolQrCodeDescription => 'Generate QR codes from any text or URL';
+
+  @override
+  String get xmlQueryHint =>
+      'XPath query  (e.g. //book[@category=\'cooking\'])';
+
+  @override
+  String get xmlQueryClear => 'Clear query';
+
+  @override
+  String get xmlQueryInvalid => 'Invalid expression';
 
   @override
   String get jsonQueryHint => 'JSONPath query  (e.g. \$.store.book[*].title)';

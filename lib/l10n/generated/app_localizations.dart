@@ -596,6 +596,12 @@ abstract class AppLocalizations {
   /// **'Convert between Unix timestamps and ISO 8601 dates'**
   String get toolUnixTimestampDescription;
 
+  /// Section header showing the timestamp in multiple timezones
+  ///
+  /// In en, this message translates to:
+  /// **'World clocks'**
+  String get worldClocks;
+
   /// Query string parser tool name
   ///
   /// In en, this message translates to:
@@ -691,6 +697,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Generate QR codes from any text or URL'**
   String get toolQrCodeDescription;
+
+  /// Placeholder text for the XPath query field in the XML formatter
+  ///
+  /// In en, this message translates to:
+  /// **'XPath query  (e.g. //book[@category=\'cooking\'])'**
+  String get xmlQueryHint;
+
+  /// Tooltip for the button that clears the XPath query and restores the full XML
+  ///
+  /// In en, this message translates to:
+  /// **'Clear query'**
+  String get xmlQueryClear;
+
+  /// Error text shown when the XPath expression is syntactically invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid expression'**
+  String get xmlQueryInvalid;
 
   /// Placeholder text for the JSONPath query field in the JSON formatter
   ///

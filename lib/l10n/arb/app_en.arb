@@ -271,6 +271,9 @@
     "toolUnixTimestampDescription": "Convert between Unix timestamps and ISO 8601 dates",
     "@toolUnixTimestampDescription": { "description": "Unix timestamp tool description" },
 
+    "worldClocks": "World clocks",
+    "@worldClocks": { "description": "Section header showing the timestamp in multiple timezones" },
+
     "toolQueryStringName": "Query String Parser",
     "@toolQueryStringName": { "description": "Query string parser tool name" },
 
@@ -318,6 +321,15 @@
 
     "toolQrCodeDescription": "Generate QR codes from any text or URL",
     "@toolQrCodeDescription": { "description": "QR code generator tool description" },
+
+    "xmlQueryHint": "XPath query  (e.g. //book[@category='cooking'])",
+    "@xmlQueryHint": { "description": "Placeholder text for the XPath query field in the XML formatter" },
+
+    "xmlQueryClear": "Clear query",
+    "@xmlQueryClear": { "description": "Tooltip for the button that clears the XPath query and restores the full XML" },
+
+    "xmlQueryInvalid": "Invalid expression",
+    "@xmlQueryInvalid": { "description": "Error text shown when the XPath expression is syntactically invalid" },
 
     "jsonQueryHint": "JSONPath query  (e.g. $.store.book[*].title)",
     "@jsonQueryHint": { "description": "Placeholder text for the JSONPath query field in the JSON formatter" },

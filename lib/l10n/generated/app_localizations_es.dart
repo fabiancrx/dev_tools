@@ -284,6 +284,9 @@ class AppLocalizationsEs extends AppLocalizations {
       'Convierte entre marcas de tiempo Unix y fechas ISO 8601';
 
   @override
+  String get worldClocks => 'Husos horarios';
+
+  @override
   String get toolQueryStringName => 'Analizador de cadena de consulta';
 
   @override
@@ -337,6 +340,16 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get toolQrCodeDescription =>
       'Genera códigos QR desde cualquier texto o URL';
+
+  @override
+  String get xmlQueryHint =>
+      'Consulta XPath  (ej. //book[@category=\'cooking\'])';
+
+  @override
+  String get xmlQueryClear => 'Limpiar consulta';
+
+  @override
+  String get xmlQueryInvalid => 'Expresión inválida';
 
   @override
   String get jsonQueryHint => 'Consulta JSONPath  (ej. \$.store.book[*].title)';

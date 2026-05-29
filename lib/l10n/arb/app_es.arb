@@ -91,6 +91,8 @@
     "toolUnixTimestampName": "Marca de tiempo Unix",
     "toolUnixTimestampDescription": "Convierte entre marcas de tiempo Unix y fechas ISO 8601",
 
+    "worldClocks": "Husos horarios",
+
     "toolQueryStringName": "Analizador de cadena de consulta",
     "toolQueryStringDescription": "Analiza cadenas de consulta URL en JSON",
 
@@ -114,6 +116,10 @@
 
     "toolQrCodeName": "Generador de código QR",
     "toolQrCodeDescription": "Genera códigos QR desde cualquier texto o URL",
+
+    "xmlQueryHint": "Consulta XPath  (ej. //book[@category='cooking'])",
+    "xmlQueryClear": "Limpiar consulta",
+    "xmlQueryInvalid": "Expresión inválida",
 
     "jsonQueryHint": "Consulta JSONPath  (ej. $.store.book[*].title)",
     "jsonQueryClear": "Limpiar consulta",
