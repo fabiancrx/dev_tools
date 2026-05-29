@@ -28,18 +28,25 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
   final TextEditingController _queryController = TextEditingController();
   String? _savedJson;
   bool _queryError = false;
+  ({String message, int line, int col})? _formatError;
 
   @override
   void initState() {
     _populate();
+    outputController.addListener(_clearFormatError);
     super.initState();
   }
 
   @override
   void dispose() {
+    outputController.removeListener(_clearFormatError);
     outputController.dispose();
     _queryController.dispose();
     super.dispose();
+  }
+
+  void _clearFormatError() {
+    if (_formatError != null) setState(() => _formatError = null);
   }
 
   void _onQueryChanged(String expr) {
@@ -67,8 +74,8 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
   }
 
   void _populate() {
-    final jsonObject = ref.read(jsonControllerProvider.notifier).processSync(kSampleJson);
-    outputController.text = jsonObject;
+    final result = ref.read(jsonControllerProvider.notifier).process(kSampleJson);
+    if (result case JsonFormatSuccess(:final output)) outputController.text = output;
   }
 
   Map<String, TextStyle> get _theme {
@@ -128,9 +135,14 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
               const Spacer(),
               ElevatedButton(
                   onPressed: () {
-                    final jsonObject =
-                        ref.read(jsonControllerProvider.notifier).processSync(outputController.text);
-                    outputController.text = jsonObject;
+                    final result = ref.read(jsonControllerProvider.notifier).process(outputController.text);
+                    switch (result) {
+                      case JsonFormatSuccess(:final output):
+                        outputController.text = output;
+                        if (_formatError != null) setState(() => _formatError = null);
+                      case JsonFormatError(:final message, :final line, :final col):
+                        setState(() => _formatError = (message: message, line: line, col: col));
+                    }
                   },
                   child: Text(l10n.format)),
               CopyButton(
@@ -159,6 +171,10 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
               ),
             ),
           ),
+          if (_formatError case final e?) ...[
+            const SizedBox(height: 6),
+            _ParseErrorBanner(message: e.message, line: e.line, col: e.col),
+          ],
           const SizedBox(height: 6),
           TextField(
             controller: _queryController,
@@ -178,6 +194,38 @@ class _JsonFormatterScreenState extends ConsumerState<JsonFormatterScreen> {
               contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             ),
             onChanged: _onQueryChanged,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ParseErrorBanner extends StatelessWidget {
+  const _ParseErrorBanner({required this.message, required this.line, required this.col});
+
+  final String message;
+  final int line;
+  final int col;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: scheme.errorContainer,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.error_outline, size: 16, color: scheme.onErrorContainer),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              'Parse error at line $line, column $col: $message',
+              style: TextStyle(fontSize: 12, color: scheme.onErrorContainer, fontFamily: 'monospace'),
+            ),
           ),
         ],
       ),

@@ -55,20 +55,35 @@ void main() {
     });
   });
 
-  group('processSync', () {
+  group('process', () {
     test('prettifies with two-space indent by default', () {
-      final result = controller.processSync('{"a":1}');
-      expect(result, '{\n  "a": 1\n}');
+      final result = controller.process('{"a":1}');
+      expect(result, isA<JsonFormatSuccess>());
+      expect((result as JsonFormatSuccess).output, '{\n  "a": 1\n}');
     });
 
     test('minifies when mode is minify', () {
       controller.changeMode(JsonMode.minify);
-      final result = controller.processSync('{ "a" : 1 }');
-      expect(result, '{"a":1}');
+      final result = controller.process('{ "a" : 1 }');
+      expect(result, isA<JsonFormatSuccess>());
+      expect((result as JsonFormatSuccess).output, '{"a":1}');
     });
 
-    test('throws on invalid JSON', () {
-      expect(() => controller.processSync('not json'), throwsFormatException);
+    test('returns error with line and column for invalid JSON', () {
+      final result = controller.process('not json');
+      expect(result, isA<JsonFormatError>());
+      final err = result as JsonFormatError;
+      expect(err.line, greaterThanOrEqualTo(1));
+      expect(err.col, greaterThanOrEqualTo(1));
+      expect(err.message, isNotEmpty);
+    });
+
+    test('reports correct line and column for mid-document error', () {
+      const input = '{\n  "a": 1,\n  "b": BAD\n}';
+      final result = controller.process(input);
+      expect(result, isA<JsonFormatError>());
+      final err = result as JsonFormatError;
+      expect(err.line, 3);
     });
   });
 }
