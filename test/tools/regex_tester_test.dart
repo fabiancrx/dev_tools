@@ -63,15 +63,16 @@ void main() {
     test('does not crash on any flag combination', () {
       const pattern = r'\w+';
       const input = 'hello\nworld';
-      for (final cs in [true, false])
+      for (final cs in [true, false]) {
         for (final ml in [true, false]) {
           for (final da in [true, false]) {
             for (final uc in [true, false]) {
               final r = runRegex(pattern, input, caseSensitive: cs, multiLine: ml, dotAll: da, unicode: uc);
               expect(r.error, isNull);
             }
-        }
           }
+        }
+      }
     });
   });
 

@@ -1,6 +1,7 @@
 /// Pure logic for converting a `docker run` command to Docker Compose YAML.
 ///
 /// No Flutter imports. Tested independently from the UI.
+library;
 
 class DockerService {
   final String image;
